@@ -1,0 +1,52 @@
+---BEGIN_ENTRY---
+originalEvent: null
+ownerAccount: lukas.aichbauer@gmail.com
+_sync_account_type: null
+visibility: 0
+rrule: null
+lastDate: 1286359200000
+hasAlarm: 0
+guestsCanModify: 0
+guestsCanSeeGuests: 1
+exrule: null
+rdate: null
+transparency: 0
+timezone: Europe/Vienna
+selected: 1
+dtstart: 1286356500000
+title: LV 702101-0 10W: Einführung in die Mathematik 1
+_sync_time: null
+_id: 1
+hasAttendeeData: 0
+_sync_id: null
+commentsUri: null
+description: Lehrveranstaltung 702101 10W, Gruppe 0
+Titel: Einführung in die Mathematik 1
+Ort: HS A
+
+http://orawww.uibk.ac.at/public/lfuonline_lv.details?sem_id_in=10W&lvnr_id_in=702101&raumanzeige_id_in=1445602
+
+htmlUri: null
+_sync_account: null
+_sync_version: null
+hasExtendedProperties: 0
+calendar_id: 1
+eventLocation: HS A
+dtend: 1286359200000
+access_level: 700
+allDay: 0
+_sync_local_id: null
+organizer: MAILTO:lfuonline@uibk.ac.at
+originalAllDay: null
+url: http://www.google.com/calendar/feeds/lukas.aichbauer%40gmail.com/private/full
+originalInstanceTime: null
+_sync_dirty: 1
+duration: null
+color: -14069085
+guestsCanInviteOthers: 1
+selfAttendeeStatus: 0
+exdate: null
+eventStatus: null
+eventTimezone: null
+
+----END_ENTRY----

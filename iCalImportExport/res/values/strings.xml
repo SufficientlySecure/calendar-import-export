@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">iCal Import/Export</string>
+
+	<string name="progress_reading_ical">Reading iCal file, can take a few minutes.</string>
+	<string name="progress_loading_builder">Loading iCal builder.</string>
+	<string name="progress_searching_ical_files">Searching for iCal files.</string>
+	<string name="progress_loading_calendarentries">Loading calendar entries.</string>
+	<string name="progress_writing_calendar_to_file">Writing calendar to file.</string>
+	<string name="progress_deleting_calendarentries">Deleting calendar entries.</string>
+	<string name="progress_insert_entries">Inserting entries.</string>
+
+	<string name="button_search_files">Search for iCal files</string>
+	<string name="button_show_information">Show information</string>
+	<string name="button_delete_entries">Delete entries</string>
+	<string name="button_insert_entries">Insert entries</string>
+	<string name="button_load_calendar">Load iCal file</string>
+	<string name="button_save_calendar">Save to iCal file</string>
+	<string name="button_set_http">Set URL</string>
+	<string name="button_drop_calendar">Drop It!</string>
+
+	<string name="textview_choose_calendar">Choose calendar to edit:</string>
+	<string name="textview_calendar_short_information">Found %d events.</string>
+	<string name="textview_search_sd">Search for iCal files on SD card:</string>
+	
+	<string name="spinner_choose_file">Select iCal file below</string>
+	<string name="spinner_choose_calendar">Select a calendar</string>
+
+	<string name="dialog_proceed">Proceed</string>
+	<string name="dialog_experimental">Feature is experimental, proceed?</string>
+	<string name="dialog_enter_url">Please enter an URL of an iCal file below which starts with http:// or ftp://</string>
+	<string name="dialog_enter_url_title">Please enter iCal URL</string>
+	<string name="dialog_choosefilename_title">Choose filename</string>
+	<string name="dialog_choosefilename_message">Please enter filename below</string>
+	<string name="dialog_sucessfully_written_calendar">Successfully written %1$d events to file %2$s
+	</string>
+	<string name="dialog_empty_calendar">Will not persist empty calendar.</string>
+	<string name="dialog_yes">Yes</string>
+	<string name="dialog_no">No</string>
+	<string name="dialog_information_title">Information</string>
+	<string name="dialog_can_take_long_time">This process can take a long time. Proceed?
+	</string>
+	<string name="dialog_success_title">Finished</string>
+	<string name="dialog_entries_deleted">Deleted %d entries of calendar.</string>
+	<string name="dialog_delete_entries">Do you really want to delete the entries?</string>
+	<string name="dialog_insert_search_for_duplicates">Do you want to search for duplicates, will take
+		longer?"</string>
+	<string name="dialog_insert_entries">Insert entries into calendar?</string>
+	<string name="dialog_entries_inserted">Inserted %d entries into calendar.</string>
+	<string name="dialog_exiting">You have no calendar. Please create one. Exiting...
+	</string>
+	<string name="dialog_error_title">Error</string>
+	<string name="dialog_error_unparseable">iCal file could not be parsed\n\n</string>
+	<string name="dialog_found_duplicates">Found %d duplicate entries.</string>
+	<string name="dialog_no_calendar_provider">No calendar provider found. Do you have calendar
+		application installed? Exititing...</string>
+	<string name="dialog_rating">Please consider rating my app</string>
+	<string name="dialog_button_go_to_market">Go to market</string>
+	<string name="dialog_button_no_i_dont_like">No, thanks</string>
+	<string name="dialog_button_buy_me_beer">Buy me a beer</string>
+	<string name="dialog_beer">Would you like to buy me a beer?</string>
+	
+	<string name="menu_quit">Quit</string>
+	<string name="menu_help">Help</string>
+	<string name="menu_changelog">Change Log</string>
+	<string name="menu_license">License</string>
+	<string name="menu_beer">Buy me a beer</string>
+	<string name="changelog">
+	Version 1.0:\nSupporting simple iCal import and export. Attendees are not supported.
+	\n\nVersion 1.1:\nAssociate program with iCal files. Working in web browser. In Froyo also working with any type of file browser.
+		\n\nVersion 1.2:\nTimezone of an event will be changed according to your local android timezone. I am not sure if that works, timezones are very confusing.
+		\n\nVersion 1.3:\nSaves the last URL</string>
+	<string name="license">I must provide the iCal4j License below:
+		===iCal4j - License===
+
+		Copyright (c) 2009, Ben Fortuna
+		All rights reserved.
+
+		Redistribution and use in source and binary forms, with or without
+		modification, are permitted provided that the following conditions
+		are met:
+
+		o Redistributions of source code must retain the above copyright
+		notice, this list of conditions and the following disclaimer.
+
+		o Redistributions in binary form must reproduce the above copyright
+		notice, this list of conditions and the following disclaimer in the
+		documentation and/or other materials provided with the distribution.
+
+		o Neither the name of Ben Fortuna nor the names of any other
+		contributors
+		may be used to endorse or promote products derived from this software
+		without specific prior written permission.
+
+		THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+		"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+		LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+		A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+		OWNER OR
+		CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+		EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+		PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+		PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+		LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+		NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+		SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+	</string>
+</resources>

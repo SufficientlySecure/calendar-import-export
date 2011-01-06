@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+	<LinearLayout android:orientation="vertical"
+		android:layout_width="fill_parent" android:layout_height="fill_parent">
+		<TextView android:layout_width="fill_parent"
+			android:textSize="19px" android:layout_height="wrap_content"
+			android:text="@string/textview_choose_calendar" />
+		<Spinner android:id="@+id/Spinner01" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" android:prompt="@string/spinner_choose_calendar" />
+		<LinearLayout android:orientation="horizontal"
+			android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<Button android:text="@string/button_show_information"
+				android:id="@+id/ShowInformationButton" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+			<Button android:text="@string/button_save_calendar"
+				android:id="@+id/SaveButton" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+		</LinearLayout>
+		<TextView android:layout_width="fill_parent"
+			android:textSize="19px" android:layout_height="wrap_content"
+			android:text="@string/textview_search_sd" />
+		<LinearLayout android:orientation="horizontal"
+			android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<Button android:text="@string/button_search_files" android:id="@+id/SearchButton"
+				android:layout_width="wrap_content" android:layout_height="wrap_content" />
+			<Button android:text="@string/button_set_http" android:id="@+id/SetUrlButton"
+				android:layout_width="wrap_content" android:layout_height="wrap_content" />
+		</LinearLayout>
+		<Spinner android:id="@+id/Spinner02" android:layout_width="wrap_content"
+			android:prompt="@string/spinner_choose_file" android:layout_height="wrap_content" android:visibility="gone"/>
+		<LinearLayout android:orientation="horizontal"
+			android:layout_width="fill_parent" android:layout_height="wrap_content">
+			<Button android:text="@string/button_load_calendar"
+				android:id="@+id/LoadButton" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" android:visibility="gone"/>
+			<TextView android:layout_width="fill_parent" android:id="@+id/textView01"
+				android:textSize="19px" android:layout_height="wrap_content" />
+		</LinearLayout>
+		<LinearLayout android:orientation="horizontal"
+			android:id="@+id/linearLayout01" android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:visibility="gone">
+			<Button android:text="@string/button_insert_entries"
+				android:id="@+id/InsertButton" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+			<Button android:text="@string/button_delete_entries"
+				android:id="@+id/DeleteButton" android:layout_width="wrap_content"
+				android:layout_height="wrap_content" />
+		</LinearLayout>
+	</LinearLayout>
+</ScrollView>

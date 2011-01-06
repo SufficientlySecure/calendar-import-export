@@ -1,0 +1,52 @@
+---BEGIN_ENTRY---
+originalEvent: null
+ownerAccount: lukas.aichbauer@gmail.com
+_sync_account_type: com.google
+visibility: 3
+rrule: null
+lastDate: 1286360100000
+hasAlarm: 1
+guestsCanModify: 0
+guestsCanSeeGuests: 1
+exrule: null
+rdate: null
+transparency: 0
+timezone: Europe/Vienna
+selected: 1
+dtstart: 1286356500000
+title: LV 702101-0 10W: Einführung in die Mathematik 1
+_sync_time: 2010-09-28T12:11:59.000Z
+_id: 15
+hasAttendeeData: 1
+_sync_id: http://www.google.com/calendar/feeds/lukas.aichbauer%40gmail.com/private/full/_64o5enpn60p32c1hbsoj8d1l6oo34g3ld5h6mbj1ccn62t0
+commentsUri: http://www.google.com/calendar/feeds/lukas.aichbauer%40gmail.com/private/full/_64o5enpn60p32c1hbsoj8d1l6oo34g3ld5h6mbj1ccn62t0/comments
+description: Lehrveranstaltung 702101 10W, Gruppe 0
+Titel: Einführung in die Mathematik 1
+Ort: HS A
+
+http://orawww.uibk.ac.at/public/lfuonline_lv.details?sem_id_in=10W&lvnr_id_in=702101&raumanzeige_id_in=1445602
+
+htmlUri: http://www.google.com/calendar/event?eid=XzY0bzVlbnBuNjBwMzJjMWhic29qOGQxbDZvbzM0ZzNsZDVoNm1iajFjY242MnQwIGx1a2FzLmFpY2hiYXVlckBt
+_sync_account: lukas.aichbauer@gmail.com
+_sync_version: http://www.google.com/calendar/feeds/lukas.aichbauer%40gmail.com/private/full/_64o5enpn60p32c1hbsoj8d1l6oo34g3ld5h6mbj1ccn62t0/63421359119
+hasExtendedProperties: 0
+calendar_id: 1
+eventLocation: HS A
+dtend: 1286360100000
+access_level: 700
+allDay: 0
+_sync_local_id: null
+organizer: lukas.aichbauer@gmail.com
+originalAllDay: null
+url: http://www.google.com/calendar/feeds/lukas.aichbauer%40gmail.com/private/full
+originalInstanceTime: null
+_sync_dirty: 0
+duration: null
+color: -14069085
+guestsCanInviteOthers: 1
+selfAttendeeStatus: 0
+exdate: null
+eventStatus: 1
+eventTimezone: Europe/Vienna
+
+----END_ENTRY----

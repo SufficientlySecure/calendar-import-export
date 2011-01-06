@@ -1,0 +1,7 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/quit" android:title="@string/menu_quit" android:icon="@drawable/calendar_gray"/>
+	<item android:id="@+id/help" android:title="@string/menu_help" android:icon="@drawable/calendar_gray"/>
+	<item android:id="@+id/changelog" android:title="@string/menu_changelog" android:icon="@drawable/calendar_gray"/>
+	<item android:id="@+id/license" android:title="@string/menu_license" android:icon="@drawable/calendar_gray"/>
+	<item android:id="@+id/beer" android:title="@string/menu_beer" android:icon="@drawable/calendar_gray"/>
+</menu>
