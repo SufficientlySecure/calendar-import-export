@@ -28,6 +28,7 @@ import at.aichbauer.ical.Controller;
 import at.aichbauer.ical.GoogleCalendar;
 import at.aichbauer.ical.ICalConstants;
 import at.aichbauer.ical.R;
+import at.aichbauer.ical.inputAdapters.BasicInputAdapter;
 import at.aichbauer.tools.dialogs.DialogTools;
 import at.aichbauer.tools.dialogs.SpinnerTools;
 
@@ -52,7 +53,7 @@ public class CalendarActivity extends Activity {
 	/*
 	 * Values
 	 */
-	private List<URL> urls;
+	private List<BasicInputAdapter> urls;
 	private List<GoogleCalendar> calendars;
 	private LinearLayout processGroup;
 	private SharedPreferences preferences;
@@ -108,7 +109,7 @@ public class CalendarActivity extends Activity {
 		Intent intent = getIntent();
 		if (intent.getAction().equals(Intent.ACTION_VIEW)) {
 			try {
-				setUrls(Arrays.asList(new URL(intent.getDataString())));
+				setUrls(Arrays.asList(new BasicInputAdapter(new URL(intent.getDataString()))));
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
@@ -144,7 +145,7 @@ public class CalendarActivity extends Activity {
 	 * @param urls
 	 *            Url's to display in the list
 	 */
-	public void setUrls(List<URL> urls) {
+	public void setUrls(List<BasicInputAdapter> urls) {
 		this.urls = urls;
 		SpinnerTools.simpleSpinnerInUI(this, fileSpinner, urls);
 		runOnUiThread(new Runnable() {
@@ -185,8 +186,8 @@ public class CalendarActivity extends Activity {
 		return null;
 	}
 
-	public URL getSelectedURL() {
-		return fileSpinner.getSelectedItem() != null ? (URL) fileSpinner.getSelectedItem() : null;
+	public BasicInputAdapter getSelectedURL() {
+		return fileSpinner.getSelectedItem() != null ? (BasicInputAdapter) fileSpinner.getSelectedItem() : null;
 	}
 
 	@Override

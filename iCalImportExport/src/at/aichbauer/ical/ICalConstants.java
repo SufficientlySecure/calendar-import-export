@@ -16,6 +16,8 @@ public interface ICalConstants {
 	public static final String BUY_ME_BEER = "https://www.paypal.com/cgi-bin/webscr?cmd=_xclick&business=lukas%2eaichbauer%40gmx%2eat&lc=AT&item_name=Beer&amount=3%2e00&currency_code=EUR&button_subtype=services&bn=PP%2dBuyNowBF%3abtn_buynowCC_LG%2egif%3aNonHosted";
 	public static final String PREFERENCE_HELP_SHOWN = "helpShown";
 	public static final String PREFERENCE_LAST_URL = "lastUrl";
+	public static final String PREFERENCE_LAST_USERNAME = "lastUsername";
+	public static final String PREFERENCE_LAST_PASSWORD = "lastPassword";
 	public static final String PREFERENCE_RATED = "rated";
 	public static final String MARKET_URL = "market://details?id=at.aichbauer.ical";
 }

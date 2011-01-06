@@ -29,8 +29,10 @@ public class SaveCalendar extends RunnableWithProgress {
 
 	@Override
 	public void run(ProgressDialog dialog) {
-		String input = DialogTools.questionDialog(getActivity(), R.string.dialog_choosefilename_title,
-				R.string.dialog_choosefilename_message, R.string.dialog_proceed,null, true, R.drawable.calendar);
+		String input = DialogTools
+				.questionDialog(getActivity(), R.string.dialog_choosefilename_title,
+						R.string.dialog_choosefilename_message, R.string.dialog_proceed, null, true,
+						R.drawable.calendar, false);
 		if (input == null || input.equals("")) {
 			return;
 		}

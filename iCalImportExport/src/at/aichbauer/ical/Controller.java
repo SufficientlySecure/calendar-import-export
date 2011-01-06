@@ -23,6 +23,9 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import at.aichbauer.ical.activities.CalendarActivity;
+import at.aichbauer.ical.inputAdapters.BasicInputAdapter;
+import at.aichbauer.ical.inputAdapters.CredentialInputAdapter;
+import at.aichbauer.tools.dialogs.Credentials;
 import at.aichbauer.tools.dialogs.DialogTools;
 import at.aichbauer.tools.dialogs.RunnableWithProgress;
 
@@ -115,11 +118,11 @@ public class Controller implements OnClickListener {
 
 					List<File> files = CalendarUtils.searchFiles(Environment.getExternalStorageDirectory(), "ics",
 							"ical", "icalendar");
-					List<URL> urls = new ArrayList<URL>(files.size());
+					List<BasicInputAdapter> urls = new ArrayList<BasicInputAdapter>(files.size());
 
 					for (File file : files) {
 						try {
-							urls.add(file.toURL());
+							urls.add(new BasicInputAdapter(file.toURL()));
 						} catch (MalformedURLException e) {
 							e.printStackTrace();
 						}
@@ -141,7 +144,7 @@ public class Controller implements OnClickListener {
 					}
 					try {
 						setProgressMessage(R.string.progress_reading_ical);
-						InputStream in = activity.getSelectedURL().openStream();
+						InputStream in = activity.getSelectedURL().getConnection().getInputStream();
 						if (in != null) {
 							calendar = calendarBuilder.build(in);
 						}
@@ -159,17 +162,34 @@ public class Controller implements OnClickListener {
 			RunnableWithProgress run = new RunnableWithProgress(activity) {
 				@Override
 				public void run(ProgressDialog dialog) {
-					String answer = DialogTools.questionDialog(activity, R.string.dialog_enter_url_title,
-							R.string.dialog_enter_url, R.string.dialog_proceed, activity.getPreferenceStore()
-									.getString(ICalConstants.PREFERENCE_LAST_URL, ""), true, R.drawable.calendar);
+					String answer = DialogTools
+							.questionDialog(activity, R.string.dialog_enter_url_title, R.string.dialog_enter_url,
+									R.string.dialog_proceed, activity.getPreferenceStore().getString(
+											ICalConstants.PREFERENCE_LAST_URL, ""), true, R.drawable.calendar, false);
 					if (answer != null && !answer.equals("")) {
 						try {
+							String username = DialogTools.questionDialog(activity, "Username", "Username:", "OK",
+									activity.getPreferenceStore().getString(ICalConstants.PREFERENCE_LAST_USERNAME, ""),
+									true, R.drawable.calendar, false);
+							String password = null;
+							if (username != null && !username.equals("")) {
+								password = DialogTools.questionDialog(activity, "Password", "Password:", "OK", activity
+										.getPreferenceStore().getString(ICalConstants.PREFERENCE_LAST_PASSWORD, ""), true,
+										R.drawable.calendar, true);
+							}
 							setProgressMessage("Parsing url...");
 							URL url = new URL(answer);
 							Editor editor = activity.getPreferenceStore().edit();
 							editor.putString(ICalConstants.PREFERENCE_LAST_URL, answer);
+							editor.putString(ICalConstants.PREFERENCE_LAST_USERNAME, username);
+							editor.putString(ICalConstants.PREFERENCE_LAST_PASSWORD, password);
 							editor.commit();
-							activity.setUrls(Arrays.asList(url));
+							if (username != null && ! username.equals("") && password != null) {
+								activity.setUrls(Arrays.asList((BasicInputAdapter) new CredentialInputAdapter(url,
+										new Credentials(username, password))));
+							} else {
+								activity.setUrls(Arrays.asList(new BasicInputAdapter(url)));
+							}
 						} catch (MalformedURLException exc) {
 							DialogTools.showInformationDialog(activity,
 									activity.getString(R.string.dialog_error_title), "URL was not parseable..."

@@ -69,7 +69,10 @@
 	Version 1.0:\nSupporting simple iCal import and export. Attendees are not supported.
 	\n\nVersion 1.1:\nAssociate program with iCal files. Working in web browser. In Froyo also working with any type of file browser.
 		\n\nVersion 1.2:\nTimezone of an event will be changed according to your local android timezone. I am not sure if that works, timezones are very confusing.
-		\n\nVersion 1.3:\nSaves the last URL</string>
+		\n\nVersion 1.3:\nSaves the last URL
+		\n\nVersion 1.4:\nReleased under GPL v3, source available under: http://code.google.com/p/ical-import-export/
+		\nA life without google: If you have no calendars installed, a local calendar can be created. But there has to be an existing account (yahoo, or something else)
+		\n\nVersion 1.5:\nBasic Http authentication and Ftp authentication via input fields.</string>
 	<string name="license">I must provide the iCal4j License below:
 		===iCal4j - License===
 
