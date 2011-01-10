@@ -7,6 +7,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Color;
+import android.text.method.PasswordTransformationMethod;
 import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
@@ -71,14 +73,14 @@ public class DialogTools {
 	}
 
 	public static String questionDialog(Activity activity, int titleResource, int messageResource, int okResource,
-			String input, boolean cancelable, final int drawableResource) {
+			String input, boolean cancelable, int drawableResource, boolean password) {
 		return questionDialog(activity, activity.getString(titleResource), activity.getString(messageResource),
-				activity.getString(okResource), input, cancelable, drawableResource);
+				activity.getString(okResource), input, cancelable, drawableResource, password);
 	}
 
 	public static String questionDialog(final Activity activity, final CharSequence title, final CharSequence message,
-			final CharSequence ok, final String input, final boolean cancelable, final int drawableResource) {
-
+			final CharSequence ok, final String input, final boolean cancelable, final int drawableResource,
+			final boolean password) {
 		final String[] result = new String[2];
 		activity.runOnUiThread(new Runnable() {
 			@Override
@@ -100,35 +102,62 @@ public class DialogTools {
 				view.setText(message);
 
 				final EditText editText = new EditText(activity);
+				if (password) {
+					editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
+				} else {
+					editText.setSingleLine();
+				}
 				editText.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT));
-				editText.setSingleLine();
 				if (input != null) {
 					editText.setText(input);
 				}
 				layout.addView(editText);
 
+				
+				LinearLayout buttons = new LinearLayout(activity);
+				buttons.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT, LayoutParams.FILL_PARENT));
+				buttons.setBackgroundColor(Color.GRAY);
+				buttons.setOrientation(LinearLayout.HORIZONTAL);
+				
+				layout.addView(buttons);
+				
 				Button button = new Button(activity);
-				button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+				button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
 				button.setGravity(Gravity.CENTER_HORIZONTAL);
-				layout.addView(button);
+				button.setText(ok);
+				button.setOnClickListener(new View.OnClickListener() {
+					@Override
+					public void onClick(View v) {
+						result[0] = editText.getText().toString();
+						result[1] = "";
+						dialog.cancel();
+					}
+				});
+
+				buttons.addView(button);
+
+				if (cancelable) {
+					button = new Button(activity);
+					button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.FILL_PARENT));
+					button.setGravity(Gravity.CENTER_HORIZONTAL);
+					button.setText("Cancel");
+					button.setOnClickListener(new View.OnClickListener() {
+						@Override
+						public void onClick(View v) {
+							result[1] = "";
+							dialog.cancel();
+						}
+					});
+				}
+
+				buttons.addView(button);
 
 				dialog.setCancelable(cancelable);
-
 				dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
 					@Override
 					public void onCancel(DialogInterface dialog) {
 						result[1] = "";
-					}
-				});
-
-				button.setText(ok);
-				button.setOnClickListener(new View.OnClickListener() {
-					@Override
-					public void onClick(View v) {
-						result[1] = "";
-						result[0] = editText.getText().toString();
-						dialog.cancel();
 					}
 				});
 

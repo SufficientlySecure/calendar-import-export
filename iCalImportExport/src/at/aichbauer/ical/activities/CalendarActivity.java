@@ -63,7 +63,7 @@ public class CalendarActivity extends Activity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.main);
-
+		
 		this.controller = new Controller(this);
 
 		// Show help menu

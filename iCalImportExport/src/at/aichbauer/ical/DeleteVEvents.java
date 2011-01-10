@@ -23,7 +23,7 @@ public class DeleteVEvents extends ProcessVEvent {
 	@Override
 	public void run(ProgressDialog dialog) {
 		if (!DialogTools.decisionDialog(getActivity(), R.string.dialog_information_title,
-				R.string.dialog_delete_entries, R.string.dialog_yes, R.string.dialog_no,R.drawable.calendar)) {
+				R.string.dialog_delete_entries, R.string.dialog_yes, R.string.dialog_no, R.drawable.calendar)) {
 			return;
 		}
 		setProgressMessage(R.string.progress_deleting_calendarentries);
@@ -40,6 +40,9 @@ public class DeleteVEvents extends ProcessVEvent {
 			for (Integer id : ids) {
 				i += contentResolver.delete(Uri.withAppendedPath(VEventWrapper.getContentURI(), Integer.toString(id)),
 						null, null);
+				// Delete reminder
+				contentResolver
+						.delete(Reminder.getContentURI(), " event_id = ?", new String[] { Integer.toString(id) });
 			}
 			incrementProgress(1);
 		}

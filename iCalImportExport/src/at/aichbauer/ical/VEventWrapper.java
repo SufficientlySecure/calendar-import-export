@@ -12,7 +12,7 @@ import at.aichbauer.ical.GoogleVEventWrapper.IGoogleWrapper;
 import at.aichbauer.ical.GoogleVEventWrapper.IVEventWrapper;
 
 public class VEventWrapper {
-	private static String LOG_ID = VEventWrapper.class.getSimpleName();
+	private static String TAG = VEventWrapper.class.getSimpleName();
 	
 	private static String[] keys = new String[] { "organizer", "rrule", "summary", "description", "location",
 			"dtstart", "dtend" };
@@ -27,7 +27,7 @@ public class VEventWrapper {
 
 		VEvent vevent = new VEvent(properties);
 		vevent.getProperties().add(new DtStamp());
-		Log.d(LOG_ID, "VEvent resolved from cursor");
+		Log.d(TAG, "VEvent resolved from cursor");
 		return vevent;
 	}
 
@@ -39,7 +39,7 @@ public class VEventWrapper {
 			wrapper.wrap(values, vevent);
 		}
 		values.put("calendar_id", calendar_id);
-		Log.d(LOG_ID, "VEvent ready to insert into db");
+		Log.d(TAG, "VEvent ready to insert into db");
 		return values;
 	}
 

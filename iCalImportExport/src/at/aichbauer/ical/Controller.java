@@ -87,6 +87,7 @@ public class Controller implements OnClickListener {
 				v.put(GoogleCalendar.ACCESS_LEVEL, 700);
 				v.put(GoogleCalendar.TIMEZONE, java.util.Calendar.getInstance().getTimeZone().getID());
 				v.put(GoogleCalendar.SYNC_ACCOUNT, "none");
+				v.put(GoogleCalendar.OWNERACCOUNT, "none@none.com");
 
 				Account[] abc = AccountManager.get(activity).getAccounts();
 				if (abc == null || abc.length == 0) {
@@ -204,6 +205,7 @@ public class Controller implements OnClickListener {
 			DialogTools.runWithProgress(activity, new SaveCalendar(activity, activity.getSelectedCalendar()), false,
 					ProgressDialog.STYLE_HORIZONTAL);
 		} else if (v.getId() == R.id.ShowInformationButton) {
+			init();
 			DialogTools.showInformationDialog(activity, activity.getString(R.string.dialog_information_title), Html
 					.fromHtml(activity.getSelectedCalendar().toHtml()), R.drawable.calendar);
 		} else if (v.getId() == R.id.InsertButton) {
