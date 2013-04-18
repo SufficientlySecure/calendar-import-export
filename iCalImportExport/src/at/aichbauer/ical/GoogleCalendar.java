@@ -25,7 +25,7 @@ public class GoogleCalendar {
 	public static final String LOCATION = "location";
 	public static final String TIMEZONE = "timezone";
 	public static final String OWNERACCOUNT = "ownerAccount";
-	public static final Uri CONTENT_URI_PRE_8 = Uri.parse("content://calendar/calendars");
+//	public static final Uri CONTENT_URI_PRE_8 = Uri.parse("content://calendar/calendars");
 	public static final Uri CONTENT_URI = Uri.parse("content://com.android.calendar/calendars");
 	
 	private int id;
@@ -57,11 +57,11 @@ public class GoogleCalendar {
 	}
 
 	public static Uri getContentURI() {
-		if(Build.VERSION.SDK_INT <= 7) {
-			return CONTENT_URI_PRE_8;
-		} else {
+//		if(Build.VERSION.SDK_INT <= 7) {
+//			return CONTENT_URI_PRE_8;
+//		} else {
 			return CONTENT_URI;
-		}
+//		}
 	}
 
 	public static GoogleCalendar retrieve(Cursor c) {
