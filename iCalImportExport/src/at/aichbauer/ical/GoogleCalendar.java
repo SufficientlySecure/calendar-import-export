@@ -1,32 +1,34 @@
 package at.aichbauer.ical;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.CalendarContract;
 
+@SuppressLint("NewApi")
 public class GoogleCalendar {
-	public static final String ID = "_id";
-	public static final String SYNC_ACCOUNT = "_sync_account";
-	public static final String SYNC_ACCOUNT_TYPE = "_sync_account_type";
-	public static final String SYNC_ID = "_sync_id";
+	public static final String ID = CalendarContract.Calendars._ID;
+	public static final String SYNC_ACCOUNT = CalendarContract.Calendars.ACCOUNT_NAME;
+	public static final String SYNC_ACCOUNT_TYPE = CalendarContract.Calendars.ACCOUNT_TYPE;
+	public static final String SYNC_ID = CalendarContract.Calendars._SYNC_ID;
 	public static final String SYNC_VERSION = "_sync_version";
 	public static final String SYNC_TIME = "_sync_time";
 	public static final String SYNC_LOCAL_ID = "_sync_local_id";
-	public static final String SYNC_DIRTY = "_sync_dirty";
+	public static final String SYNC_DIRTY = CalendarContract.Calendars.DIRTY;
 	public static final String SYNC_MARK = "_sync_mark";
 	public static final String URL = "url";
-	public static final String NAME = "name";
-	public static final String DISPLAY_NAME = "displayName";
+	public static final String NAME = CalendarContract.Calendars.NAME;
+	public static final String DISPLAY_NAME = CalendarContract.Calendars.CALENDAR_DISPLAY_NAME;
 	public static final String HIDDEN = "hidden";
-	public static final String COLOR = "color";
-	public static final String ACCESS_LEVEL = "access_level";
-	public static final String SELECTED = "selected";
-	public static final String SYNC_EVENTS = "sync_events";
-	public static final String LOCATION = "location";
-	public static final String TIMEZONE = "timezone";
-	public static final String OWNERACCOUNT = "ownerAccount";
-//	public static final Uri CONTENT_URI_PRE_8 = Uri.parse("content://calendar/calendars");
-	public static final Uri CONTENT_URI = Uri.parse("content://com.android.calendar/calendars");
+	public static final String COLOR = CalendarContract.Calendars.CALENDAR_COLOR;
+	public static final String ACCESS_LEVEL = CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL;
+	public static final String SELECTED = CalendarContract.Calendars.VISIBLE;
+	public static final String SYNC_EVENTS = CalendarContract.Calendars.SYNC_EVENTS;
+	public static final String LOCATION = CalendarContract.Calendars.CALENDAR_LOCATION;
+	public static final String TIMEZONE = CalendarContract.Calendars.CALENDAR_TIME_ZONE;
+	public static final String OWNERACCOUNT = CalendarContract.Calendars.OWNER_ACCOUNT;
+	public static final Uri CONTENT_URI = CalendarContract.Calendars.CONTENT_URI;
 	
 	private int id;
 	private String name;
@@ -57,11 +59,7 @@ public class GoogleCalendar {
 	}
 
 	public static Uri getContentURI() {
-//		if(Build.VERSION.SDK_INT <= 7) {
-//			return CONTENT_URI_PRE_8;
-//		} else {
 			return CONTENT_URI;
-//		}
 	}
 
 	public static GoogleCalendar retrieve(Cursor c) {
