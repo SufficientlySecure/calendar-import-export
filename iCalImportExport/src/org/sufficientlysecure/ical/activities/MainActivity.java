@@ -68,14 +68,6 @@ public class MainActivity extends Activity {
 
         // Show help menu
         preferences = getSharedPreferences("at.aichbauer.iCal", Context.MODE_PRIVATE);
-        boolean helpShown = preferences.getBoolean(ICalConstants.PREFERENCE_HELP_SHOWN, false);
-        if (!helpShown) {
-            DialogTools.showInformationDialog(this, getString(R.string.menu_help),
-                    getString(R.string.changelog), R.drawable.calendar_gray);
-            Editor editor = preferences.edit();
-            editor.putBoolean(ICalConstants.PREFERENCE_HELP_SHOWN, true);
-            editor.commit();
-        }
 
         // Retrieve views
         calendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);
@@ -132,9 +124,8 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                calendarInformation
-                        .setVisibility(MainActivity.this.calendars == null ? View.GONE
-                                : View.VISIBLE);
+                calendarInformation.setVisibility(MainActivity.this.calendars == null ? View.GONE
+                        : View.VISIBLE);
                 dumpCalendar.setVisibility(MainActivity.this.calendars == null ? View.GONE
                         : View.VISIBLE);
 
@@ -154,8 +145,7 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                loadButton.setVisibility(MainActivity.this.urls == null ? View.GONE
-                        : View.VISIBLE);
+                loadButton.setVisibility(MainActivity.this.urls == null ? View.GONE : View.VISIBLE);
             }
         });
     }
