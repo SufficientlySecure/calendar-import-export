@@ -77,16 +77,16 @@ public class CalendarActivity extends Activity {
         }
 
         // Retrieve views
-        calendarSpinner = (Spinner) findViewById(R.id.Spinner01);
-        fileSpinner = (Spinner) findViewById(R.id.Spinner02);
+        calendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);
+        fileSpinner = (Spinner) findViewById(R.id.SpinnerFile);
         searchButton = (Button) findViewById(R.id.SearchButton);
         loadButton = (Button) findViewById(R.id.LoadButton);
         insertButton = (Button) findViewById(R.id.InsertButton);
         deleteButton = (Button) findViewById(R.id.DeleteButton);
         calendarInformation = (Button) findViewById(R.id.ShowInformationButton);
         dumpCalendar = (Button) findViewById(R.id.SaveButton);
-        icalInformation = (TextView) findViewById(R.id.textView01);
-        processGroup = (LinearLayout) findViewById(R.id.linearLayout01);
+        icalInformation = (TextView) findViewById(R.id.IcalInfo);
+        processGroup = (LinearLayout) findViewById(R.id.linearLayoutProcess);
         setUrlButton = (Button) findViewById(R.id.SetUrlButton);
 
         new Thread(new Runnable() {
