@@ -12,42 +12,42 @@ import at.aichbauer.ical.GoogleVEventWrapper.IGoogleWrapper;
 import at.aichbauer.ical.GoogleVEventWrapper.IVEventWrapper;
 
 public class VEventWrapper {
-	private static String TAG = VEventWrapper.class.getSimpleName();
-	
-	private static String[] keys = new String[] { "organizer", "rrule", "summary", "description", "location",
-			"dtstart", "dtend" };
+    private static String TAG = VEventWrapper.class.getSimpleName();
 
-	public static VEvent resolve(Cursor c) {
-		PropertyList properties = new PropertyList();
-		GoogleVEventWrapper wrapperInstance = GoogleVEventWrapper.getInstance();
-		for (String key : keys) {
-			IGoogleWrapper wrapper = wrapperInstance.getGoogleWrapper(key);
-			wrapper.wrap(properties, c);
-		}
+    private static String[] keys = new String[] { "organizer", "rrule", "summary", "description",
+            "location", "dtstart", "dtend" };
 
-		VEvent vevent = new VEvent(properties);
-		vevent.getProperties().add(new DtStamp());
-		Log.d(TAG, "VEvent resolved from cursor");
-		return vevent;
-	}
+    public static VEvent resolve(Cursor c) {
+        PropertyList properties = new PropertyList();
+        GoogleVEventWrapper wrapperInstance = GoogleVEventWrapper.getInstance();
+        for (String key : keys) {
+            IGoogleWrapper wrapper = wrapperInstance.getGoogleWrapper(key);
+            wrapper.wrap(properties, c);
+        }
 
-	public static ContentValues resolve(VEvent vevent, int calendar_id) {
-		ContentValues values = new ContentValues();
-		GoogleVEventWrapper wrapperInstance = GoogleVEventWrapper.getInstance();
-		for (String key : keys) {
-			IVEventWrapper wrapper = wrapperInstance.getVEventWrapper(key);
-			wrapper.wrap(values, vevent);
-		}
-		values.put("calendar_id", calendar_id);
-		Log.d(TAG, "VEvent ready to insert into db");
-		return values;
-	}
+        VEvent vevent = new VEvent(properties);
+        vevent.getProperties().add(new DtStamp());
+        Log.d(TAG, "VEvent resolved from cursor");
+        return vevent;
+    }
 
-	public static Uri getContentURI() {
-		if (Build.VERSION.SDK_INT <= 7) {
-			return Uri.parse("content://calendar/events");
-		} else {
-			return Uri.parse("content://com.android.calendar/events");
-		}
-	}
+    public static ContentValues resolve(VEvent vevent, int calendar_id) {
+        ContentValues values = new ContentValues();
+        GoogleVEventWrapper wrapperInstance = GoogleVEventWrapper.getInstance();
+        for (String key : keys) {
+            IVEventWrapper wrapper = wrapperInstance.getVEventWrapper(key);
+            wrapper.wrap(values, vevent);
+        }
+        values.put("calendar_id", calendar_id);
+        Log.d(TAG, "VEvent ready to insert into db");
+        return values;
+    }
+
+    public static Uri getContentURI() {
+        if (Build.VERSION.SDK_INT <= 7) {
+            return Uri.parse("content://calendar/events");
+        } else {
+            return Uri.parse("content://com.android.calendar/events");
+        }
+    }
 }
