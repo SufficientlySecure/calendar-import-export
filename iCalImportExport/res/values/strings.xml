@@ -10,7 +10,7 @@
     <string name="progress_deleting_calendarentries">Deleting calendar entries.</string>
     <string name="progress_insert_entries">Inserting entries.</string>
     <string name="button_search_files">From SDCard</string>
-    <string name="button_show_information">Show information</string>
+    <string name="button_show_information">Information</string>
     <string name="button_delete_entries">Delete entries</string>
     <string name="button_insert_entries">Insert entries</string>
     <string name="button_load_calendar">Load</string>

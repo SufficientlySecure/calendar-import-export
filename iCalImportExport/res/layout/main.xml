@@ -23,17 +23,19 @@
             android:layout_margin="8dp"
             android:orientation="horizontal" >
 
+            <Spinner
+                android:id="@+id/SpinnerChooseCalendar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:prompt="@string/spinner_choose_calendar" />
+
             <Button
                 android:id="@+id/ShowInformationButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:text="@string/button_show_information" />
-
-            <Spinner
-                android:id="@+id/SpinnerChooseCalendar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:prompt="@string/spinner_choose_calendar" />
         </LinearLayout>
 
         <LinearLayout
