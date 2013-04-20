@@ -198,10 +198,8 @@ public class CalendarActivity extends Activity {
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		if (item.getItemId() == R.id.quit) {
-			onBackPressed();
-		} else if (item.getItemId() == R.id.help) {
+	public boolean onOptionsItemSelected(MenuItem item) { 
+	    if (item.getItemId() == R.id.help) {
 			DialogTools.showInformationDialog(this, getString(R.string.menu_help), Html.fromHtml(ICalConstants.HELP),
 					R.drawable.calendar_gray);
 		} else if (item.getItemId() == R.id.changelog) {
@@ -209,9 +207,6 @@ public class CalendarActivity extends Activity {
 					R.drawable.calendar_gray);
 		} else if (item.getItemId() == R.id.license) {
 			DialogTools.showInformationDialog(this, R.string.menu_license, R.string.license, R.drawable.calendar_gray);
-		} else if (item.getItemId() == R.id.beer) {
-			Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(ICalConstants.BUY_ME_BEER));
-			startActivity(i);
 		}
 		return super.onContextItemSelected(item);
 	}
