@@ -80,36 +80,9 @@ public class Controller implements OnClickListener {
                 null, null);
 
         if (c.getCount() == 0) {
-            if (DialogTools.decisionDialog(activity, "No calendars...",
-                    "Create new dummy calendar? This can not be undone at the moment.", "Yes",
-                    "No", R.drawable.calendar_gray)) {
-                ContentValues v = new ContentValues();
-                v.put(GoogleCalendar.NAME, "dummy");
-                v.put(GoogleCalendar.DISPLAY_NAME, "LocalDummyCalendar");
-                v.put(GoogleCalendar.ACCESS_LEVEL, 700);
-                v.put(GoogleCalendar.TIMEZONE, java.util.Calendar.getInstance().getTimeZone()
-                        .getID());
-                v.put(GoogleCalendar.SYNC_ACCOUNT, "none");
-                v.put(GoogleCalendar.OWNERACCOUNT, "none@none.com");
-
-                Account[] abc = AccountManager.get(activity).getAccounts();
-                if (abc == null || abc.length == 0) {
-                    DialogTools
-                            .showInformationDialog(
-                                    activity,
-                                    "Problem creating calendar",
-                                    "No account to use for calendar. Their must be at least one account...",
-                                    R.drawable.calendar);
-                    return;
-                }
-                v.put(GoogleCalendar.SYNC_ACCOUNT_TYPE, abc[0].type);
-
-                activity.getContentResolver().insert(GoogleCalendar.getContentURI(), v);
-            } else {
-                DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
-                        R.string.dialog_exiting, R.drawable.calendar);
-                activity.finish();
-            }
+            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
+                    R.string.dialog_exiting, R.drawable.calendar);
+            activity.finish();
         }
         c.close();
     }

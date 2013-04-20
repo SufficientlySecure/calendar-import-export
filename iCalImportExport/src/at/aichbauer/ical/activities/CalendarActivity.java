@@ -216,38 +216,4 @@ public class CalendarActivity extends Activity {
         }
         return super.onContextItemSelected(item);
     }
-
-    // @Override
-    // public void onBackPressed() {
-    // new Thread(new Runnable() {
-    // @Override
-    // public void run() {
-    // boolean rated = preferences.getBoolean(ICalConstants.PREFERENCE_RATED, false);
-    // if (!rated) {
-    // boolean decision = DialogTools.decisionDialog(CalendarActivity.this,
-    // R.string.dialog_information_title, R.string.dialog_beer,
-    // R.string.dialog_button_buy_me_beer, R.string.dialog_no, R.drawable.calendar);
-    // if (decision) {
-    // Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(ICalConstants.BUY_ME_BEER));
-    // startActivity(i);
-    // } else {
-    // decision = DialogTools.decisionDialog(CalendarActivity.this,
-    // R.string.dialog_information_title,
-    // R.string.dialog_rating, R.string.dialog_button_go_to_market,
-    // R.string.dialog_button_no_i_dont_like, R.drawable.calendar);
-    //
-    // if (decision) {
-    // Editor editor = preferences.edit();
-    // editor.putBoolean(ICalConstants.PREFERENCE_RATED, decision);
-    // editor.commit();
-    //
-    // Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse(ICalConstants.MARKET_URL));
-    // startActivity(i);
-    // }
-    // }
-    // }
-    // finish();
-    // }
-    // }).start();
-    // }
 }
