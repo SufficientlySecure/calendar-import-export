@@ -70,12 +70,15 @@ public abstract class ProcessVEvent extends RunnableWithProgress {
     }
 
     private Cursor getFromContentValues(ContentValues cValues) {
-        String where = "title = ? AND dtstart = ?";
+        String where = CalendarContract.Events.TITLE + " = ? AND "
+                + CalendarContract.Events.DTSTART + " = ?";
         Log.d(LOG_ID,
-                CalendarContract.Events.TITLE + " = " + cValues.getAsString("title") + " AND "
-                        + CalendarContract.Events.DTSTART + " = " + cValues.getAsString("dtstart"));
-        String[] values = new String[] { cValues.getAsString("title"),
-                cValues.getAsString("dtstart") };
+                CalendarContract.Events.TITLE + " = "
+                        + cValues.getAsString(CalendarContract.Events.TITLE) + " AND "
+                        + CalendarContract.Events.DTSTART + " = "
+                        + cValues.getAsString(CalendarContract.Events.DTSTART));
+        String[] values = new String[] { cValues.getAsString(CalendarContract.Events.TITLE),
+                cValues.getAsString(CalendarContract.Events.DTSTART) };
         Cursor c = getActivity().getContentResolver().query(VEventWrapper.getContentURI(),
                 new String[] { CalendarContract.Events._ID }, where, values, null);
         return c;

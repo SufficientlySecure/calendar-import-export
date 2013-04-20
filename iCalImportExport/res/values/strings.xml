@@ -48,64 +48,51 @@
     <string name="dialog_error_title">Error</string>
     <string name="dialog_error_unparseable">iCal file could not be parsed\n\n</string>
     <string name="dialog_found_duplicates">Found %d duplicate entries.</string>
-    <string name="dialog_no_calendar_provider">No calendar provider found. Do you have calendar
-		application installed? Exititing…</string>
-    <string name="dialog_rating">Please consider rating my app</string>
-    <string name="dialog_button_go_to_market">Go to market</string>
-    <string name="dialog_button_no_i_dont_like">No, thanks</string>
-    <string name="dialog_button_buy_me_beer">Buy me a beer</string>
-    <string name="dialog_beer">Would you like to buy me a beer?</string>
+    <string name="dialog_bug_title">Error</string>
+    <string name="dialog_bug">I am sorry for you inconvinience. Please open a new issue report on https://github.com/dschuermann/ical-import-export and attach ical_error.log located on your sd card.</string>
     <string name="menu_quit">Quit</string>
     <string name="menu_help">Help</string>
     <string name="menu_changelog">Change Log</string>
     <string name="menu_license">License</string>
     <string name="menu_beer">Buy me a beer</string>
-    <string name="changelog">		Version 1.0:\nSupporting simple iCal import and export. Attendees are not
-		supported.
-		\n\nVersion 1.1:\nAssociate program with iCal files. Working in web browser. In
-		Froyo also working with any type of file browser.
-		\n\nVersion
-		1.2:\nTimezone of an event will be changed according to your local
-		android timezone. I am not sure if that works, timezones are very
-		confusing.
-		\n\nVersion 1.3:\nSaves the last URL
-		\n\nVersion
-		1.4:\nReleased under GPL v3, source available under:
-		http://code.google.com/p/ical-import-export/
-		\nA life without google:
-		If you have no calendars installed, a local calendar can be created.
-		But there has to be an existing account (yahoo, or something else)
-		\n\nVersion 1.5:\nBasic Http authentication and Ftp authentication via
-		input fields. Small bugfix regarding dummy calendar. Insert manual
-		alarm, no VAlarm support.</string>
-    <string name="license">I must provide the iCal4j License below:
-		===iCal4j -
-		License===
-
-		Copyright (c) 2009, Ben Fortuna
+    <string name="changelog">Version 1.6:\nNew forked version\nMany fixes for Android >= 4.0\nNew design
+        \n\nVersion 1.5:\nBasic Http authentication and Ftp authentication via
+        input fields. Small bugfix regarding dummy calendar. Insert manual
+        alarm, no VAlarm support.
+        \n\nVersion 1.4:\nReleased under GPL v3, source available under:
+        http://code.google.com/p/ical-import-export/
+        \nA life without google:
+        If you have no calendars installed, a local calendar can be created.
+        But there has to be an existing account (yahoo, or something else)
+        \n\nVersion 1.3:\nSaves the last URL
+        \n\nVersion 1.2:\nTimezone of an event will be changed according to your local
+        android timezone. I am not sure if that works, timezones are very
+        confusing.
+        \n\nVersion 1.1:\nAssociate program with iCal files. Working in web browser. In
+        Froyo also working with any type of file browser.
+        \n\nVersion 1.0:\nSupporting simple iCal import and export. Attendees are not
+        supported.</string>
+    <string name="license">iCal Import/Export is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+\n\niCal Import/Export is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+\n\nYou should have received a copy of the GNU General Public License along with iCal Import/Export. If not, see http://www.gnu.org/licenses/.     
+\n\n\n\n===iCal4j - License===
+\n\nCopyright (c) 2009, Ben Fortuna\n
 		All rights reserved.
-
-		Redistribution and use in source and binary forms, with or without
+\n\nRedistribution and use in source and binary forms, with or without
 		modification, are permitted provided that the following conditions
-		are
-		met:
-
-		o Redistributions of source code must retain the above copyright
+		are met:
+\n\no Redistributions of source code must retain the above copyright
 		notice, this list of conditions and the following disclaimer.
-
-		o
-		Redistributions in binary form must reproduce the above copyright
+\n\no Redistributions in binary form must reproduce the above copyright
 		notice, this list of conditions and the following disclaimer in the
 		documentation and/or other materials provided with the distribution.
-
-		o
+\n\no
 		Neither the name of Ben Fortuna nor the names of any other
 		contributors
 		may be used to endorse or promote products derived from
 		this software
 		without specific prior written permission.
-
-		THIS SOFTWARE
+\n\nTHIS SOFTWARE
 		IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
 		"AS IS" AND ANY
 		EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT

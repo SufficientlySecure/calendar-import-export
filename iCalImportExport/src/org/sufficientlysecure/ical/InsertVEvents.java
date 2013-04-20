@@ -26,14 +26,18 @@ import org.sufficientlysecure.ical.tools.providers.ProviderTools;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.CalendarContract;
 import android.util.Log;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class InsertVEvents extends ProcessVEvent {
     private static final String TAG = InsertVEvents.class.getSimpleName();
 
@@ -57,17 +61,20 @@ public class InsertVEvents extends ProcessVEvent {
             Reminder reminder = new Reminder();
 
             while (DialogTools.decisionDialog(getActivity(), "Reminder",
-                    "Add a reminder? Will be used for all Events!", "Yes", "No",
-                    R.drawable.calendar)) {
+                    "Add a reminder? Will be used for all Events!",
+                    getActivity().getString(android.R.string.yes),
+                    getActivity().getString(android.R.string.no), R.drawable.calendar)) {
                 String time_in_minutes = DialogTools.questionDialog(getActivity(), "Reminder",
-                        "Insert minutes for reminding before event", "OK", "10", true,
+                        "Insert minutes for reminding before event",
+                        getActivity().getString(android.R.string.ok), "10", true,
                         R.drawable.calendar, false);
                 try {
                     if (time_in_minutes != null) {
                         reminder.addReminder(Integer.parseInt(time_in_minutes));
                     }
                 } catch (Exception exc) {
-                    DialogTools.showInformationDialog(getActivity(), "Error",
+                    DialogTools.showInformationDialog(getActivity(),
+                            getActivity().getString(R.string.dialog_bug_title),
                             "Minutes could not be parsed", R.drawable.calendar);
                 }
             }
@@ -82,7 +89,7 @@ public class InsertVEvents extends ProcessVEvent {
             for (Object event : vevents) {
                 ContentValues values = VEventWrapper.resolve((VEvent) event, getCalendarId());
                 if (reminder.getReminders().size() > 0) {
-                    values.put("hasAlarm", 1);
+                    values.put(CalendarContract.Events.HAS_ALARM, 1);
                 }
                 if (!checkForDuplicates || !contains(values)) {
                     Uri uri = resolver.insert(VEventWrapper.getContentURI(), values);
@@ -122,12 +129,9 @@ public class InsertVEvents extends ProcessVEvent {
             } catch (Exception e) {
 
             }
-            DialogTools
-                    .showInformationDialog(
-                            getActivity(),
-                            "Error",
-                            "I am sorry for you inconvinience. Please send file ical_error.log located on your sd card to lukas.aichbauer@gmail.com.",
-                            R.drawable.calendar);
+            DialogTools.showInformationDialog(getActivity(),
+                    getActivity().getString(R.string.dialog_bug_title),
+                    getActivity().getString(R.string.dialog_bug), R.drawable.calendar);
         }
     }
 }

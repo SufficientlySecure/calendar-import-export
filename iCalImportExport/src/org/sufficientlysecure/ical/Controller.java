@@ -90,9 +90,7 @@ public class Controller implements OnClickListener {
                 .acquireContentProviderClient(VEventWrapper.getContentURI());
 
         if (eventClient == null || calendarClient == null) {
-            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
-                    R.string.dialog_no_calendar_provider, R.drawable.calendar);
-            activity.finish();
+            noCalendarFinish();
         }
         calendarClient.release();
         eventClient.release();
@@ -102,29 +100,32 @@ public class Controller implements OnClickListener {
                 null, null);
 
         if (c.getCount() == 0) {
-            activity.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    AlertDialog dialog = new AlertDialog.Builder(activity)
-                            .setMessage(R.string.dialog_exiting)
-                            .setIcon(R.drawable.calendar)
-                            .setTitle(R.string.dialog_information_title)
-                            .setCancelable(false)
-                            .setPositiveButton(android.R.string.ok,
-                                    new DialogInterface.OnClickListener() {
-
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                            activity.finish();
-                                        }
-                                    }).create();
-                    dialog.show();
-                }
-            });
-
+            noCalendarFinish();
         }
         c.close();
+    }
+    
+    private void noCalendarFinish() {
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                AlertDialog dialog = new AlertDialog.Builder(activity)
+                        .setMessage(R.string.dialog_exiting)
+                        .setIcon(R.drawable.calendar)
+                        .setTitle(R.string.dialog_information_title)
+                        .setCancelable(false)
+                        .setPositiveButton(android.R.string.ok,
+                                new DialogInterface.OnClickListener() {
+
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+                                        dialog.cancel();
+                                        activity.finish();
+                                    }
+                                }).create();
+                dialog.show();
+            }
+        });
     }
 
     @Override

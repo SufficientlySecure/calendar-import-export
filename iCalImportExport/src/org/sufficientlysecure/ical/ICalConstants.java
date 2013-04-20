@@ -20,7 +20,7 @@ package org.sufficientlysecure.ical;
 
 public interface ICalConstants {
     public static final String HELP = "<b>iCal Import/Export</b><br>"
-            + "It is a simple tool to import iCal files into your google calendar."
+            + "It is a simple tool to import iCal files into your Android calendar."
             + "<br>To successfully import iCal events please follow the given steps below:<br><br>"
             + "  +<i>Select a calendar</i><br><small>The selected calendar will be editet</small><br>"
             + "  +<i>Search iCal files</i> or <i>Set URL</i><br><small>Searches the SD card for iCal files or enter URL of an iCal file directly (http and ftp support)</small><br>"
@@ -28,7 +28,7 @@ public interface ICalConstants {
             + "  +<i>Load iCal file</i><br><small>The iCal file will be parsed, if successfull a number of events should appear next to the button</small><br>"
             + "  +<i>Insert events</i> or <i>Delete events</i><br><small>Starts the import process. When finished a status information should be displayed.</small><br>"
             + "<br>"
-            + "If you are considering errors, please contact me via email (lukas.aichbauer@gmail.com) and provide me with an iCal file you would like to import.<br>"
+            + "If you are considering errors, please add a new issue to https://github.com/dschuermann/ical-import-export and provide an iCal file you would like to import.<br>"
             + "<br>Thanks to iCal4j Project for the parser/interpreter<br><br>"
             + "<i>To view this information again: menu --> help</i>";
     public static final String PREFERENCE_LAST_URL = "lastUrl";
