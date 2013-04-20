@@ -10,7 +10,6 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/textView1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
@@ -93,6 +92,7 @@
                     android:id="@+id/SpinnerFile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:prompt="@string/spinner_choose_file"
                     android:visibility="gone" />
 
@@ -100,6 +100,7 @@
                     android:id="@+id/LoadButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_weight="1"
                     android:text="@string/button_load_calendar"
                     android:visibility="gone" />
             </LinearLayout>
