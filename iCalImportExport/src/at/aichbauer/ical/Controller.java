@@ -10,14 +10,14 @@ import java.util.List;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
-import android.accounts.Account;
-import android.accounts.AccountManager;
+import android.annotation.TargetApi;
 import android.app.ProgressDialog;
 import android.content.ContentProviderClient;
-import android.content.ContentValues;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.CalendarContract;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
@@ -29,6 +29,7 @@ import at.aichbauer.tools.dialogs.Credentials;
 import at.aichbauer.tools.dialogs.DialogTools;
 import at.aichbauer.tools.dialogs.RunnableWithProgress;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class Controller implements OnClickListener {
     private static final String TAG = Controller.class.getName();
     private CalendarActivity activity;
@@ -49,7 +50,7 @@ public class Controller implements OnClickListener {
         while (c.moveToNext()) {
             GoogleCalendar cal = GoogleCalendar.retrieve(c);
             Cursor cursor = activity.getContentResolver().query(VEventWrapper.getContentURI(),
-                    new String[] {}, "calendar_id = ?",
+                    new String[] {}, CalendarContract.Events.CALENDAR_ID + " = ?",
                     new String[] { Integer.toString(cal.getId()) }, null);
             cal.setEntryCount(cursor.getCount());
             cursor.close();
@@ -203,7 +204,6 @@ public class Controller implements OnClickListener {
                     new SaveCalendar(activity, activity.getSelectedCalendar()), false,
                     ProgressDialog.STYLE_HORIZONTAL);
         } else if (v.getId() == R.id.ShowInformationButton) {
-            init();
             DialogTools.showInformationDialog(activity,
                     activity.getString(R.string.dialog_information_title),
                     Html.fromHtml(activity.getSelectedCalendar().toHtml()), R.drawable.calendar);

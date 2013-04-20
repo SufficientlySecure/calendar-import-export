@@ -4,12 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.fortuna.ical4j.model.Calendar;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
+import android.os.Build;
+import android.provider.CalendarContract;
 import android.util.Log;
 import at.aichbauer.tools.dialogs.RunnableWithProgress;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public abstract class ProcessVEvent extends RunnableWithProgress {
     private Calendar calendar;
     private int calendarId;
@@ -49,13 +53,12 @@ public abstract class ProcessVEvent extends RunnableWithProgress {
     private Cursor getFromContentValues(ContentValues cValues) {
         String where = "title = ? AND dtstart = ?";
         Log.d(LOG_ID,
-                "title = " + cValues.getAsString("title") + " AND dtstart = "
-                        + cValues.getAsString("dtstart"));
+                CalendarContract.Events.TITLE + " = " + cValues.getAsString("title") + " AND "
+                        + CalendarContract.Events.DTSTART + " = " + cValues.getAsString("dtstart"));
         String[] values = new String[] { cValues.getAsString("title"),
                 cValues.getAsString("dtstart") };
         Cursor c = getActivity().getContentResolver().query(VEventWrapper.getContentURI(),
-                new String[] { "_id" }, where, values, null);
+                new String[] { CalendarContract.Events._ID }, where, values, null);
         return c;
-
     }
 }

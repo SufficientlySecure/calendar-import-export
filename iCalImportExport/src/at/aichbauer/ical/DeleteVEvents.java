@@ -5,15 +5,18 @@ import java.util.List;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
+import android.os.Build;
+import android.provider.CalendarContract;
 import at.aichbauer.tools.dialogs.DialogTools;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class DeleteVEvents extends ProcessVEvent {
-    private static String LOG_ID = DeleteVEvents.class.getSimpleName();
 
     public DeleteVEvents(Activity activity, Calendar calendar, int calendarId) {
         super(activity, calendar, calendarId);
@@ -43,7 +46,8 @@ public class DeleteVEvents extends ProcessVEvent {
                         Uri.withAppendedPath(VEventWrapper.getContentURI(), Integer.toString(id)),
                         null, null);
                 // Delete reminder
-                contentResolver.delete(Reminder.getContentURI(), " event_id = ?",
+                contentResolver.delete(Reminder.getContentURI(),
+                        CalendarContract.Reminders.EVENT_ID + " = ?",
                         new String[] { Integer.toString(id) });
             }
             incrementProgress(1);
