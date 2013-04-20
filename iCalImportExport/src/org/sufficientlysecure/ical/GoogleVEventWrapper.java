@@ -1,4 +1,4 @@
-package at.aichbauer.ical;
+package org.sufficientlysecure.ical;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

@@ -1,4 +1,4 @@
-package at.aichbauer.tools.activity;
+package org.sufficientlysecure.ical.tools.activity;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;

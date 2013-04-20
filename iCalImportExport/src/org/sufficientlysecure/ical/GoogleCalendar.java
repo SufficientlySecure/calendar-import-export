@@ -1,4 +1,4 @@
-package at.aichbauer.ical;
+package org.sufficientlysecure.ical;
 
 import android.annotation.SuppressLint;
 import android.database.Cursor;

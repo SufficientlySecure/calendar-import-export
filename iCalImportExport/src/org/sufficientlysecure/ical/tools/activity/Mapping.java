@@ -1,4 +1,4 @@
-package at.aichbauer.tools.activity;
+package org.sufficientlysecure.ical.tools.activity;
 
 public class Mapping {
     private String key;

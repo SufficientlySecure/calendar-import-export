@@ -1,4 +1,4 @@
-package at.aichbauer.tools.dialogs;
+package org.sufficientlysecure.ical.tools.dialogs;
 
 import java.util.List;
 

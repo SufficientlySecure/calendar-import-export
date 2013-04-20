@@ -1,12 +1,12 @@
-package at.aichbauer.ical.inputAdapters;
+package org.sufficientlysecure.ical.inputAdapters;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.codec.binary.Base64;
+import org.sufficientlysecure.ical.tools.dialogs.Credentials;
 
-import at.aichbauer.tools.dialogs.Credentials;
 
 public class CredentialInputAdapter extends BasicInputAdapter {
     private Credentials credentials;

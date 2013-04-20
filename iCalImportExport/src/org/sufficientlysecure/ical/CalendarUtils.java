@@ -1,4 +1,4 @@
-package at.aichbauer.ical;
+package org.sufficientlysecure.ical;
 
 import java.io.File;
 import java.util.ArrayList;

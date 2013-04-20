@@ -1,10 +1,18 @@
-package at.aichbauer.ical.activities;
+package org.sufficientlysecure.ical.activities;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.sufficientlysecure.ical.Controller;
+import org.sufficientlysecure.ical.GoogleCalendar;
+import org.sufficientlysecure.ical.ICalConstants;
+import org.sufficientlysecure.ical.R;
+import org.sufficientlysecure.ical.inputAdapters.BasicInputAdapter;
+import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
+import org.sufficientlysecure.ical.tools.dialogs.SpinnerTools;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -23,16 +31,9 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
-import at.aichbauer.ical.Controller;
-import at.aichbauer.ical.GoogleCalendar;
-import at.aichbauer.ical.ICalConstants;
-import at.aichbauer.ical.R;
-import at.aichbauer.ical.inputAdapters.BasicInputAdapter;
-import at.aichbauer.tools.dialogs.DialogTools;
-import at.aichbauer.tools.dialogs.SpinnerTools;
 
-public class CalendarActivity extends Activity {
-    private static final String TAG = CalendarActivity.class.getSimpleName();
+public class MainActivity extends Activity {
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     /*
      * Views
@@ -132,9 +133,9 @@ public class CalendarActivity extends Activity {
             @Override
             public void run() {
                 calendarInformation
-                        .setVisibility(CalendarActivity.this.calendars == null ? View.GONE
+                        .setVisibility(MainActivity.this.calendars == null ? View.GONE
                                 : View.VISIBLE);
-                dumpCalendar.setVisibility(CalendarActivity.this.calendars == null ? View.GONE
+                dumpCalendar.setVisibility(MainActivity.this.calendars == null ? View.GONE
                         : View.VISIBLE);
 
             }
@@ -153,7 +154,7 @@ public class CalendarActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                loadButton.setVisibility(CalendarActivity.this.urls == null ? View.GONE
+                loadButton.setVisibility(MainActivity.this.urls == null ? View.GONE
                         : View.VISIBLE);
             }
         });

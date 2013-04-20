@@ -1,6 +1,9 @@
-package at.aichbauer.ical;
+package org.sufficientlysecure.ical;
 
 import java.io.File;
+
+import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
+import org.sufficientlysecure.ical.tools.providers.ProviderTools;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
@@ -12,8 +15,6 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Environment;
 import android.util.Log;
-import at.aichbauer.tools.dialogs.DialogTools;
-import at.aichbauer.tools.providers.ProviderTools;
 
 public class InsertVEvents extends ProcessVEvent {
     private static final String TAG = InsertVEvents.class.getSimpleName();

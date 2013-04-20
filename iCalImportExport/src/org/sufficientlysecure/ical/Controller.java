@@ -1,4 +1,4 @@
-package at.aichbauer.ical;
+package org.sufficientlysecure.ical;
 
 import java.io.File;
 import java.io.InputStream;
@@ -7,6 +7,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.sufficientlysecure.ical.activities.MainActivity;
+import org.sufficientlysecure.ical.inputAdapters.BasicInputAdapter;
+import org.sufficientlysecure.ical.inputAdapters.CredentialInputAdapter;
+import org.sufficientlysecure.ical.tools.dialogs.Credentials;
+import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
+import org.sufficientlysecure.ical.tools.dialogs.RunnableWithProgress;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
@@ -24,21 +31,15 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
-import at.aichbauer.ical.activities.CalendarActivity;
-import at.aichbauer.ical.inputAdapters.BasicInputAdapter;
-import at.aichbauer.ical.inputAdapters.CredentialInputAdapter;
-import at.aichbauer.tools.dialogs.Credentials;
-import at.aichbauer.tools.dialogs.DialogTools;
-import at.aichbauer.tools.dialogs.RunnableWithProgress;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class Controller implements OnClickListener {
     private static final String TAG = Controller.class.getName();
-    private CalendarActivity activity;
+    private MainActivity activity;
     public static CalendarBuilder calendarBuilder;
     private Calendar calendar;
 
-    public Controller(CalendarActivity activity) {
+    public Controller(MainActivity activity) {
         this.activity = activity;
     }
 

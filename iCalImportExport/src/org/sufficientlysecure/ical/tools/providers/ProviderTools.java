@@ -1,4 +1,4 @@
-package at.aichbauer.tools.providers;
+package org.sufficientlysecure.ical.tools.providers;
 
 import java.io.FileOutputStream;
 import java.io.PrintStream;

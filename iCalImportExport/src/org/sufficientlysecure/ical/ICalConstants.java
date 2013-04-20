@@ -1,4 +1,4 @@
-package at.aichbauer.ical;
+package org.sufficientlysecure.ical;
 
 public interface ICalConstants {
     public static final String HELP = "<b>iCal Import/Export</b><br>"

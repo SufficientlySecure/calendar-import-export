@@ -1,7 +1,10 @@
-package at.aichbauer.ical;
+package org.sufficientlysecure.ical;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
+import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
+import org.sufficientlysecure.ical.tools.dialogs.RunnableWithProgress;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
@@ -14,8 +17,6 @@ import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.Environment;
 import android.util.Log;
-import at.aichbauer.tools.dialogs.DialogTools;
-import at.aichbauer.tools.dialogs.RunnableWithProgress;
 
 public class SaveCalendar extends RunnableWithProgress {
     private final String LOG_ID = SaveCalendar.class.getSimpleName();

@@ -1,6 +1,8 @@
-package at.aichbauer.ical;
+package org.sufficientlysecure.ical;
 
 import java.util.List;
+
+import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
@@ -13,7 +15,6 @@ import android.content.ContentValues;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.CalendarContract;
-import at.aichbauer.tools.dialogs.DialogTools;
 
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class DeleteVEvents extends ProcessVEvent {
