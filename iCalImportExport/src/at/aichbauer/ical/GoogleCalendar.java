@@ -3,7 +3,6 @@ package at.aichbauer.ical;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.CalendarContract;
 
 @SuppressLint("NewApi")
@@ -12,15 +11,9 @@ public class GoogleCalendar {
 	public static final String SYNC_ACCOUNT = CalendarContract.Calendars.ACCOUNT_NAME;
 	public static final String SYNC_ACCOUNT_TYPE = CalendarContract.Calendars.ACCOUNT_TYPE;
 	public static final String SYNC_ID = CalendarContract.Calendars._SYNC_ID;
-	public static final String SYNC_VERSION = "_sync_version";
-	public static final String SYNC_TIME = "_sync_time";
-	public static final String SYNC_LOCAL_ID = "_sync_local_id";
 	public static final String SYNC_DIRTY = CalendarContract.Calendars.DIRTY;
-	public static final String SYNC_MARK = "_sync_mark";
-	public static final String URL = "url";
 	public static final String NAME = CalendarContract.Calendars.NAME;
 	public static final String DISPLAY_NAME = CalendarContract.Calendars.CALENDAR_DISPLAY_NAME;
-	public static final String HIDDEN = "hidden";
 	public static final String COLOR = CalendarContract.Calendars.CALENDAR_COLOR;
 	public static final String ACCESS_LEVEL = CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL;
 	public static final String SELECTED = CalendarContract.Calendars.VISIBLE;

@@ -30,190 +30,216 @@ import at.aichbauer.tools.dialogs.DialogTools;
 import at.aichbauer.tools.dialogs.RunnableWithProgress;
 
 public class Controller implements OnClickListener {
-	private static final String TAG = Controller.class.getName();
-	private CalendarActivity activity;
-	public static CalendarBuilder calendarBuilder;
-	private Calendar calendar;
+    private static final String TAG = Controller.class.getName();
+    private CalendarActivity activity;
+    public static CalendarBuilder calendarBuilder;
+    private Calendar calendar;
 
-	public Controller(CalendarActivity activity) {
-		this.activity = activity;
-	}
+    public Controller(CalendarActivity activity) {
+        this.activity = activity;
+    }
 
-	public void init() {
-		checkPrequesites();
+    public void init() {
+        checkPrequesites();
 
-		Cursor c = activity.getContentResolver().query(GoogleCalendar.getContentURI(), null, null, null, null);
-		List<GoogleCalendar> calendars = new ArrayList<GoogleCalendar>(c.getCount());
+        Cursor c = activity.getContentResolver().query(GoogleCalendar.getContentURI(), null, null,
+                null, null);
+        List<GoogleCalendar> calendars = new ArrayList<GoogleCalendar>(c.getCount());
 
-		while (c.moveToNext()) {
-			GoogleCalendar cal = GoogleCalendar.retrieve(c);
-			Cursor cursor = activity.getContentResolver().query(VEventWrapper.getContentURI(), new String[] {},
-					"calendar_id = ?", new String[] { Integer.toString(cal.getId()) }, null);
-			cal.setEntryCount(cursor.getCount());
-			cursor.close();
-			calendars.add(cal);
-		}
-		c.close();
+        while (c.moveToNext()) {
+            GoogleCalendar cal = GoogleCalendar.retrieve(c);
+            Cursor cursor = activity.getContentResolver().query(VEventWrapper.getContentURI(),
+                    new String[] {}, "calendar_id = ?",
+                    new String[] { Integer.toString(cal.getId()) }, null);
+            cal.setEntryCount(cursor.getCount());
+            cursor.close();
+            calendars.add(cal);
+        }
+        c.close();
 
-		this.activity.setCalendars(calendars);
-	}
+        this.activity.setCalendars(calendars);
+    }
 
-	public void checkPrequesites() {
-		// Check if all necessary providers are installed
-		ContentProviderClient calendarClient = activity.getContentResolver().acquireContentProviderClient(
-				GoogleCalendar.getContentURI());
-		ContentProviderClient eventClient = activity.getContentResolver().acquireContentProviderClient(
-				VEventWrapper.getContentURI());
+    public void checkPrequesites() {
+        // Check if all necessary providers are installed
+        ContentProviderClient calendarClient = activity.getContentResolver()
+                .acquireContentProviderClient(GoogleCalendar.getContentURI());
+        ContentProviderClient eventClient = activity.getContentResolver()
+                .acquireContentProviderClient(VEventWrapper.getContentURI());
 
-		if (eventClient == null || calendarClient == null) {
-			DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
-					R.string.dialog_no_calendar_provider, R.drawable.calendar);
-			activity.finish();
-		}
-		calendarClient.release();
-		eventClient.release();
+        if (eventClient == null || calendarClient == null) {
+            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
+                    R.string.dialog_no_calendar_provider, R.drawable.calendar);
+            activity.finish();
+        }
+        calendarClient.release();
+        eventClient.release();
 
-		// Check if their is a calendar
-		Cursor c = activity.getContentResolver().query(GoogleCalendar.getContentURI(), null, null, null, null);
+        // Check if their is a calendar
+        Cursor c = activity.getContentResolver().query(GoogleCalendar.getContentURI(), null, null,
+                null, null);
 
-		if (c.getCount() == 0) {
-			if (DialogTools.decisionDialog(activity, "No calendars...",
-					"Create new dummy calendar? This can not be undone at the moment.", "Yes", "No",
-					R.drawable.calendar_gray)) {
-				ContentValues v = new ContentValues();
-				v.put(GoogleCalendar.NAME, "dummy");
-				v.put(GoogleCalendar.DISPLAY_NAME, "LocalDummyCalendar");
-				v.put(GoogleCalendar.HIDDEN, 0);
-				v.put(GoogleCalendar.ACCESS_LEVEL, 700);
-				v.put(GoogleCalendar.TIMEZONE, java.util.Calendar.getInstance().getTimeZone().getID());
-				v.put(GoogleCalendar.SYNC_ACCOUNT, "none");
-				v.put(GoogleCalendar.OWNERACCOUNT, "none@none.com");
+        if (c.getCount() == 0) {
+            if (DialogTools.decisionDialog(activity, "No calendars...",
+                    "Create new dummy calendar? This can not be undone at the moment.", "Yes",
+                    "No", R.drawable.calendar_gray)) {
+                ContentValues v = new ContentValues();
+                v.put(GoogleCalendar.NAME, "dummy");
+                v.put(GoogleCalendar.DISPLAY_NAME, "LocalDummyCalendar");
+                v.put(GoogleCalendar.ACCESS_LEVEL, 700);
+                v.put(GoogleCalendar.TIMEZONE, java.util.Calendar.getInstance().getTimeZone()
+                        .getID());
+                v.put(GoogleCalendar.SYNC_ACCOUNT, "none");
+                v.put(GoogleCalendar.OWNERACCOUNT, "none@none.com");
 
-				Account[] abc = AccountManager.get(activity).getAccounts();
-				if (abc == null || abc.length == 0) {
-					DialogTools.showInformationDialog(activity, "Problem creating calendar",
-							"No account to use for calendar. Their must be at least one account...",
-							R.drawable.calendar);
-					return;
-				}
-				v.put(GoogleCalendar.SYNC_ACCOUNT_TYPE, abc[0].type);
+                Account[] abc = AccountManager.get(activity).getAccounts();
+                if (abc == null || abc.length == 0) {
+                    DialogTools
+                            .showInformationDialog(
+                                    activity,
+                                    "Problem creating calendar",
+                                    "No account to use for calendar. Their must be at least one account...",
+                                    R.drawable.calendar);
+                    return;
+                }
+                v.put(GoogleCalendar.SYNC_ACCOUNT_TYPE, abc[0].type);
 
-				activity.getContentResolver().insert(GoogleCalendar.getContentURI(), v);
-			} else {
-				DialogTools.showInformationDialog(activity, R.string.dialog_information_title, R.string.dialog_exiting,
-						R.drawable.calendar);
-				activity.finish();
-			}
-		}
-		c.close();
-	}
+                activity.getContentResolver().insert(GoogleCalendar.getContentURI(), v);
+            } else {
+                DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
+                        R.string.dialog_exiting, R.drawable.calendar);
+                activity.finish();
+            }
+        }
+        c.close();
+    }
 
-	@Override
-	public void onClick(View v) {
-		// Handling search for file event
-		if (v.getId() == R.id.SearchButton) {
-			RunnableWithProgress run = new RunnableWithProgress(activity) {
-				@Override
-				public void run(ProgressDialog dialog) {
-					setProgressMessage(R.string.progress_searching_ical_files);
+    @Override
+    public void onClick(View v) {
+        // Handling search for file event
+        if (v.getId() == R.id.SearchButton) {
+            RunnableWithProgress run = new RunnableWithProgress(activity) {
+                @Override
+                public void run(ProgressDialog dialog) {
+                    setProgressMessage(R.string.progress_searching_ical_files);
 
-					List<File> files = CalendarUtils.searchFiles(Environment.getExternalStorageDirectory(), "ics",
-							"ical", "icalendar");
-					List<BasicInputAdapter> urls = new ArrayList<BasicInputAdapter>(files.size());
+                    List<File> files = CalendarUtils.searchFiles(
+                            Environment.getExternalStorageDirectory(), "ics", "ical", "icalendar");
+                    List<BasicInputAdapter> urls = new ArrayList<BasicInputAdapter>(files.size());
 
-					for (File file : files) {
-						try {
-							urls.add(new BasicInputAdapter(file.toURL()));
-						} catch (MalformedURLException e) {
-							e.printStackTrace();
-						}
-					}
-					// Collections.sort(urls, new );
-					activity.setUrls(urls);
-				}
-			};
-			DialogTools.runWithProgress(activity, run, false);
-		}
+                    for (File file : files) {
+                        try {
+                            urls.add(new BasicInputAdapter(file.toURL()));
+                        } catch (MalformedURLException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    // Collections.sort(urls, new );
+                    activity.setUrls(urls);
+                }
+            };
+            DialogTools.runWithProgress(activity, run, false);
+        }
 
-		else if (v.getId() == R.id.LoadButton) {
-			RunnableWithProgress run = new RunnableWithProgress(activity) {
-				@Override
-				public void run(ProgressDialog dialog) {
-					if (calendarBuilder == null) {
-						setProgressMessage(R.string.progress_loading_builder);
-						calendarBuilder = new CalendarBuilder();
-					}
-					try {
-						setProgressMessage(R.string.progress_reading_ical);
-						InputStream in = activity.getSelectedURL().getConnection().getInputStream();
-						if (in != null) {
-							calendar = calendarBuilder.build(in);
-						}
-						activity.setCalendar(calendar);
-					} catch (Exception exc) {
-						DialogTools.showInformationDialog(activity, activity.getString(R.string.dialog_error_title),
-								activity.getString(R.string.dialog_error_unparseable) + exc.getMessage(),
-								R.drawable.calendar);
-						Log.d(TAG, "Error", exc);
-					}
-				}
-			};
-			DialogTools.runWithProgress(activity, run, false);
-		} else if (v.getId() == R.id.SetUrlButton) {
-			RunnableWithProgress run = new RunnableWithProgress(activity) {
-				@Override
-				public void run(ProgressDialog dialog) {
-					String answer = DialogTools
-							.questionDialog(activity, R.string.dialog_enter_url_title, R.string.dialog_enter_url,
-									R.string.dialog_proceed, activity.getPreferenceStore().getString(
-											ICalConstants.PREFERENCE_LAST_URL, ""), true, R.drawable.calendar, false);
-					if (answer != null && !answer.equals("")) {
-						try {
-							String username = DialogTools.questionDialog(activity, "Username", "Username:", "OK",
-									activity.getPreferenceStore().getString(ICalConstants.PREFERENCE_LAST_USERNAME, ""),
-									true, R.drawable.calendar, false);
-							String password = null;
-							if (username != null && !username.equals("")) {
-								password = DialogTools.questionDialog(activity, "Password", "Password:", "OK", activity
-										.getPreferenceStore().getString(ICalConstants.PREFERENCE_LAST_PASSWORD, ""), true,
-										R.drawable.calendar, true);
-							}
-							setProgressMessage("Parsing url...");
-							URL url = new URL(answer);
-							Editor editor = activity.getPreferenceStore().edit();
-							editor.putString(ICalConstants.PREFERENCE_LAST_URL, answer);
-							editor.putString(ICalConstants.PREFERENCE_LAST_USERNAME, username);
-							editor.putString(ICalConstants.PREFERENCE_LAST_PASSWORD, password);
-							editor.commit();
-							if (username != null && ! username.equals("") && password != null) {
-								activity.setUrls(Arrays.asList((BasicInputAdapter) new CredentialInputAdapter(url,
-										new Credentials(username, password))));
-							} else {
-								activity.setUrls(Arrays.asList(new BasicInputAdapter(url)));
-							}
-						} catch (MalformedURLException exc) {
-							DialogTools.showInformationDialog(activity,
-									activity.getString(R.string.dialog_error_title), "URL was not parseable..."
-											+ exc.getMessage(), R.drawable.calendar);
-							Log.d(TAG, "Error", exc);
-						}
-					}
-				}
-			};
-			DialogTools.runWithProgress(activity, run, false);
-		} else if (v.getId() == R.id.SaveButton) {
-			DialogTools.runWithProgress(activity, new SaveCalendar(activity, activity.getSelectedCalendar()), false,
-					ProgressDialog.STYLE_HORIZONTAL);
-		} else if (v.getId() == R.id.ShowInformationButton) {
-			init();
-			DialogTools.showInformationDialog(activity, activity.getString(R.string.dialog_information_title), Html
-					.fromHtml(activity.getSelectedCalendar().toHtml()), R.drawable.calendar);
-		} else if (v.getId() == R.id.InsertButton) {
-			DialogTools.runWithProgress(activity, new InsertVEvents(activity, calendar, activity.getSelectedCalendar()
-					.getId()), false, ProgressDialog.STYLE_HORIZONTAL);
-		} else if (v.getId() == R.id.DeleteButton) {
-			DialogTools.runWithProgress(activity, new DeleteVEvents(activity, calendar, activity.getSelectedCalendar()
-					.getId()), false, ProgressDialog.STYLE_HORIZONTAL);
-		}
-	}
+        else if (v.getId() == R.id.LoadButton) {
+            RunnableWithProgress run = new RunnableWithProgress(activity) {
+                @Override
+                public void run(ProgressDialog dialog) {
+                    if (calendarBuilder == null) {
+                        setProgressMessage(R.string.progress_loading_builder);
+                        calendarBuilder = new CalendarBuilder();
+                    }
+                    try {
+                        setProgressMessage(R.string.progress_reading_ical);
+                        InputStream in = activity.getSelectedURL().getConnection().getInputStream();
+                        if (in != null) {
+                            calendar = calendarBuilder.build(in);
+                        }
+                        activity.setCalendar(calendar);
+                    } catch (Exception exc) {
+                        DialogTools.showInformationDialog(
+                                activity,
+                                activity.getString(R.string.dialog_error_title),
+                                activity.getString(R.string.dialog_error_unparseable)
+                                        + exc.getMessage(), R.drawable.calendar);
+                        Log.d(TAG, "Error", exc);
+                    }
+                }
+            };
+            DialogTools.runWithProgress(activity, run, false);
+        } else if (v.getId() == R.id.SetUrlButton) {
+            RunnableWithProgress run = new RunnableWithProgress(activity) {
+                @Override
+                public void run(ProgressDialog dialog) {
+                    String answer = DialogTools.questionDialog(
+                            activity,
+                            R.string.dialog_enter_url_title,
+                            R.string.dialog_enter_url,
+                            R.string.dialog_proceed,
+                            activity.getPreferenceStore().getString(
+                                    ICalConstants.PREFERENCE_LAST_URL, ""), true,
+                            R.drawable.calendar, false);
+                    if (answer != null && !answer.equals("")) {
+                        try {
+                            String username = DialogTools.questionDialog(
+                                    activity,
+                                    "Username",
+                                    "Username:",
+                                    "OK",
+                                    activity.getPreferenceStore().getString(
+                                            ICalConstants.PREFERENCE_LAST_USERNAME, ""), true,
+                                    R.drawable.calendar, false);
+                            String password = null;
+                            if (username != null && !username.equals("")) {
+                                password = DialogTools.questionDialog(
+                                        activity,
+                                        "Password",
+                                        "Password:",
+                                        "OK",
+                                        activity.getPreferenceStore().getString(
+                                                ICalConstants.PREFERENCE_LAST_PASSWORD, ""), true,
+                                        R.drawable.calendar, true);
+                            }
+                            setProgressMessage("Parsing url...");
+                            URL url = new URL(answer);
+                            Editor editor = activity.getPreferenceStore().edit();
+                            editor.putString(ICalConstants.PREFERENCE_LAST_URL, answer);
+                            editor.putString(ICalConstants.PREFERENCE_LAST_USERNAME, username);
+                            editor.putString(ICalConstants.PREFERENCE_LAST_PASSWORD, password);
+                            editor.commit();
+                            if (username != null && !username.equals("") && password != null) {
+                                activity.setUrls(Arrays
+                                        .asList((BasicInputAdapter) new CredentialInputAdapter(url,
+                                                new Credentials(username, password))));
+                            } else {
+                                activity.setUrls(Arrays.asList(new BasicInputAdapter(url)));
+                            }
+                        } catch (MalformedURLException exc) {
+                            DialogTools.showInformationDialog(activity,
+                                    activity.getString(R.string.dialog_error_title),
+                                    "URL was not parseable..." + exc.getMessage(),
+                                    R.drawable.calendar);
+                            Log.d(TAG, "Error", exc);
+                        }
+                    }
+                }
+            };
+            DialogTools.runWithProgress(activity, run, false);
+        } else if (v.getId() == R.id.SaveButton) {
+            DialogTools.runWithProgress(activity,
+                    new SaveCalendar(activity, activity.getSelectedCalendar()), false,
+                    ProgressDialog.STYLE_HORIZONTAL);
+        } else if (v.getId() == R.id.ShowInformationButton) {
+            init();
+            DialogTools.showInformationDialog(activity,
+                    activity.getString(R.string.dialog_information_title),
+                    Html.fromHtml(activity.getSelectedCalendar().toHtml()), R.drawable.calendar);
+        } else if (v.getId() == R.id.InsertButton) {
+            DialogTools.runWithProgress(activity, new InsertVEvents(activity, calendar, activity
+                    .getSelectedCalendar().getId()), false, ProgressDialog.STYLE_HORIZONTAL);
+        } else if (v.getId() == R.id.DeleteButton) {
+            DialogTools.runWithProgress(activity, new DeleteVEvents(activity, calendar, activity
+                    .getSelectedCalendar().getId()), false, ProgressDialog.STYLE_HORIZONTAL);
+        }
+    }
 }
