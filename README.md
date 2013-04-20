@@ -7,7 +7,7 @@ This is a updated fork from iCal Import/Export, found on Googlecode (http://code
 # Build the project
 
 1. Have Android SDK "tools" directory in your PATH (http://developer.android.com/sdk/index.html)
-2. Change to "iCalImportExport" directory with ``cd Local-Calendar``
+2. Change to "iCalImportExport" directory with ``cd iCalImportExport``
 3. Execute ``android update project -p .``
 4. Execute ``ant debug`` or ``ant release``
 
