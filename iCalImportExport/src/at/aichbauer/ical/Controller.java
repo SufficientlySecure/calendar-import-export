@@ -11,8 +11,10 @@ import java.util.List;
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
 import android.annotation.TargetApi;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentProviderClient;
+import android.content.DialogInterface;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.os.Build;
@@ -81,9 +83,27 @@ public class Controller implements OnClickListener {
                 null, null);
 
         if (c.getCount() == 0) {
-            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
-                    R.string.dialog_exiting, R.drawable.calendar);
-            activity.finish();
+            activity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    AlertDialog dialog = new AlertDialog.Builder(activity)
+                            .setMessage(R.string.dialog_exiting)
+                            .setIcon(R.drawable.calendar)
+                            .setTitle(R.string.dialog_information_title)
+                            .setCancelable(false)
+                            .setPositiveButton(android.R.string.ok,
+                                    new DialogInterface.OnClickListener() {
+
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int which) {
+                                            dialog.cancel();
+                                            activity.finish();
+                                        }
+                                    }).create();
+                    dialog.show();
+                }
+            });
+
         }
         c.close();
     }

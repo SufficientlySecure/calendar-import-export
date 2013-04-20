@@ -44,7 +44,7 @@
 		longer?"</string>
     <string name="dialog_insert_entries">Insert entries into calendar?</string>
     <string name="dialog_entries_inserted">Inserted %d entries into calendar.</string>
-    <string name="dialog_exiting">You have no calendar. You can install the app \"Local Calendar \" to create one. Exiting…</string>
+    <string name="dialog_exiting">You have no calendar. You can install the app \"Local Calendar\" to create one.</string>
     <string name="dialog_error_title">Error</string>
     <string name="dialog_error_unparseable">iCal file could not be parsed\n\n</string>
     <string name="dialog_found_duplicates">Found %d duplicate entries.</string>
