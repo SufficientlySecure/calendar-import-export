@@ -2,18 +2,12 @@ package at.aichbauer.tools.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
-import android.graphics.Color;
 import android.text.method.PasswordTransformationMethod;
-import android.view.Gravity;
-import android.view.View;
-import android.view.Window;
 import android.view.ViewGroup.LayoutParams;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -88,9 +82,8 @@ public class DialogTools {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                final Dialog dialog = new Dialog(activity);
-                dialog.setTitle(title);
-                dialog.requestWindowFeature(Window.FEATURE_LEFT_ICON);
+                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+                builder.setTitle(title);
 
                 LinearLayout layout = new LinearLayout(activity);
                 layout.setOrientation(LinearLayout.VERTICAL);
@@ -119,49 +112,29 @@ public class DialogTools {
                 }
                 layout.addView(editText);
 
-                LinearLayout buttons = new LinearLayout(activity);
-                buttons.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-                        LayoutParams.FILL_PARENT));
-                buttons.setBackgroundColor(Color.GRAY);
-                buttons.setOrientation(LinearLayout.HORIZONTAL);
-
-                layout.addView(buttons);
-
-                Button button = new Button(activity);
-                button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-                        LayoutParams.FILL_PARENT));
-                button.setGravity(Gravity.CENTER_HORIZONTAL);
-                button.setText(ok);
-                button.setOnClickListener(new View.OnClickListener() {
+                builder.setPositiveButton(ok, new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(View v) {
+                    public void onClick(DialogInterface dialog, int which) {
                         result[0] = editText.getText().toString();
                         result[1] = "";
                         dialog.cancel();
                     }
                 });
 
-                buttons.addView(button);
-
                 if (cancelable) {
-                    button = new Button(activity);
-                    button.setLayoutParams(new LayoutParams(LayoutParams.WRAP_CONTENT,
-                            LayoutParams.FILL_PARENT));
-                    button.setGravity(Gravity.CENTER_HORIZONTAL);
-                    button.setText("Cancel");
-                    button.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            result[1] = "";
-                            dialog.cancel();
-                        }
-                    });
+                    builder.setNegativeButton(android.R.string.cancel,
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    result[0] = editText.getText().toString();
+                                    result[1] = "";
+                                    dialog.cancel();
+                                }
+                            });
                 }
 
-                buttons.addView(button);
-
-                dialog.setCancelable(cancelable);
-                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                builder.setCancelable(cancelable);
+                builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
 
                     @Override
                     public void onCancel(DialogInterface dialog) {
@@ -169,8 +142,8 @@ public class DialogTools {
                     }
                 });
 
-                dialog.setContentView(layout);
-                dialog.setFeatureDrawableResource(Window.FEATURE_LEFT_ICON, drawableResource);
+                builder.setView(layout);
+                AlertDialog dialog = builder.create();
                 dialog.show();
             }
         });

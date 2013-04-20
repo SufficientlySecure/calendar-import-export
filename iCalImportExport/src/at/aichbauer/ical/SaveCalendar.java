@@ -72,8 +72,7 @@ public class SaveCalendar extends RunnableWithProgress {
             try {
                 Thread.sleep(3000);
             } catch (InterruptedException e1) {
-                // TODO Auto-generated catch block
-                e1.printStackTrace();
+                Log.e(LOG_ID, "InterruptedException", e);
             }
             return;
         }
