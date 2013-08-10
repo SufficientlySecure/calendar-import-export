@@ -21,22 +21,21 @@ package org.sufficientlysecure.ical;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.sufficientlysecure.ical.tools.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
 import net.fortuna.ical4j.model.Calendar;
-import android.annotation.TargetApi;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.os.Build;
 import android.provider.CalendarContract;
 import android.util.Log;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+@SuppressLint("NewApi")
 public abstract class ProcessVEvent extends RunnableWithProgress {
     private Calendar calendar;
     private int calendarId;
-    private final String LOG_ID = ProcessVEvent.class.getSimpleName();
+    private final String TAG = ProcessVEvent.class.getSimpleName();
 
     public ProcessVEvent(Activity activity, Calendar calendar, int calendarId) {
         super(activity);
@@ -72,14 +71,14 @@ public abstract class ProcessVEvent extends RunnableWithProgress {
     private Cursor getFromContentValues(ContentValues cValues) {
         String where = CalendarContract.Events.TITLE + " = ? AND "
                 + CalendarContract.Events.DTSTART + " = ?";
-        Log.d(LOG_ID,
+        Log.d(TAG,
                 CalendarContract.Events.TITLE + " = "
                         + cValues.getAsString(CalendarContract.Events.TITLE) + " AND "
                         + CalendarContract.Events.DTSTART + " = "
                         + cValues.getAsString(CalendarContract.Events.DTSTART));
         String[] values = new String[] { cValues.getAsString(CalendarContract.Events.TITLE),
                 cValues.getAsString(CalendarContract.Events.DTSTART) };
-        Cursor c = getActivity().getContentResolver().query(VEventWrapper.getContentURI(),
+        Cursor c = getActivity().getContentResolver().query(CalendarContract.Events.CONTENT_URI,
                 new String[] { CalendarContract.Events._ID }, where, values, null);
         return c;
     }

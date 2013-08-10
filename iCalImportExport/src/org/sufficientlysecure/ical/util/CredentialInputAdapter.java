@@ -1,5 +1,4 @@
 /**
- *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,14 +15,14 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.sufficientlysecure.ical.inputAdapters;
+package org.sufficientlysecure.ical.util;
 
 import java.io.IOException;
 import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.codec.binary.Base64;
-import org.sufficientlysecure.ical.tools.dialogs.Credentials;
+import org.sufficientlysecure.ical.ui.dialogs.Credentials;
 
 
 public class CredentialInputAdapter extends BasicInputAdapter {

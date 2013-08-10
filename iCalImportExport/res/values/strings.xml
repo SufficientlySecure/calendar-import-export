@@ -44,12 +44,12 @@
 		longer?"</string>
     <string name="dialog_insert_entries">Insert entries into calendar?</string>
     <string name="dialog_entries_inserted">Inserted %d entries into calendar.</string>
-    <string name="dialog_exiting">You have no calendar. You can install the app \"Local Calendar\" to create one.</string>
+    <string name="dialog_exiting">You have no calendar. You can install the app \"Offline Calendar\" to create one.</string>
     <string name="dialog_error_title">Error</string>
     <string name="dialog_error_unparseable">iCal file could not be parsed\n\n</string>
     <string name="dialog_found_duplicates">Found %d duplicate entries.</string>
     <string name="dialog_bug_title">Error</string>
-    <string name="dialog_bug">I am sorry for you inconvinience. Please open a new issue report on https://github.com/dschuermann/ical-import-export and attach ical_error.log located on your sd card.</string>
+    <string name="dialog_bug">I am sorry for you inconvinience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
     <string name="menu_quit">Quit</string>
     <string name="menu_help">Help</string>
     <string name="menu_changelog">Change Log</string>

@@ -1,5 +1,4 @@
 /**
- *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,23 +15,29 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.sufficientlysecure.ical.tools.activity;
+package org.sufficientlysecure.ical.util;
 
-public class Mapping {
-    private String key;
-    private Object value;
+import java.io.IOException;
+import java.net.URL;
+import java.net.URLConnection;
 
-    public Mapping(String key, Object value) {
-        super();
-        this.key = key;
-        this.value = value;
+public class BasicInputAdapter {
+    private URL url;
+
+    public BasicInputAdapter(URL url) {
+        this.url = url;
     }
 
-    public String getKey() {
-        return key;
+    public URL getURL() {
+        return this.url;
     }
 
-    public Object getValue() {
-        return value;
+    public URLConnection getConnection() throws IOException {
+        return this.url.openConnection();
+    }
+
+    @Override
+    public String toString() {
+        return this.url.toString();
     }
 }

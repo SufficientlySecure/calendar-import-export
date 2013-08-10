@@ -1,5 +1,4 @@
 /**
- *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,7 +15,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.sufficientlysecure.ical.tools.dialogs;
+package org.sufficientlysecure.ical.ui.dialogs;
 
 public class Credentials {
     private String username;

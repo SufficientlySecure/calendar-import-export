@@ -21,29 +21,35 @@ package org.sufficientlysecure.ical;
 import java.io.File;
 import java.io.FileOutputStream;
 
-import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
-import org.sufficientlysecure.ical.tools.dialogs.RunnableWithProgress;
-
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
+
+import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.database.Cursor;
 import android.os.Environment;
+import android.provider.CalendarContract;
 import android.util.Log;
 
+@SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
-    private final String LOG_ID = SaveCalendar.class.getSimpleName();
+    private final String TAG = SaveCalendar.class.getSimpleName();
 
-    private GoogleCalendar googleCalendar;
+    private AndroidCalendar androidCalendar;
 
-    public SaveCalendar(Activity activity, GoogleCalendar calendar) {
+    public SaveCalendar(Activity activity, AndroidCalendar calendar) {
         super(activity);
-        this.googleCalendar = calendar;
+        this.androidCalendar = calendar;
     }
 
     @Override
@@ -60,24 +66,36 @@ public class SaveCalendar extends RunnableWithProgress {
         String output = Environment.getExternalStorageDirectory() + File.separator + input;
         int i = 0;
         setProgressMessage(R.string.progress_loading_calendarentries);
-        Cursor c = getActivity().getContentResolver()
-                .query(VEventWrapper.getContentURI(), null, "calendar_id  = ?",
-                        new String[] { Integer.toString(googleCalendar.getId()) }, null);
+
+        // query events
+        Cursor c = getActivity().getContentResolver().query(CalendarContract.Events.CONTENT_URI,
+                null, CalendarContract.Events.CALENDAR_ID + " = ?",
+                new String[] { Integer.toString(androidCalendar.getId()) }, null);
         dialog.setMax(c.getCount());
+
+        // don't save empty calendars
         if (c.getCount() == 0) {
             DialogTools.showInformationDialog(getActivity(), R.string.dialog_information_title,
                     R.string.dialog_empty_calendar, R.drawable.calendar);
             return;
         }
 
+        // get timezone
+        // TODO: see https://github.com/dschuermann/ical-import-export/issues/11
+        // TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+        // VTimeZone tz = registry.getTimeZone(androidCalendar.getTimezone()).getVTimeZone();
+
         Calendar calendar = new Calendar();
-        calendar.getProperties().add(new ProdId(googleCalendar.getOwnerAccount()));
+        calendar.getProperties().add(new ProdId(androidCalendar.getOwnerAccount()));
         calendar.getProperties().add(Version.VERSION_2_0);
+
+        // calendar.getComponents().add(tz);
+
         while (c.moveToNext()) {
             VEvent vevent = VEventWrapper.resolve(c);
-            vevent.getProperties().add(new Uid((i + 1) + "+" + googleCalendar.getOwnerAccount()));
+            vevent.getProperties().add(new Uid((i + 1) + "+" + androidCalendar.getOwnerAccount()));
             calendar.getComponents().add(vevent);
-            Log.d(LOG_ID, "Adding event to calendar");
+            Log.d(TAG, "Adding event to calendar");
             incrementProgress(1);
             i++;
         }
@@ -86,18 +104,18 @@ public class SaveCalendar extends RunnableWithProgress {
         try {
             setProgressMessage(R.string.progress_writing_calendar_to_file);
             outputter.output(calendar, new FileOutputStream(output));
+
+            DialogTools.showInformationDialog(getActivity(),
+                    getActivity().getString(R.string.dialog_success_title), getActivity()
+                            .getString(R.string.dialog_sucessfully_written_calendar, i, output),
+                    R.drawable.calendar);
         } catch (Exception e) {
-            setProgressMessage("Error:\n" + e.getMessage());
-            try {
-                Thread.sleep(3000);
-            } catch (InterruptedException e1) {
-                Log.e(LOG_ID, "InterruptedException", e);
-            }
-            return;
+            Log.e(TAG, "SaveCalendar", e);
+
+            DialogTools.showInformationDialog(getActivity(),
+                    getActivity().getString(R.string.dialog_bug_title),
+                    "Error:\n" + e.getMessage(), R.drawable.calendar);
         }
-        DialogTools.showInformationDialog(getActivity(),
-                getActivity().getString(R.string.dialog_success_title),
-                getActivity().getString(R.string.dialog_sucessfully_written_calendar, i, output),
-                R.drawable.calendar);
+
     }
 }

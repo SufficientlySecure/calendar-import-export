@@ -28,9 +28,9 @@ public interface ICalConstants {
             + "  +<i>Load iCal file</i><br><small>The iCal file will be parsed, if successfull a number of events should appear next to the button</small><br>"
             + "  +<i>Insert events</i> or <i>Delete events</i><br><small>Starts the import process. When finished a status information should be displayed.</small><br>"
             + "<br>"
-            + "If you are considering errors, please add a new issue to https://github.com/dschuermann/ical-import-export and provide an iCal file you would like to import.<br>"
-            + "<br>Thanks to iCal4j Project for the parser/interpreter<br><br>"
-            + "<i>To view this information again: menu --> help</i>";
+            + "Help translating, developing, or report bugs on <a href=\"http://sufficientlysecure.org/android-apps\">http://sufficientlysecure.org/android-apps</a>"
+            + ". If you have problems with specific iCal files, please provide those.<br>"
+            + "<br>Thanks to iCal4j Project for the parser/interpreter";
     public static final String PREFERENCE_LAST_URL = "lastUrl";
     public static final String PREFERENCE_LAST_USERNAME = "lastUsername";
     public static final String PREFERENCE_LAST_PASSWORD = "lastPassword";

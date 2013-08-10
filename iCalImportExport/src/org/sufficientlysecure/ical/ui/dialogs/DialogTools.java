@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.sufficientlysecure.ical.tools.dialogs;
+package org.sufficientlysecure.ical.ui.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -24,6 +24,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.EditText;
@@ -57,6 +58,8 @@ public class DialogTools {
                         }).setTitle(title).create();
 
                 dialog.show();
+                ((TextView) dialog.findViewById(android.R.id.message))
+                        .setMovementMethod(LinkMovementMethod.getInstance());
             }
         });
     }
@@ -105,13 +108,13 @@ public class DialogTools {
 
                 LinearLayout layout = new LinearLayout(activity);
                 layout.setOrientation(LinearLayout.VERTICAL);
-                layout.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
-                        LayoutParams.FILL_PARENT));
+                layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
+                        LayoutParams.MATCH_PARENT));
                 layout.setMinimumWidth(300);
 
                 TextView view = new TextView(activity);
                 view.setPadding(10, 10, 10, 10);
-                view.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+                view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
                         LayoutParams.WRAP_CONTENT));
                 view.setTextSize(16);
                 layout.addView(view);
@@ -123,7 +126,7 @@ public class DialogTools {
                 } else {
                     editText.setSingleLine();
                 }
-                editText.setLayoutParams(new LayoutParams(LayoutParams.FILL_PARENT,
+                editText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
                         LayoutParams.WRAP_CONTENT));
                 if (input != null) {
                     editText.setText(input);
@@ -192,6 +195,7 @@ public class DialogTools {
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
                 AlertDialog dialog = builder.setMessage(message)
+                        .setCancelable(false)
                         .setPositiveButton(yes, new OnClickListener() {
 
                             @Override

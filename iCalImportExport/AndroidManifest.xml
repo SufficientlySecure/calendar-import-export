@@ -20,8 +20,8 @@
         android:icon="@drawable/calendar"
         android:label="@string/app_name" >
         <activity
-            android:name="org.sufficientlysecure.ical.activities.MainActivity"
-            android:configChanges="orientation|keyboardHidden"
+            android:name="org.sufficientlysecure.ical.ui.MainActivity"
+            android:configChanges="orientation|screenSize|keyboardHidden|keyboard"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

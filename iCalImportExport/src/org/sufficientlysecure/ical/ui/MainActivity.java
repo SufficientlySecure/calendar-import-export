@@ -16,7 +16,7 @@
  *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.sufficientlysecure.ical.activities;
+package org.sufficientlysecure.ical.ui;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -24,16 +24,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sufficientlysecure.ical.Controller;
-import org.sufficientlysecure.ical.GoogleCalendar;
-import org.sufficientlysecure.ical.ICalConstants;
-import org.sufficientlysecure.ical.R;
-import org.sufficientlysecure.ical.inputAdapters.BasicInputAdapter;
-import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
-import org.sufficientlysecure.ical.tools.dialogs.SpinnerTools;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
+
+import org.sufficientlysecure.ical.AndroidCalendar;
+import org.sufficientlysecure.ical.Controller;
+import org.sufficientlysecure.ical.ICalConstants;
+import org.sufficientlysecure.ical.R;
+import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+import org.sufficientlysecure.ical.ui.dialogs.SpinnerTools;
+import org.sufficientlysecure.ical.util.BasicInputAdapter;
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -71,7 +72,7 @@ public class MainActivity extends Activity {
      * Values
      */
     private List<BasicInputAdapter> urls;
-    private List<GoogleCalendar> calendars;
+    private List<AndroidCalendar> calendars;
     private LinearLayout processGroup;
     private SharedPreferences preferences;
 
@@ -130,10 +131,10 @@ public class MainActivity extends Activity {
      * 
      * @param calendars
      */
-    public void setCalendars(List<GoogleCalendar> calendars) {
+    public void setCalendars(List<AndroidCalendar> calendars) {
         this.calendars = calendars;
         List<String> calendarStrings = new ArrayList<String>();
-        for (GoogleCalendar cal : calendars) {
+        for (AndroidCalendar cal : calendars) {
             calendarStrings.add(cal.getDisplayName() + " (" + cal.getId() + ")");
         }
         SpinnerTools.simpleSpinnerInUI(this, calendarSpinner, calendarStrings);
@@ -185,10 +186,10 @@ public class MainActivity extends Activity {
         return preferences;
     }
 
-    public GoogleCalendar getSelectedCalendar() {
+    public AndroidCalendar getSelectedCalendar() {
         if (calendarSpinner.getSelectedItem() != null && calendars != null) {
             String calendarName = calendarSpinner.getSelectedItem().toString();
-            for (GoogleCalendar cal : calendars) {
+            for (AndroidCalendar cal : calendars) {
                 if ((cal.getDisplayName() + " (" + cal.getId() + ")").equals(calendarName)) {
                     return cal;
                 }

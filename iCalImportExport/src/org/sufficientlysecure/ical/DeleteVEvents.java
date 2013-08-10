@@ -1,5 +1,4 @@
 /**
- *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -20,21 +19,21 @@ package org.sufficientlysecure.ical;
 
 import java.util.List;
 
-import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
-
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
-import android.annotation.TargetApi;
+
+import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
-import android.os.Build;
 import android.provider.CalendarContract;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+@SuppressLint("NewApi")
 public class DeleteVEvents extends ProcessVEvent {
 
     public DeleteVEvents(Activity activity, Calendar calendar, int calendarId) {
@@ -62,10 +61,10 @@ public class DeleteVEvents extends ProcessVEvent {
 
             for (Integer id : ids) {
                 i += contentResolver.delete(
-                        Uri.withAppendedPath(VEventWrapper.getContentURI(), Integer.toString(id)),
+                        Uri.withAppendedPath(CalendarContract.Events.CONTENT_URI, Integer.toString(id)),
                         null, null);
                 // Delete reminder
-                contentResolver.delete(Reminder.getContentURI(),
+                contentResolver.delete(CalendarContract.Reminders.CONTENT_URI,
                         CalendarContract.Reminders.EVENT_ID + " = ?",
                         new String[] { Integer.toString(id) });
             }

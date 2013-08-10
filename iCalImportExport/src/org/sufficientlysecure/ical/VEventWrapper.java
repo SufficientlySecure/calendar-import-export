@@ -1,5 +1,4 @@
 /**
- *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -18,8 +17,8 @@
 
 package org.sufficientlysecure.ical;
 
-import org.sufficientlysecure.ical.GoogleVEventWrapper.IGoogleWrapper;
-import org.sufficientlysecure.ical.GoogleVEventWrapper.IVEventWrapper;
+import org.sufficientlysecure.ical.AndroidVEventWrapper.IAndroidWrapper;
+import org.sufficientlysecure.ical.AndroidVEventWrapper.IVEventWrapper;
 
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -41,9 +40,9 @@ public class VEventWrapper {
 
     public static VEvent resolve(Cursor c) {
         PropertyList properties = new PropertyList();
-        GoogleVEventWrapper wrapperInstance = GoogleVEventWrapper.getInstance();
+        AndroidVEventWrapper wrapperInstance = AndroidVEventWrapper.getInstance();
         for (String key : keys) {
-            IGoogleWrapper wrapper = wrapperInstance.getGoogleWrapper(key);
+            IAndroidWrapper wrapper = wrapperInstance.getAndroidWrapper(key);
             wrapper.wrap(properties, c);
         }
 
@@ -55,7 +54,7 @@ public class VEventWrapper {
 
     public static ContentValues resolve(VEvent vevent, int calendar_id) {
         ContentValues values = new ContentValues();
-        GoogleVEventWrapper wrapperInstance = GoogleVEventWrapper.getInstance();
+        AndroidVEventWrapper wrapperInstance = AndroidVEventWrapper.getInstance();
         for (String key : keys) {
             IVEventWrapper wrapper = wrapperInstance.getVEventWrapper(key);
             wrapper.wrap(values, vevent);
@@ -63,9 +62,5 @@ public class VEventWrapper {
         values.put(CalendarContract.Events.CALENDAR_ID, calendar_id);
         Log.d(TAG, "VEvent ready to insert into db");
         return values;
-    }
-
-    public static Uri getContentURI() {
-        return CalendarContract.Events.CONTENT_URI;
     }
 }

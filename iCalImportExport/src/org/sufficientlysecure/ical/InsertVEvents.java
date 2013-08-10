@@ -19,25 +19,27 @@
 package org.sufficientlysecure.ical;
 
 import java.io.File;
-
-import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
-import org.sufficientlysecure.ical.tools.providers.ProviderTools;
+import java.util.ArrayList;
+import java.util.List;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
-import android.annotation.TargetApi;
+
+import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+import org.sufficientlysecure.ical.util.ProviderTools;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.CalendarContract;
 import android.util.Log;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+@SuppressLint("NewApi")
 public class InsertVEvents extends ProcessVEvent {
     private static final String TAG = InsertVEvents.class.getSimpleName();
 
@@ -58,7 +60,7 @@ public class InsertVEvents extends ProcessVEvent {
                     R.string.dialog_insert_search_for_duplicates, R.string.dialog_yes,
                     R.string.dialog_no, R.drawable.calendar);
 
-            Reminder reminder = new Reminder();
+            List<Integer> reminders = new ArrayList<Integer>();
 
             while (DialogTools.decisionDialog(getActivity(), "Reminder",
                     "Add a reminder? Will be used for all Events!",
@@ -70,7 +72,9 @@ public class InsertVEvents extends ProcessVEvent {
                         R.drawable.calendar, false);
                 try {
                     if (time_in_minutes != null) {
-                        reminder.addReminder(Integer.parseInt(time_in_minutes));
+                        if (!reminders.contains(Integer.parseInt(time_in_minutes))) {
+                            reminders.add(Integer.parseInt(time_in_minutes));
+                        }
                     }
                 } catch (Exception exc) {
                     DialogTools.showInformationDialog(getActivity(),
@@ -88,23 +92,26 @@ public class InsertVEvents extends ProcessVEvent {
             int j = 0;
             for (Object event : vevents) {
                 ContentValues values = VEventWrapper.resolve((VEvent) event, getCalendarId());
-                if (reminder.getReminders().size() > 0) {
+                if (reminders.size() > 0) {
                     values.put(CalendarContract.Events.HAS_ALARM, 1);
                 }
                 if (!checkForDuplicates || !contains(values)) {
-                    Uri uri = resolver.insert(VEventWrapper.getContentURI(), values);
+                    Log.d(TAG, "values: " + values);
+                    
+                    Uri uri = resolver.insert(CalendarContract.Events.CONTENT_URI, values);
                     Log.d(TAG, uri != null ? "Inserted calendar event: " + uri.toString()
                             : "Could not insert calendar event.");
                     if (uri != null) {
                         i += 1;
-                        for (int time : reminder.getReminders()) {
+                        for (int time : reminders) {
                             int id = Integer.parseInt(uri.getLastPathSegment());
                             Log.d(TAG, "Inserting reminder for event with id: " + id);
                             ContentValues reminderValues = new ContentValues();
-                            reminderValues.put(Reminder.EVENT_ID, id);
-                            reminderValues.put(Reminder.MINUTES, time);
-                            reminderValues.put(Reminder.METHOD, 1);
-                            uri = resolver.insert(Reminder.getContentURI(), reminderValues);
+                            reminderValues.put(CalendarContract.Reminders.EVENT_ID, id);
+                            reminderValues.put(CalendarContract.Reminders.MINUTES, time);
+                            reminderValues.put(CalendarContract.Reminders.METHOD, 1);
+                            uri = resolver.insert(CalendarContract.Reminders.CONTENT_URI,
+                                    reminderValues);
                             Log.d(TAG, uri != null ? "Inserted reminder: " + uri.toString()
                                     : "Could not insert reminder.");
                         }

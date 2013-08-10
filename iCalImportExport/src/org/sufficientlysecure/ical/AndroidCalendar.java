@@ -24,7 +24,7 @@ import android.net.Uri;
 import android.provider.CalendarContract;
 
 @SuppressLint("NewApi")
-public class GoogleCalendar {
+public class AndroidCalendar {
     public static final String ID = CalendarContract.Calendars._ID;
     public static final String SYNC_ACCOUNT = CalendarContract.Calendars.ACCOUNT_NAME;
     public static final String SYNC_ACCOUNT_TYPE = CalendarContract.Calendars.ACCOUNT_TYPE;
@@ -46,6 +46,7 @@ public class GoogleCalendar {
     private String displayName;
     private String ownerAccount;
     private boolean isActive;
+    private String timezone;
 
     private int entries;
 
@@ -69,17 +70,26 @@ public class GoogleCalendar {
         return id;
     }
 
+    public String getTimezone() {
+        return timezone;
+    }
+
+    public void setTimezone(String timezone) {
+        this.timezone = timezone;
+    }
+
     public static Uri getContentURI() {
         return CONTENT_URI;
     }
 
-    public static GoogleCalendar retrieve(Cursor c) {
-        GoogleCalendar calendar = new GoogleCalendar();
+    public static AndroidCalendar retrieve(Cursor c) {
+        AndroidCalendar calendar = new AndroidCalendar();
         calendar.id = c.getInt(c.getColumnIndex(ID));
         calendar.name = c.getString(c.getColumnIndex(NAME));
         calendar.displayName = c.getString(c.getColumnIndex(DISPLAY_NAME));
         calendar.ownerAccount = c.getString(c.getColumnIndex(OWNERACCOUNT));
         calendar.isActive = c.getInt(c.getColumnIndex(SELECTED)) == 1;
+        calendar.timezone = c.getString(c.getColumnIndex(TIMEZONE));
         return calendar;
     }
 
@@ -90,12 +100,14 @@ public class GoogleCalendar {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("CalendarId: " + id);
-        builder.append("\nEvents: " + entries);
-        builder.append("\nDisplayName:\n" + displayName);
-        builder.append("\nName:\n" + name);
-        builder.append("\nOwner:\n" + ownerAccount);
-        builder.append("\nIsActive:\n" + isActive + "\n");
+        builder.append("CalendarId: " + id + "\n");
+        builder.append("\nEvents: " + entries + "\n");
+        builder.append("\nDisplayName:" + displayName + "\n");
+        builder.append("\nName:" + name + "\n");
+        builder.append("\nOwner:" + ownerAccount + "\n");
+        builder.append("\nIsActive:" + isActive + "\n");
+        builder.append("\nTimezone:" + timezone + "\n");
+
         return builder.toString();
     }
 
@@ -107,6 +119,9 @@ public class GoogleCalendar {
         builder.append("<br><b>Name:</b><br>" + name);
         builder.append("<br><b>Owner:</b><br>" + ownerAccount);
         builder.append("<br><b>IsActive:</b><br>" + isActive + "<br>");
+        builder.append("<br><b>Timezone:</b><br>" + timezone + "<br>");
+
         return builder.toString();
     }
+
 }

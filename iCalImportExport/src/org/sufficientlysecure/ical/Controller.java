@@ -26,23 +26,23 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import org.sufficientlysecure.ical.activities.MainActivity;
-import org.sufficientlysecure.ical.inputAdapters.BasicInputAdapter;
-import org.sufficientlysecure.ical.inputAdapters.CredentialInputAdapter;
-import org.sufficientlysecure.ical.tools.dialogs.Credentials;
-import org.sufficientlysecure.ical.tools.dialogs.DialogTools;
-import org.sufficientlysecure.ical.tools.dialogs.RunnableWithProgress;
-
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
-import android.annotation.TargetApi;
+
+import org.sufficientlysecure.ical.ui.MainActivity;
+import org.sufficientlysecure.ical.ui.dialogs.Credentials;
+import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.util.BasicInputAdapter;
+import org.sufficientlysecure.ical.util.CredentialInputAdapter;
+
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentProviderClient;
 import android.content.DialogInterface;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
-import android.os.Build;
 import android.os.Environment;
 import android.provider.CalendarContract;
 import android.text.Html;
@@ -50,7 +50,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+@SuppressLint("NewApi")
 public class Controller implements OnClickListener {
     private static final String TAG = Controller.class.getName();
     private MainActivity activity;
@@ -64,14 +64,15 @@ public class Controller implements OnClickListener {
     public void init() {
         checkPrequesites();
 
-        Cursor c = activity.getContentResolver().query(GoogleCalendar.getContentURI(), null, null,
+        Cursor c = activity.getContentResolver().query(AndroidCalendar.getContentURI(), null, null,
                 null, null);
-        List<GoogleCalendar> calendars = new ArrayList<GoogleCalendar>(c.getCount());
+        List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(c.getCount());
 
         while (c.moveToNext()) {
-            GoogleCalendar cal = GoogleCalendar.retrieve(c);
-            Cursor cursor = activity.getContentResolver().query(VEventWrapper.getContentURI(),
-                    new String[] {}, CalendarContract.Events.CALENDAR_ID + " = ?",
+            AndroidCalendar cal = AndroidCalendar.retrieve(c);
+            Cursor cursor = activity.getContentResolver().query(
+                    CalendarContract.Events.CONTENT_URI, null,
+                    CalendarContract.Events.CALENDAR_ID + " = ?",
                     new String[] { Integer.toString(cal.getId()) }, null);
             cal.setEntryCount(cursor.getCount());
             cursor.close();
@@ -85,9 +86,9 @@ public class Controller implements OnClickListener {
     public void checkPrequesites() {
         // Check if all necessary providers are installed
         ContentProviderClient calendarClient = activity.getContentResolver()
-                .acquireContentProviderClient(GoogleCalendar.getContentURI());
+                .acquireContentProviderClient(AndroidCalendar.getContentURI());
         ContentProviderClient eventClient = activity.getContentResolver()
-                .acquireContentProviderClient(VEventWrapper.getContentURI());
+                .acquireContentProviderClient(CalendarContract.Events.CONTENT_URI);
 
         if (eventClient == null || calendarClient == null) {
             noCalendarFinish();
@@ -96,7 +97,7 @@ public class Controller implements OnClickListener {
         eventClient.release();
 
         // Check if their is a calendar
-        Cursor c = activity.getContentResolver().query(GoogleCalendar.getContentURI(), null, null,
+        Cursor c = activity.getContentResolver().query(AndroidCalendar.getContentURI(), null, null,
                 null, null);
 
         if (c.getCount() == 0) {
@@ -104,7 +105,7 @@ public class Controller implements OnClickListener {
         }
         c.close();
     }
-    
+
     private void noCalendarFinish() {
         activity.runOnUiThread(new Runnable() {
             @Override
