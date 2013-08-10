@@ -84,7 +84,7 @@ public class SaveCalendar extends RunnableWithProgress {
         Calendar calendar = new Calendar();
         calendar.getProperties().add(new ProdId(androidCalendar.getOwnerAccount()));
         calendar.getProperties().add(Version.VERSION_2_0);
-        // get timezone
+        // set calendar timezone, only defined on Google Calendars?
         // TODO: Test
         if (androidCalendar.getTimezone() != null) {
             TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();

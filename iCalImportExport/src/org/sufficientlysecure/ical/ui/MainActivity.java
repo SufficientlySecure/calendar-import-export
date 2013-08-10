@@ -36,7 +36,6 @@ import org.sufficientlysecure.ical.ui.dialogs.SpinnerTools;
 import org.sufficientlysecure.ical.util.BasicInputAdapter;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -83,9 +82,6 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
 
         this.controller = new Controller(this);
-
-        // Show help menu
-        preferences = getSharedPreferences("at.aichbauer.iCal", Context.MODE_PRIVATE);
 
         // Retrieve views
         calendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);

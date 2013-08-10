@@ -118,7 +118,7 @@ public class AndroidCalendar {
         builder.append("<br><b>DisplayName:</b><br>" + displayName);
         builder.append("<br><b>Name:</b><br>" + name);
         builder.append("<br><b>Owner:</b><br>" + ownerAccount);
-        builder.append("<br><b>IsActive:</b><br>" + isActive + "<br>");
+        builder.append("<br><b>IsActive:</b><br>" + isActive);
         builder.append("<br><b>Timezone:</b><br>" + timezone + "<br>");
 
         return builder.toString();
