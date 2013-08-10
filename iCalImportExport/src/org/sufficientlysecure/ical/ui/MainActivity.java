@@ -217,9 +217,14 @@ public class MainActivity extends Activity {
     }
 
     public void selectCalendar(long id) {
-        for (AndroidCalendar cal : calendars) {
+        for (final AndroidCalendar cal : calendars) {
             if (cal.getId() == id) {
-                calendarSpinner.setSelection(calendars.indexOf(cal));
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        calendarSpinner.setSelection(calendars.indexOf(cal));
+                    }
+                });
             }
         }
     }
