@@ -39,7 +39,7 @@ See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-wi
 
 # Licenses
 iCal Import/Export is licensed under the GPLv3+.  
-The file COPYING includes the full license text.
+The file LICENSE includes the full license text.
 
 ## Details
 iCal Import/Export is free software: you can redistribute it and/or modify
@@ -58,7 +58,21 @@ along with iCal Import/Export.  If not, see <http://www.gnu.org/licenses/>.
 ## Libraries
 
 * iCal4J  
-  http://ical4j.sourceforge.net/  
+  http://ical4j.sourceforge.net  
   New BSD License
 
+* Apache Commons  
+  http://commons.apache.org  
+  Apache License v2
+
+* backport-util-concurrent  
+  http://backport-jsr166.sourceforge.net  
+  Public Domain
+
 ## Images
+
+* icon.svg  
+  Based on Tango Icon Library and RRZE Icon Set  
+  http://tango.freedesktop.org  
+  http://rrze-icon-set.berlios.de  
+  Public Domain (Tango Icon Library) and Creative Commons Attribution Share-Alike licence 3.0. (RRZE Icon Set)
