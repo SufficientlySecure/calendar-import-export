@@ -24,6 +24,7 @@ import java.io.FileOutputStream;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
+import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.property.ProdId;
@@ -80,16 +81,17 @@ public class SaveCalendar extends RunnableWithProgress {
             return;
         }
 
-        // get timezone
-        // TODO: see https://github.com/dschuermann/ical-import-export/issues/11
-        // TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-        // VTimeZone tz = registry.getTimeZone(androidCalendar.getTimezone()).getVTimeZone();
-
         Calendar calendar = new Calendar();
         calendar.getProperties().add(new ProdId(androidCalendar.getOwnerAccount()));
         calendar.getProperties().add(Version.VERSION_2_0);
+        // get timezone
+        // TODO: Test
+        if (androidCalendar.getTimezone() != null) {
+            TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
+            VTimeZone tz = registry.getTimeZone(androidCalendar.getTimezone()).getVTimeZone();
 
-        // calendar.getComponents().add(tz);
+            calendar.getComponents().add(tz);
+        }
 
         while (c.moveToNext()) {
             VEvent vevent = VEventWrapper.resolve(c);

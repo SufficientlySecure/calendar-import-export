@@ -57,7 +57,7 @@ public class AndroidVEventWrapper {
         vEventToAndroid = new HashMap<String, IVEventWrapper>();
 
         androidToVEvent.put("description", new AndroidWrapper("description"));
-        androidToVEvent.put("organizer", new AndroidOrganizerWrapper("organizer"));
+        // androidToVEvent.put("organizer", new AndroidOrganizerWrapper("organizer"));
         androidToVEvent.put("rrule", new AndroidWrapper("rrule"));
         androidToVEvent.put("summary", new AndroidWrapper("summary", "title"));
         androidToVEvent.put("location", new AndroidWrapper("location", "eventLocation"));
@@ -67,7 +67,7 @@ public class AndroidVEventWrapper {
         // "lastDate"));
 
         vEventToAndroid.put("description", new VEventWrapper("description"));
-        vEventToAndroid.put("organizer", new VEventWrapper("organizer"));
+        // vEventToAndroid.put("organizer", new VEventWrapper("organizer"));
         vEventToAndroid.put("rrule", new VEventWrapper("rrule"));
         vEventToAndroid.put("summary", new VEventWrapper("summary", "title"));
         vEventToAndroid.put("location", new VEventWrapper("location", "eventLocation"));
@@ -131,38 +131,38 @@ public class AndroidVEventWrapper {
         }
     }
 
-    private class AndroidOrganizerWrapper implements IAndroidWrapper {
-        private String keyVEvent;
-        private String keyAndroidEvent;
-
-        public AndroidOrganizerWrapper(String keyVEvent, String keyAndroidEvent) {
-            this.keyVEvent = keyVEvent.toUpperCase();
-            this.keyAndroidEvent = keyAndroidEvent;
-        }
-
-        public AndroidOrganizerWrapper(String key) {
-            this.keyVEvent = key.toUpperCase();
-            this.keyAndroidEvent = key;
-        }
-
-        public void wrap(PropertyList properties, Cursor c) {
-            int columnIndex = c.getColumnIndex(keyAndroidEvent);
-            if (columnIndex != -1) {
-                String value = c.getString(columnIndex);
-                if (value != null) {
-                    // remove whitespaces from organizer string
-                    value = value.replaceAll("\\s", "");
-                    try {
-                        Log.d(TAG, "AndroidWrapper, VEvent: " + keyVEvent + " AndroidEvent: "
-                                + keyAndroidEvent + " Value: " + value);
-                        properties.add(createProperty(keyVEvent, value));
-                    } catch (Exception exc) {
-                        Log.d(TAG, "Error", exc);
-                    }
-                }
-            }
-        }
-    }
+    // private class AndroidOrganizerWrapper implements IAndroidWrapper {
+    // private String keyVEvent;
+    // private String keyAndroidEvent;
+    //
+    // public AndroidOrganizerWrapper(String keyVEvent, String keyAndroidEvent) {
+    // this.keyVEvent = keyVEvent.toUpperCase();
+    // this.keyAndroidEvent = keyAndroidEvent;
+    // }
+    //
+    // public AndroidOrganizerWrapper(String key) {
+    // this.keyVEvent = key.toUpperCase();
+    // this.keyAndroidEvent = key;
+    // }
+    //
+    // public void wrap(PropertyList properties, Cursor c) {
+    // int columnIndex = c.getColumnIndex(keyAndroidEvent);
+    // if (columnIndex != -1) {
+    // String value = c.getString(columnIndex);
+    // if (value != null) {
+    // // remove whitespaces from organizer string
+    // value = value.replaceAll("\\s", "");
+    // try {
+    // Log.d(TAG, "AndroidWrapper, VEvent: " + keyVEvent + " AndroidEvent: "
+    // + keyAndroidEvent + " Value: " + value);
+    // properties.add(createProperty(keyVEvent, value));
+    // } catch (Exception exc) {
+    // Log.d(TAG, "Error", exc);
+    // }
+    // }
+    // }
+    // }
+    // }
 
     private class AndroidDateWrapper implements IAndroidWrapper {
         private String keyVEvent;
@@ -189,21 +189,27 @@ public class AndroidVEventWrapper {
                         // Find timezone
                         String dbTimezone = c.getString(c
                                 .getColumnIndex(CalendarContract.Events.EVENT_TIMEZONE));
-                        Log.d(TAG, "timezone from db: " + dbTimezone);
+                        Log.d(TAG, "timezone from Android: " + dbTimezone);
                         net.fortuna.ical4j.model.TimeZone timezone = new TimeZoneRegistryImpl()
                                 .getTimeZone(dbTimezone);
+
+                        // TODO: Do we need to convert this timezone??? To account for GMT
+                        // conversion to string?
                         Log.d(TAG, "timezone display name: " + timezone.getDisplayName());
                         Log.d(TAG, "vtimezone id: " + timezone.getVTimeZone().getTimeZoneId());
 
+                        // Time needs to be the local time (i.e. the time in the timezone of the
+                        // event)
+                        // see FORM#3, http://www.kanzaki.com/docs/ical/dateTime.html
                         DateTime dateTime = new DateTime(Long.valueOf(value));
                         dateTime.setTimeZone(timezone);
+                        Log.d(TAG, "dateTime: " + dateTime.toString());
 
+                        // Add timezone to event
                         // create tzid parameter..
                         TzId tzParam = new TzId(timezone.getID());
-
                         // create value parameter..
                         // Value type = Value.TIME;
-
                         ParameterList params = new ParameterList();
                         params.add(tzParam);
                         // params.add(type);
@@ -213,8 +219,6 @@ public class AndroidVEventWrapper {
                                 dateTime.toString());
 
                         properties.add(property);
-
-                        // properties.add(createProperty(keyVEvent, dateTime.toString()));
                     } catch (Exception exc) {
                         Log.d(TAG, "Error", exc);
                     }

@@ -17,26 +17,25 @@
 
 package org.sufficientlysecure.ical;
 
-import org.sufficientlysecure.ical.AndroidVEventWrapper.IAndroidWrapper;
-import org.sufficientlysecure.ical.AndroidVEventWrapper.IVEventWrapper;
-
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtStamp;
-import android.annotation.TargetApi;
+
+import org.sufficientlysecure.ical.AndroidVEventWrapper.IAndroidWrapper;
+import org.sufficientlysecure.ical.AndroidVEventWrapper.IVEventWrapper;
+
+import android.annotation.SuppressLint;
 import android.content.ContentValues;
 import android.database.Cursor;
-import android.net.Uri;
-import android.os.Build;
 import android.provider.CalendarContract;
 import android.util.Log;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
+@SuppressLint("NewApi")
 public class VEventWrapper {
     private static String TAG = VEventWrapper.class.getSimpleName();
 
-    private static String[] keys = new String[] { "organizer", "rrule", "summary", "description",
-            "location", "dtstart", "dtend" };
+    private static String[] keys = new String[] { "rrule", "summary", "description", "location",
+            "dtstart", "dtend" };// "organizer",
 
     public static VEvent resolve(Cursor c) {
         PropertyList properties = new PropertyList();

@@ -230,11 +230,12 @@ public class Controller implements OnClickListener {
                                 activity.setUrls(Arrays.asList(new BasicInputAdapter(url)));
                             }
                         } catch (MalformedURLException exc) {
+                            Log.d(TAG, "Controller", exc);
+
                             DialogTools.showInformationDialog(activity,
                                     activity.getString(R.string.dialog_error_title),
                                     "URL was not parseable..." + exc.getMessage(),
                                     R.drawable.calendar);
-                            Log.d(TAG, "Error", exc);
                         }
                     }
                 }

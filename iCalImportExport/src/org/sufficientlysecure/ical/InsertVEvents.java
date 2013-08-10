@@ -97,7 +97,7 @@ public class InsertVEvents extends ProcessVEvent {
                 }
                 if (!checkForDuplicates || !contains(values)) {
                     Log.d(TAG, "values: " + values);
-                    
+
                     Uri uri = resolver.insert(CalendarContract.Events.CONTENT_URI, values);
                     Log.d(TAG, uri != null ? "Inserted calendar event: " + uri.toString()
                             : "Could not insert calendar event.");
@@ -130,6 +130,7 @@ public class InsertVEvents extends ProcessVEvent {
                     getActivity().getString(R.string.dialog_information_title), message,
                     R.drawable.calendar);
         } catch (Exception exc) {
+            Log.e(TAG, "InsertVEvents", exc);
             try {
                 ProviderTools.writeException(Environment.getExternalStorageDirectory()
                         + File.separator + "ical_error.log", exc);
