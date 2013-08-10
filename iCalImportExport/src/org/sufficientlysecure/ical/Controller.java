@@ -83,6 +83,11 @@ public class Controller implements OnClickListener {
         this.activity.setCalendars(calendars);
     }
 
+    public void init(long calendarId) {
+        init();
+        this.activity.selectCalendar(calendarId);
+    }
+
     public void checkPrequesites() {
         // Check if all necessary providers are installed
         ContentProviderClient calendarClient = activity.getContentResolver()
@@ -96,7 +101,7 @@ public class Controller implements OnClickListener {
         calendarClient.release();
         eventClient.release();
 
-        // Check if their is a calendar
+        // Check if there is a calendar
         Cursor c = activity.getContentResolver().query(AndroidCalendar.getContentURI(), null, null,
                 null, null);
 

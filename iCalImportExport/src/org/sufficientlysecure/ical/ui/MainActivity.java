@@ -52,6 +52,9 @@ import android.widget.TextView;
 public class MainActivity extends Activity {
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
+    public static final String EXTRA_CALENDAR_ID = "calendarId";
+
     /*
      * Views
      */
@@ -96,13 +99,6 @@ public class MainActivity extends Activity {
         processGroup = (LinearLayout) findViewById(R.id.linearLayoutProcess);
         setUrlButton = (Button) findViewById(R.id.SetUrlButton);
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                controller.init();
-            }
-        }).start();
-
         searchButton.setOnClickListener(controller);
         loadButton.setOnClickListener(controller);
         calendarInformation.setOnClickListener(controller);
@@ -111,15 +107,41 @@ public class MainActivity extends Activity {
         insertButton.setOnClickListener(controller);
         setUrlButton.setOnClickListener(controller);
 
-        // if file intent
         Intent intent = getIntent();
-        if (intent != null && intent.getAction().equals(Intent.ACTION_VIEW)) {
-            try {
-                setUrls(Arrays.asList(new BasicInputAdapter(new URL(intent.getDataString()))));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
+        if (intent != null) {
+            String action = intent.getAction();
+
+            if (LOAD_CALENDAR.equals(action)) {
+                final long calendarId = intent.getLongExtra(EXTRA_CALENDAR_ID, -1);
+
+                // load with specific calendar
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        controller.init(calendarId);
+                    }
+                }).start();
+            } else {
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        controller.init();
+                    }
+                }).start();
+
+                // if file intent
+                if (Intent.ACTION_VIEW.equals(action)) {
+                    try {
+                        setUrls(Arrays
+                                .asList(new BasicInputAdapter(new URL(intent.getDataString()))));
+                    } catch (MalformedURLException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         }
+
     }
 
     /**
@@ -192,6 +214,14 @@ public class MainActivity extends Activity {
             }
         }
         return null;
+    }
+
+    public void selectCalendar(long id) {
+        for (AndroidCalendar cal : calendars) {
+            if (cal.getId() == id) {
+                calendarSpinner.setSelection(calendars.indexOf(cal));
+            }
+        }
     }
 
     public BasicInputAdapter getSelectedURL() {
