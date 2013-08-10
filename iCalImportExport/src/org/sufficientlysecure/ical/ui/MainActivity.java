@@ -245,13 +245,13 @@ public class MainActivity extends Activity {
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
             DialogTools.showInformationDialog(this, getString(R.string.menu_help),
-                    Html.fromHtml(ICalConstants.HELP), R.drawable.calendar_gray);
+                    Html.fromHtml(ICalConstants.HELP), R.drawable.icon);
         } else if (item.getItemId() == R.id.changelog) {
             DialogTools.showInformationDialog(this, R.string.menu_changelog, R.string.changelog,
-                    R.drawable.calendar_gray);
+                    R.drawable.icon);
         } else if (item.getItemId() == R.id.license) {
             DialogTools.showInformationDialog(this, R.string.menu_license, R.string.license,
-                    R.drawable.calendar_gray);
+                    R.drawable.icon);
         }
         return super.onContextItemSelected(item);
     }

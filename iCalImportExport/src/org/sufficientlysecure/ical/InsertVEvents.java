@@ -52,24 +52,24 @@ public class InsertVEvents extends ProcessVEvent {
         try {
             if (!DialogTools.decisionDialog(getActivity(), R.string.dialog_information_title,
                     R.string.dialog_insert_entries, R.string.dialog_yes, R.string.dialog_no,
-                    R.drawable.calendar)) {
+                    R.drawable.icon)) {
                 return;
             }
             boolean checkForDuplicates = DialogTools.decisionDialog(getActivity(),
                     R.string.dialog_information_title,
                     R.string.dialog_insert_search_for_duplicates, R.string.dialog_yes,
-                    R.string.dialog_no, R.drawable.calendar);
+                    R.string.dialog_no, R.drawable.icon);
 
             List<Integer> reminders = new ArrayList<Integer>();
 
             while (DialogTools.decisionDialog(getActivity(), "Reminder",
                     "Add a reminder? Will be used for all Events!",
                     getActivity().getString(android.R.string.yes),
-                    getActivity().getString(android.R.string.no), R.drawable.calendar)) {
+                    getActivity().getString(android.R.string.no), R.drawable.icon)) {
                 String time_in_minutes = DialogTools.questionDialog(getActivity(), "Reminder",
                         "Insert minutes for reminding before event",
                         getActivity().getString(android.R.string.ok), "10", true,
-                        R.drawable.calendar, false);
+                        R.drawable.icon, false);
                 try {
                     if (time_in_minutes != null) {
                         if (!reminders.contains(Integer.parseInt(time_in_minutes))) {
@@ -79,7 +79,7 @@ public class InsertVEvents extends ProcessVEvent {
                 } catch (Exception exc) {
                     DialogTools.showInformationDialog(getActivity(),
                             getActivity().getString(R.string.dialog_bug_title),
-                            "Minutes could not be parsed", R.drawable.calendar);
+                            "Minutes could not be parsed", R.drawable.icon);
                 }
             }
 
@@ -128,7 +128,7 @@ public class InsertVEvents extends ProcessVEvent {
             }
             DialogTools.showInformationDialog(getActivity(),
                     getActivity().getString(R.string.dialog_information_title), message,
-                    R.drawable.calendar);
+                    R.drawable.icon);
         } catch (Exception exc) {
             Log.e(TAG, "InsertVEvents", exc);
             try {
@@ -139,7 +139,7 @@ public class InsertVEvents extends ProcessVEvent {
             }
             DialogTools.showInformationDialog(getActivity(),
                     getActivity().getString(R.string.dialog_bug_title),
-                    getActivity().getString(R.string.dialog_bug), R.drawable.calendar);
+                    getActivity().getString(R.string.dialog_bug), R.drawable.icon);
         }
     }
 }

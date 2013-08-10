@@ -1,5 +1,16 @@
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-	<item android:id="@+id/help" android:title="@string/menu_help" android:icon="@drawable/calendar_gray"/>
-	<item android:id="@+id/changelog" android:title="@string/menu_changelog" android:icon="@drawable/calendar_gray"/>
-	<item android:id="@+id/license" android:title="@string/menu_license" android:icon="@drawable/calendar_gray"/>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/help"
+        android:icon="@drawable/icon"
+        android:title="@string/menu_help"/>
+    <item
+        android:id="@+id/changelog"
+        android:icon="@drawable/icon"
+        android:title="@string/menu_changelog"/>
+    <item
+        android:id="@+id/license"
+        android:icon="@drawable/icon"
+        android:title="@string/menu_license"/>
+
 </menu>

@@ -57,7 +57,7 @@ public class SaveCalendar extends RunnableWithProgress {
     public void run(ProgressDialog dialog) {
         String input = DialogTools.questionDialog(getActivity(),
                 R.string.dialog_choosefilename_title, R.string.dialog_choosefilename_message,
-                R.string.dialog_proceed, null, true, R.drawable.calendar, false);
+                R.string.dialog_proceed, null, true, R.drawable.icon, false);
         if (input == null || input.equals("")) {
             return;
         }
@@ -77,7 +77,7 @@ public class SaveCalendar extends RunnableWithProgress {
         // don't save empty calendars
         if (c.getCount() == 0) {
             DialogTools.showInformationDialog(getActivity(), R.string.dialog_information_title,
-                    R.string.dialog_empty_calendar, R.drawable.calendar);
+                    R.string.dialog_empty_calendar, R.drawable.icon);
             return;
         }
 
@@ -110,13 +110,13 @@ public class SaveCalendar extends RunnableWithProgress {
             DialogTools.showInformationDialog(getActivity(),
                     getActivity().getString(R.string.dialog_success_title), getActivity()
                             .getString(R.string.dialog_sucessfully_written_calendar, i, output),
-                    R.drawable.calendar);
+                    R.drawable.icon);
         } catch (Exception e) {
             Log.e(TAG, "SaveCalendar", e);
 
             DialogTools.showInformationDialog(getActivity(),
                     getActivity().getString(R.string.dialog_bug_title),
-                    "Error:\n" + e.getMessage(), R.drawable.calendar);
+                    "Error:\n" + e.getMessage(), R.drawable.icon);
         }
 
     }

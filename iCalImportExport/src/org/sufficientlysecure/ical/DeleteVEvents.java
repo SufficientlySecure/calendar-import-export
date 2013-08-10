@@ -45,7 +45,7 @@ public class DeleteVEvents extends ProcessVEvent {
     public void run(ProgressDialog dialog) {
         if (!DialogTools.decisionDialog(getActivity(), R.string.dialog_information_title,
                 R.string.dialog_delete_entries, R.string.dialog_yes, R.string.dialog_no,
-                R.drawable.calendar)) {
+                R.drawable.icon)) {
             return;
         }
         setProgressMessage(R.string.progress_deleting_calendarentries);
@@ -73,6 +73,6 @@ public class DeleteVEvents extends ProcessVEvent {
 
         DialogTools.showInformationDialog(getActivity(),
                 getActivity().getString(R.string.dialog_information_title), getActivity()
-                        .getString(R.string.dialog_entries_deleted, i), R.drawable.calendar);
+                        .getString(R.string.dialog_entries_deleted, i), R.drawable.icon);
     }
 }

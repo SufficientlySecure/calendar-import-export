@@ -117,7 +117,7 @@ public class Controller implements OnClickListener {
             public void run() {
                 AlertDialog dialog = new AlertDialog.Builder(activity)
                         .setMessage(R.string.dialog_exiting)
-                        .setIcon(R.drawable.calendar)
+                        .setIcon(R.drawable.icon)
                         .setTitle(R.string.dialog_information_title)
                         .setCancelable(false)
                         .setPositiveButton(android.R.string.ok,
@@ -181,7 +181,7 @@ public class Controller implements OnClickListener {
                                 activity,
                                 activity.getString(R.string.dialog_error_title),
                                 activity.getString(R.string.dialog_error_unparseable)
-                                        + exc.getMessage(), R.drawable.calendar);
+                                        + exc.getMessage(), R.drawable.icon);
                         Log.d(TAG, "Error", exc);
                     }
                 }
@@ -198,7 +198,7 @@ public class Controller implements OnClickListener {
                             R.string.dialog_proceed,
                             activity.getPreferenceStore().getString(
                                     ICalConstants.PREFERENCE_LAST_URL, ""), true,
-                            R.drawable.calendar, false);
+                            R.drawable.icon, false);
                     if (answer != null && !answer.equals("")) {
                         try {
                             String username = DialogTools.questionDialog(
@@ -208,7 +208,7 @@ public class Controller implements OnClickListener {
                                     "OK",
                                     activity.getPreferenceStore().getString(
                                             ICalConstants.PREFERENCE_LAST_USERNAME, ""), true,
-                                    R.drawable.calendar, false);
+                                    R.drawable.icon, false);
                             String password = null;
                             if (username != null && !username.equals("")) {
                                 password = DialogTools.questionDialog(
@@ -218,7 +218,7 @@ public class Controller implements OnClickListener {
                                         "OK",
                                         activity.getPreferenceStore().getString(
                                                 ICalConstants.PREFERENCE_LAST_PASSWORD, ""), true,
-                                        R.drawable.calendar, true);
+                                        R.drawable.icon, true);
                             }
                             setProgressMessage("Parsing url...");
                             URL url = new URL(answer);
@@ -240,7 +240,7 @@ public class Controller implements OnClickListener {
                             DialogTools.showInformationDialog(activity,
                                     activity.getString(R.string.dialog_error_title),
                                     "URL was not parseable..." + exc.getMessage(),
-                                    R.drawable.calendar);
+                                    R.drawable.icon);
                         }
                     }
                 }
@@ -253,7 +253,7 @@ public class Controller implements OnClickListener {
         } else if (v.getId() == R.id.ShowInformationButton) {
             DialogTools.showInformationDialog(activity,
                     activity.getString(R.string.dialog_information_title),
-                    Html.fromHtml(activity.getSelectedCalendar().toHtml()), R.drawable.calendar);
+                    Html.fromHtml(activity.getSelectedCalendar().toHtml()), R.drawable.icon);
         } else if (v.getId() == R.id.InsertButton) {
             DialogTools.runWithProgress(activity, new InsertVEvents(activity, calendar, activity
                     .getSelectedCalendar().getId()), false, ProgressDialog.STYLE_HORIZONTAL);
