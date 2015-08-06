@@ -59,7 +59,7 @@ along with iCal Import/Export.  If not, see <http://www.gnu.org/licenses/>.
 ## Libraries
 
 * iCal4J
-  http://ical4j.sourceforge.net
+  https://github.com/ical4j
   New BSD License
 
 * Apache Commons
