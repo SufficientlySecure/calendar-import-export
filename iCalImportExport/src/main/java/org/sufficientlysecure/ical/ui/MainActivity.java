@@ -39,6 +39,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -76,7 +77,6 @@ public class MainActivity extends Activity {
     private List<BasicInputAdapter> urls;
     private List<AndroidCalendar> calendars;
     private LinearLayout processGroup;
-    private SharedPreferences preferences;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,7 +201,7 @@ public class MainActivity extends Activity {
     }
 
     public SharedPreferences getPreferenceStore() {
-        return preferences;
+        return PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     public AndroidCalendar getSelectedCalendar() {
