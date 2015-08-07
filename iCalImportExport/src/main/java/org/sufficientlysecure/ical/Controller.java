@@ -40,9 +40,11 @@ import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
 import android.provider.CalendarContract;
 import android.text.Html;
@@ -62,7 +64,7 @@ public class Controller implements OnClickListener {
     }
 
     public void init() {
-        checkPrequesites();
+        checkPrerequisites();
 
         Cursor c = activity.getContentResolver().query(AndroidCalendar.getContentURI(), null, null,
                 null, null);
@@ -88,27 +90,33 @@ public class Controller implements OnClickListener {
         this.activity.selectCalendar(calendarId);
     }
 
-    public void checkPrequesites() {
-        // Check if all necessary providers are installed
-        ContentProviderClient calendarClient = activity.getContentResolver()
-                .acquireContentProviderClient(AndroidCalendar.getContentURI());
-        ContentProviderClient eventClient = activity.getContentResolver()
-                .acquireContentProviderClient(CalendarContract.Events.CONTENT_URI);
-
-        if (eventClient == null || calendarClient == null) {
+    private void checkProvider(final ContentResolver resolver, final Uri uri) {
+        // Check an individual provider is installed
+        ContentProviderClient provider = resolver.acquireContentProviderClient(uri);
+        if (provider == null) {
             noCalendarFinish();
         }
-        calendarClient.release();
-        eventClient.release();
+        else
+        {
+            provider.release();
+        }
+    }
 
-        // Check if there is a calendar
-        Cursor c = activity.getContentResolver().query(AndroidCalendar.getContentURI(), null, null,
-                null, null);
+    private void checkPrerequisites() {
+        // Check that all necessary providers are installed
+        ContentResolver resolver = activity.getContentResolver();
+        checkProvider(resolver, AndroidCalendar.getContentURI());
+        checkProvider(resolver, CalendarContract.Events.CONTENT_URI);
 
+        // Check that there is a calendar available
+        Cursor c = resolver.query(AndroidCalendar.getContentURI(), null, null, null, null);
         if (c.getCount() == 0) {
             noCalendarFinish();
         }
-        c.close();
+        else
+        {
+            c.close();
+        }
     }
 
     private void noCalendarFinish() {
