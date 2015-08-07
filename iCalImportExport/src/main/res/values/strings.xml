@@ -42,8 +42,6 @@
          <item quantity="other">Successfully wrote %1$d events to file %2$s</item>
     </plurals>
     <string name="dialog_empty_calendar">Will not persist empty calendar.</string>
-    <string name="dialog_yes">Yes</string>
-    <string name="dialog_no">No</string>
     <string name="dialog_proceed">Proceed</string>
     <string name="dialog_information_title">Information</string>
     <string name="dialog_success_title">Finished</string>

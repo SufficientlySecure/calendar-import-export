@@ -48,7 +48,7 @@ public class DialogTools {
             public void run() {
                 AlertDialog dialog = new AlertDialog.Builder(activity).setMessage(message)
                         .setIcon(drawableResource)
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

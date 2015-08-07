@@ -45,7 +45,7 @@ public class DeleteVEvents extends ProcessVEvent {
     @Override
     public void run(ProgressDialog dialog) {
         if (!DialogTools.decisionDialog(getActivity(), R.string.dialog_information_title,
-                R.string.dialog_delete_entries, R.string.dialog_yes, R.string.dialog_no,
+                R.string.dialog_delete_entries, android.R.string.yes, android.R.string.no,
                 R.drawable.icon)) {
             return;
         }
