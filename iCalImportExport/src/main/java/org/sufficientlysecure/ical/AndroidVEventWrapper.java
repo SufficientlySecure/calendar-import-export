@@ -31,7 +31,6 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
@@ -214,7 +213,7 @@ public class AndroidVEventWrapper {
                         params.add(tzParam);
                         // params.add(type);
 
-                        PropertyFactory factory = PropertyFactoryImpl.getInstance();
+                        PropertyFactoryImpl factory = PropertyFactoryImpl.getInstance();
                         Property property = factory.createProperty(keyVEvent, params,
                                 dateTime.toString());
 
@@ -342,7 +341,7 @@ public class AndroidVEventWrapper {
 
     private Property createProperty(String key, String value) throws IOException,
             URISyntaxException, ParseException {
-        PropertyFactory factory = PropertyFactoryImpl.getInstance();
+        PropertyFactoryImpl factory = PropertyFactoryImpl.getInstance();
         Property property = factory.createProperty(key);
         property.setValue(value);
         return property;
