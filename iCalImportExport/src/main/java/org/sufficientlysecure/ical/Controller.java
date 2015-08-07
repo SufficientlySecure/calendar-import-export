@@ -64,9 +64,10 @@ public class Controller implements OnClickListener {
         this.activity = activity;
     }
 
-    public void init() {
+    public void init(long calendarId) {
         checkPrerequisites();
 
+        // Load our list of calendars
         Cursor c = activity.getContentResolver().query(AndroidCalendar.getContentURI(), null, null,
                 null, null);
         List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(c.getCount());
@@ -84,10 +85,6 @@ public class Controller implements OnClickListener {
         c.close();
 
         this.activity.setCalendars(calendars);
-    }
-
-    public void init(long calendarId) {
-        init();
         this.activity.selectCalendar(calendarId);
     }
 

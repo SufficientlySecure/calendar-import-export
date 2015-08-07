@@ -109,40 +109,29 @@ public class MainActivity extends Activity {
         setUrlButton.setOnClickListener(controller);
 
         Intent intent = getIntent();
-        if (intent != null) {
-            String action = intent.getAction();
-
-            if (LOAD_CALENDAR.equals(action)) {
-                final long calendarId = intent.getLongExtra(EXTRA_CALENDAR_ID, -1);
-
-                // load with specific calendar
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        controller.init(calendarId);
-                    }
-                }).start();
-            } else {
-
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        controller.init();
-                    }
-                }).start();
-
-                // if file intent
-                if (Intent.ACTION_VIEW.equals(action)) {
-                    try {
-                        setUrls(Arrays
-                                .asList(new BasicInputAdapter(new URL(intent.getDataString()))));
-                    } catch (MalformedURLException e) {
-                        e.printStackTrace();
-                    }
-                }
-            }
+        if (intent == null) {
+            return;
         }
 
+        String action = intent.getAction();
+
+        final int id = action.equals(LOAD_CALENDAR) ? intent.getIntExtra(EXTRA_CALENDAR_ID, -1) : -1;
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                controller.init(id);
+            }
+        }).start();
+
+        if (action.equals(Intent.ACTION_VIEW)) {
+            // File intent
+            try {
+                setUrls(Arrays.asList(new BasicInputAdapter(new URL(intent.getDataString()))));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     /**
