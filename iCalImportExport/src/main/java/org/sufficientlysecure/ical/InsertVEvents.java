@@ -106,7 +106,8 @@ public class InsertVEvents extends ProcessVEvent {
                             ContentValues reminderValues = new ContentValues();
                             reminderValues.put(CalendarContract.Reminders.EVENT_ID, id);
                             reminderValues.put(CalendarContract.Reminders.MINUTES, time);
-                            reminderValues.put(CalendarContract.Reminders.METHOD, 1);
+                            reminderValues.put(CalendarContract.Reminders.METHOD,
+                                    CalendarContract.Reminders.METHOD_ALERT);
                             uri = resolver.insert(CalendarContract.Reminders.CONTENT_URI,
                                     reminderValues);
                             Log.d(TAG, uri != null ? "Inserted reminder: " + uri.toString()
