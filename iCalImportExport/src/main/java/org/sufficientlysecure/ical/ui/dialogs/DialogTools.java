@@ -88,22 +88,15 @@ public class DialogTools {
         return dialog;
     }
 
-    public static String questionDialog(Activity activity, int titleResource, int messageResource,
-            int okResource, String input, boolean cancelable, int drawableResource, boolean password) {
-        return questionDialog(activity, activity.getString(titleResource),
-                activity.getString(messageResource), activity.getString(okResource), input,
-                cancelable, drawableResource, password);
-    }
-
-    public static String questionDialog(final Activity activity, final CharSequence title,
-            final CharSequence message, final CharSequence ok, final String input,
+    public static String questionDialog(final Activity activity, final int titleResource,
+            final int messageResource, final int okResource, final String input,
             final boolean cancelable, final int drawableResource, final boolean password) {
         final String[] result = new String[2];
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                builder.setTitle(title);
+                builder.setTitle(activity.getString(titleResource));
 
                 LinearLayout layout = new LinearLayout(activity);
                 layout.setOrientation(LinearLayout.VERTICAL);
@@ -117,7 +110,7 @@ public class DialogTools {
                         LayoutParams.WRAP_CONTENT));
                 view.setTextSize(16);
                 layout.addView(view);
-                view.setText(message);
+                view.setText(activity.getString(messageResource));
 
                 final EditText editText = new EditText(activity);
                 if (password) {
@@ -132,7 +125,8 @@ public class DialogTools {
                 }
                 layout.addView(editText);
 
-                builder.setPositiveButton(ok, new DialogInterface.OnClickListener() {
+                builder.setPositiveButton(activity.getString(okResource),
+                        new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         result[0] = editText.getText().toString();

@@ -203,7 +203,7 @@ public class Controller implements OnClickListener {
                     String answer = DialogTools.questionDialog(
                             activity,
                             R.string.dialog_enter_url_title,
-                            R.string.dialog_enter_url,
+                            R.string.dialog_enter_url_message,
                             R.string.dialog_proceed,
                             activity.getPreferenceStore().getString(
                                     ICalConstants.PREFERENCE_LAST_URL, ""), true,
@@ -212,9 +212,9 @@ public class Controller implements OnClickListener {
                         try {
                             String username = DialogTools.questionDialog(
                                     activity,
-                                    "Username",
-                                    "Username:",
-                                    "OK",
+                                    R.string.dialog_enter_username_title,
+                                    R.string.dialog_enter_username_message,
+                                    android.R.string.ok,
                                     activity.getPreferenceStore().getString(
                                             ICalConstants.PREFERENCE_LAST_USERNAME, ""), true,
                                     R.drawable.icon, false);
@@ -222,9 +222,9 @@ public class Controller implements OnClickListener {
                             if (username != null && !username.equals("")) {
                                 password = DialogTools.questionDialog(
                                         activity,
-                                        "Password",
-                                        "Password:",
-                                        "OK",
+                                        R.string.dialog_enter_password_title,
+                                        R.string.dialog_enter_password_message,
+                                        android.R.string.ok,
                                         activity.getPreferenceStore().getString(
                                                 ICalConstants.PREFERENCE_LAST_PASSWORD, ""), true,
                                         R.drawable.icon, true);

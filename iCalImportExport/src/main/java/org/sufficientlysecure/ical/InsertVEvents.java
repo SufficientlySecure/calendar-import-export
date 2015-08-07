@@ -67,9 +67,10 @@ public class InsertVEvents extends ProcessVEvent {
                     "Add a reminder? Will be used for all Events!",
                     getActivity().getString(android.R.string.yes),
                     getActivity().getString(android.R.string.no), R.drawable.icon)) {
-                String time_in_minutes = DialogTools.questionDialog(getActivity(), "Reminder",
-                        "Insert minutes for reminding before event",
-                        getActivity().getString(android.R.string.ok), "10", true,
+                String time_in_minutes = DialogTools.questionDialog(getActivity(),
+                        R.string.dialog_reminder_title,
+                        R.string.dialog_reminder_message,
+                        android.R.string.ok, "10", true,
                         R.drawable.icon, false);
                 try {
                     if (time_in_minutes != null) {
