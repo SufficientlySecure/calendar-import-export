@@ -16,7 +16,6 @@
     <string name="button_load_calendar">Load</string>
     <string name="button_save_calendar">Save to iCal file</string>
     <string name="button_set_http">Set URL</string>
-    <string name="button_drop_calendar">Drop It!</string>
     <string name="textview_export">Export</string>
     <string name="textview_import">Import</string>
     <string name="textview_choose_calendar">Selected Calendar:</string>
@@ -24,11 +23,9 @@
          <item quantity="one">Found %d event.</item>
          <item quantity="other">Found %d events.</item>
     </plurals>
-    <string name="textview_search_sd">Search for iCal files on SD card:</string>
     <string name="spinner_choose_file">Select iCal file below</string>
     <string name="spinner_choose_calendar">Select a calendar</string>
     <string name="dialog_proceed">Proceed</string>
-    <string name="dialog_experimental">Feature is experimental, proceed?</string>
     <string name="dialog_enter_url">Please enter an URL of an iCal file below which
 		starts with http:// or ftp://</string>
     <string name="dialog_enter_url_title">Please enter iCal URL</string>
@@ -42,7 +39,6 @@
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
     <string name="dialog_information_title">Information</string>
-    <string name="dialog_can_take_long_time">This process can take a long time. Proceed?</string>
     <string name="dialog_success_title">Finished</string>
     <plurals name="dialog_entries_deleted">
          <item quantity="one">Deleted %d calendar entry.</item>
@@ -65,11 +61,9 @@
     </plurals>
     <string name="dialog_bug_title">Error</string>
     <string name="dialog_bug">I am sorry for you inconvinience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
-    <string name="menu_quit">Quit</string>
     <string name="menu_help">Help</string>
     <string name="menu_changelog">Change Log</string>
     <string name="menu_license">License</string>
-    <string name="menu_beer">Buy me a beer</string>
     <string name="changelog">Version 1.6:\nNew forked version\nMany fixes for Android >= 4.0\nNew design
         \n\nVersion 1.5:\nBasic Http authentication and Ftp authentication via
         input fields. Small bugfix regarding dummy calendar. Insert manual
