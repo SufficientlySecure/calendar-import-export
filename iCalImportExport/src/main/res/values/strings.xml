@@ -20,7 +20,10 @@
     <string name="textview_export">Export</string>
     <string name="textview_import">Import</string>
     <string name="textview_choose_calendar">Selected Calendar:</string>
-    <string name="textview_calendar_short_information">Found %d events.</string>
+    <plurals name="textview_calendar_short_information">
+         <item quantity="one">Found %d event.</item>
+         <item quantity="other">Found %d events.</item>
+    </plurals>
     <string name="textview_search_sd">Search for iCal files on SD card:</string>
     <string name="spinner_choose_file">Select iCal file below</string>
     <string name="spinner_choose_calendar">Select a calendar</string>
@@ -31,23 +34,35 @@
     <string name="dialog_enter_url_title">Please enter iCal URL</string>
     <string name="dialog_choosefilename_title">Choose filename</string>
     <string name="dialog_choosefilename_message">Please enter filename below</string>
-    <string name="dialog_sucessfully_written_calendar">Successfully written %1$d events to file %2$s</string>
+    <plurals name="dialog_sucessfully_written_calendar">
+         <item quantity="one">Successfully wrote %1$d event to file %2$s</item>
+         <item quantity="other">Successfully wrote %1$d events to file %2$s</item>
+    </plurals>
     <string name="dialog_empty_calendar">Will not persist empty calendar.</string>
     <string name="dialog_yes">Yes</string>
     <string name="dialog_no">No</string>
     <string name="dialog_information_title">Information</string>
     <string name="dialog_can_take_long_time">This process can take a long time. Proceed?</string>
     <string name="dialog_success_title">Finished</string>
-    <string name="dialog_entries_deleted">Deleted %d entries of calendar.</string>
+    <plurals name="dialog_entries_deleted">
+         <item quantity="one">Deleted %d calendar entry.</item>
+         <item quantity="other">Deleted %d calendar entries.</item>
+    </plurals>
     <string name="dialog_delete_entries">Do you really want to delete the entries?</string>
     <string name="dialog_insert_search_for_duplicates">Do you want to search for duplicates, will take
 		longer?"</string>
     <string name="dialog_insert_entries">Insert entries into calendar?</string>
-    <string name="dialog_entries_inserted">Inserted %d entries into calendar.</string>
+    <plurals name="dialog_entries_inserted">
+         <item quantity="one">Inserted %d calendar entry.</item>
+         <item quantity="other">Inserted %d calendar entries.</item>
+    </plurals>
     <string name="dialog_exiting">No calendars found.\n\nYou must create a calendar to import to/export from. You can install \"Offline Calendar\" to create one.\n\nIf you are using Cyanogenmod: Make sure that Privacy Guard is disabled for this application to  allow calendar read/write.\n\nIf you are using Android 4.3 App Ops: Make sure that you allow calendar read/write access for this application.</string>
     <string name="dialog_error_title">Error</string>
     <string name="dialog_error_unparseable">iCal file could not be parsed\n\n</string>
-    <string name="dialog_found_duplicates">Found %d duplicate entries.</string>
+    <plurals name="dialog_found_duplicates">
+         <item quantity="one">Found %d duplicate entry.</item>
+         <item quantity="other">Found %d duplicate entries.</item>
+    </plurals>
     <string name="dialog_bug_title">Error</string>
     <string name="dialog_bug">I am sorry for you inconvinience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
     <string name="menu_quit">Quit</string>

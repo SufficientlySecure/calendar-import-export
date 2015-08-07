@@ -34,6 +34,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.CalendarContract;
@@ -122,9 +123,10 @@ public class InsertVEvents extends ProcessVEvent {
                 incrementProgress(1);
             }
 
-            String message = getActivity().getString(R.string.dialog_entries_inserted, i);
+            Resources res = getActivity().getResources();
+            String message = res.getQuantityString(R.plurals.dialog_entries_inserted, i, i);
             if (checkForDuplicates) {
-                message += "\n" + getActivity().getString(R.string.dialog_found_duplicates, j);
+                message += "\n" + res.getQuantityString(R.plurals.dialog_found_duplicates, j, j);
             }
             DialogTools.showInformationDialog(getActivity(),
                     getActivity().getString(R.string.dialog_information_title), message,

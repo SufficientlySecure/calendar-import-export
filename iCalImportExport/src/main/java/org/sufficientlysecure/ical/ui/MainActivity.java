@@ -37,6 +37,7 @@ import org.sufficientlysecure.ical.util.BasicInputAdapter;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -193,8 +194,11 @@ public class MainActivity extends Activity {
                 icalInformation.setVisibility(calendar == null ? View.GONE : View.VISIBLE);
                 processGroup.setVisibility(calendar == null ? View.GONE : View.VISIBLE);
                 if (calendar != null) {
-                    icalInformation.setText(getString(R.string.textview_calendar_short_information,
-                            calendar.getComponents(VEvent.VEVENT).size()));
+                    final int numEvents = calendar.getComponents(VEvent.VEVENT).size();
+                    Resources res = getResources();
+                    String txt = res.getQuantityString(R.plurals.textview_calendar_short_information,
+                            numEvents, numEvents);
+                    icalInformation.setText(txt);
                 }
             }
         });

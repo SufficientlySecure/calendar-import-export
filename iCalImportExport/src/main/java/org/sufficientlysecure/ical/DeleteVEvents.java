@@ -30,6 +30,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.provider.CalendarContract;
 
@@ -71,8 +72,9 @@ public class DeleteVEvents extends ProcessVEvent {
             incrementProgress(1);
         }
 
-        DialogTools.showInformationDialog(getActivity(),
-                getActivity().getString(R.string.dialog_information_title), getActivity()
-                        .getString(R.string.dialog_entries_deleted, i), R.drawable.icon);
+        Resources res = getActivity().getResources();
+        String title = res.getString(R.string.dialog_information_title);
+        String txt = res.getQuantityString(R.plurals.dialog_entries_deleted, i, i);
+        DialogTools.showInformationDialog(getActivity(), title, txt, R.drawable.icon);
     }
 }

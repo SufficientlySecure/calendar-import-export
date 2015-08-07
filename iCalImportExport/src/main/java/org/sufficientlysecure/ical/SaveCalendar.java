@@ -37,6 +37,7 @@ import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Environment;
 import android.provider.CalendarContract;
@@ -103,19 +104,20 @@ public class SaveCalendar extends RunnableWithProgress {
         }
         c.close();
         CalendarOutputter outputter = new CalendarOutputter();
+        Resources res = getActivity().getResources();
         try {
             setProgressMessage(R.string.progress_writing_calendar_to_file);
             outputter.output(calendar, new FileOutputStream(output));
 
-            DialogTools.showInformationDialog(getActivity(),
-                    getActivity().getString(R.string.dialog_success_title), getActivity()
-                            .getString(R.string.dialog_sucessfully_written_calendar, i, output),
-                    R.drawable.icon);
+            String title = res.getString(R.string.dialog_success_title);
+            String txt = res.getQuantityString(R.plurals.dialog_sucessfully_written_calendar,
+                    i, i, output);
+            DialogTools.showInformationDialog(getActivity(), title, txt, R.drawable.icon);
         } catch (Exception e) {
             Log.e(TAG, "SaveCalendar", e);
 
             DialogTools.showInformationDialog(getActivity(),
-                    getActivity().getString(R.string.dialog_bug_title),
+                    res.getString(R.string.dialog_bug_title),
                     "Error:\n" + e.getMessage(), R.drawable.icon);
         }
 
