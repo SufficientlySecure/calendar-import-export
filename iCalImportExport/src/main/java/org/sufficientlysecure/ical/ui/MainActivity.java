@@ -239,9 +239,8 @@ public class MainActivity extends Activity {
         if (item.getItemId() == R.id.help) {
             DialogTools.showInformationDialog(this, R.string.menu_help,
                     Html.fromHtml(ICalConstants.HELP), R.drawable.icon);
-        } else if (item.getItemId() == R.id.changelog) {
-            DialogTools.showInformationDialog(this, R.string.menu_changelog, R.string.changelog,
-                    R.drawable.icon);
+        } else if (item.getItemId() == R.id.settings) {
+            // FIXME: Settings
         } else if (item.getItemId() == R.id.license) {
             DialogTools.showInformationDialog(this, R.string.menu_license, R.string.license,
                     R.drawable.icon);
