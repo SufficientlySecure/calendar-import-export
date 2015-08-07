@@ -109,15 +109,14 @@ public class SaveCalendar extends RunnableWithProgress {
             setProgressMessage(R.string.progress_writing_calendar_to_file);
             outputter.output(calendar, new FileOutputStream(output));
 
-            String title = res.getString(R.string.dialog_success_title);
             String txt = res.getQuantityString(R.plurals.dialog_sucessfully_written_calendar,
                     i, i, output);
-            DialogTools.showInformationDialog(getActivity(), title, txt, R.drawable.icon);
+            DialogTools.showInformationDialog(getActivity(), R.string.dialog_success_title,
+                    txt, R.drawable.icon);
         } catch (Exception e) {
             Log.e(TAG, "SaveCalendar", e);
 
-            DialogTools.showInformationDialog(getActivity(),
-                    res.getString(R.string.dialog_bug_title),
+            DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,
                     "Error:\n" + e.getMessage(), R.drawable.icon);
         }
 

@@ -78,9 +78,8 @@ public class InsertVEvents extends ProcessVEvent {
                         }
                     }
                 } catch (Exception exc) {
-                    DialogTools.showInformationDialog(getActivity(),
-                            getActivity().getString(R.string.dialog_bug_title),
-                            "Minutes could not be parsed", R.drawable.icon);
+                    DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,
+                            R.string.dialog_bug_minutes_parse, R.drawable.icon);
                 }
             }
 
@@ -128,9 +127,8 @@ public class InsertVEvents extends ProcessVEvent {
             if (checkForDuplicates) {
                 message += "\n" + res.getQuantityString(R.plurals.dialog_found_duplicates, j, j);
             }
-            DialogTools.showInformationDialog(getActivity(),
-                    getActivity().getString(R.string.dialog_information_title), message,
-                    R.drawable.icon);
+            DialogTools.showInformationDialog(getActivity(), R.string.dialog_information_title,
+                    message, R.drawable.icon);
         } catch (Exception exc) {
             Log.e(TAG, "InsertVEvents", exc);
             try {
@@ -139,9 +137,8 @@ public class InsertVEvents extends ProcessVEvent {
             } catch (Exception e) {
 
             }
-            DialogTools.showInformationDialog(getActivity(),
-                    getActivity().getString(R.string.dialog_bug_title),
-                    getActivity().getString(R.string.dialog_bug), R.drawable.icon);
+            DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,
+                    R.string.dialog_bug, R.drawable.icon);
         }
     }
 }

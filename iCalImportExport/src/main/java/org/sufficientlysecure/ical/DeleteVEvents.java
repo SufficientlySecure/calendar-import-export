@@ -73,8 +73,8 @@ public class DeleteVEvents extends ProcessVEvent {
         }
 
         Resources res = getActivity().getResources();
-        String title = res.getString(R.string.dialog_information_title);
         String txt = res.getQuantityString(R.plurals.dialog_entries_deleted, i, i);
-        DialogTools.showInformationDialog(getActivity(), title, txt, R.drawable.icon);
+        DialogTools.showInformationDialog(getActivity(), R.string.dialog_information_title,
+                txt, R.drawable.icon);
     }
 }

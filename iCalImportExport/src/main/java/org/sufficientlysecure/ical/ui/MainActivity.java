@@ -248,7 +248,7 @@ public class MainActivity extends Activity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.help) {
-            DialogTools.showInformationDialog(this, getString(R.string.menu_help),
+            DialogTools.showInformationDialog(this, R.string.menu_help,
                     Html.fromHtml(ICalConstants.HELP), R.drawable.icon);
         } else if (item.getItemId() == R.id.changelog) {
             DialogTools.showInformationDialog(this, R.string.menu_changelog, R.string.changelog,

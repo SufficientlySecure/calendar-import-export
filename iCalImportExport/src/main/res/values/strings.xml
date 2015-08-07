@@ -61,6 +61,7 @@
          <item quantity="other">Found %d duplicate entries.</item>
     </plurals>
     <string name="dialog_bug_title">Error</string>
+    <string name="dialog_bug_minutes_parse">Minutes could not be parsed</string>
     <string name="dialog_bug">I am sorry for you inconvinience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
     <string name="menu_help">Help</string>
     <string name="menu_changelog">Change Log</string>

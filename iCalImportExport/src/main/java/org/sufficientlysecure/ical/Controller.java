@@ -188,9 +188,7 @@ public class Controller implements OnClickListener {
                         }
                         activity.setCalendar(calendar);
                     } catch (Exception exc) {
-                        DialogTools.showInformationDialog(
-                                activity,
-                                activity.getString(R.string.dialog_error_title),
+                        DialogTools.showInformationDialog(activity, R.string.dialog_error_title,
                                 activity.getString(R.string.dialog_error_unparseable)
                                         + exc.getMessage(), R.drawable.icon);
                         Log.d(TAG, "Error", exc);
@@ -248,10 +246,8 @@ public class Controller implements OnClickListener {
                         } catch (MalformedURLException exc) {
                             Log.d(TAG, "Controller", exc);
 
-                            DialogTools.showInformationDialog(activity,
-                                    activity.getString(R.string.dialog_error_title),
-                                    "URL was not parseable..." + exc.getMessage(),
-                                    R.drawable.icon);
+                            DialogTools.showInformationDialog(activity, R.string.dialog_error_title,
+                                    "URL was not parseable..." + exc.getMessage(), R.drawable.icon);
                         }
                     }
                 }
@@ -262,8 +258,7 @@ public class Controller implements OnClickListener {
                     new SaveCalendar(activity, activity.getSelectedCalendar()), false,
                     ProgressDialog.STYLE_HORIZONTAL);
         } else if (v.getId() == R.id.ShowInformationButton) {
-            DialogTools.showInformationDialog(activity,
-                    activity.getString(R.string.dialog_information_title),
+            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
                     Html.fromHtml(activity.getSelectedCalendar().toHtml()), R.drawable.icon);
         } else if (v.getId() == R.id.InsertButton) {
             DialogTools.runWithProgress(activity, new InsertVEvents(activity, calendar, activity

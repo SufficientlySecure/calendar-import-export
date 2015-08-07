@@ -38,11 +38,10 @@ public class DialogTools {
 
     public static void showInformationDialog(final Activity activity, final int title,
             final int message, final int drawableResource) {
-        showInformationDialog(activity, activity.getString(title), activity.getString(message),
-                drawableResource);
+        showInformationDialog(activity, title, activity.getString(message), drawableResource);
     }
 
-    public static void showInformationDialog(final Activity activity, final CharSequence title,
+    public static void showInformationDialog(final Activity activity, final int title,
             final CharSequence message, final int drawableResource) {
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -55,7 +54,7 @@ public class DialogTools {
                             public void onClick(DialogInterface dialog, int which) {
                                 dialog.cancel();
                             }
-                        }).setTitle(title).create();
+                        }).setTitle(activity.getString(title)).create();
 
                 dialog.show();
                 ((TextView) dialog.findViewById(android.R.id.message))
