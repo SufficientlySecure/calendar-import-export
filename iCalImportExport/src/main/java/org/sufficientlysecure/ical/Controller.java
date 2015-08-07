@@ -28,6 +28,7 @@ import java.util.List;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.dialogs.Credentials;
@@ -181,6 +182,8 @@ public class Controller implements OnClickListener {
                         setProgressMessage(R.string.progress_reading_ical);
                         InputStream in = activity.getSelectedURL().getConnection().getInputStream();
                         if (in != null) {
+                            // FIXME: Set all hints from options
+                            CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
                             calendar = calendarBuilder.build(in);
                         }
                         activity.setCalendar(calendar);
