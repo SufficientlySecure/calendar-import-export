@@ -170,16 +170,8 @@ public class DialogTools {
         return result[0];
     }
 
-    public static boolean decisionDialog(Activity activity, int titleResource, int messageResource,
-            int yesResource, int noResource, int drawableResource) {
-        return decisionDialog(activity, activity.getString(titleResource),
-                activity.getString(messageResource), activity.getString(yesResource),
-                activity.getString(noResource), drawableResource);
-    }
-
-    public static boolean decisionDialog(final Activity activity, final CharSequence title,
-            final CharSequence message, final CharSequence yes, final CharSequence no,
-            final int drawableResource) {
+    public static boolean decisionDialog(final Activity activity, final int title,
+            final int message, final int drawableResource) {
 
         final boolean[] result = new boolean[1];
         final Object[] obj = new Object[1];
@@ -187,9 +179,9 @@ public class DialogTools {
             @Override
             public void run() {
                 AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                AlertDialog dialog = builder.setMessage(message)
+                AlertDialog dialog = builder.setMessage(activity.getString(message))
                         .setCancelable(false)
-                        .setPositiveButton(yes, new OnClickListener() {
+                        .setPositiveButton(android.R.string.yes, new OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -197,7 +189,7 @@ public class DialogTools {
                                 obj[0] = new Object();
                                 dialog.cancel();
                             }
-                        }).setNegativeButton(no, new OnClickListener() {
+                        }).setNegativeButton(android.R.string.no, new OnClickListener() {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -205,7 +197,7 @@ public class DialogTools {
                                 obj[0] = new Object();
                                 dialog.cancel();
                             }
-                        }).setTitle(title).setIcon(drawableResource).create();
+                        }).setTitle(activity.getString(title)).setIcon(drawableResource).create();
 
                 dialog.show();
             }

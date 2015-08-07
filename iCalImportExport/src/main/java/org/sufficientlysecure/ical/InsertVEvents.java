@@ -52,24 +52,20 @@ public class InsertVEvents extends ProcessVEvent {
     public void run(ProgressDialog dialog) {
         try {
             if (!DialogTools.decisionDialog(getActivity(), R.string.dialog_information_title,
-                    R.string.dialog_insert_entries, android.R.string.yes, android.R.string.no,
-                    R.drawable.icon)) {
+                    R.string.dialog_insert_entries, R.drawable.icon)) {
                 return;
             }
             boolean checkForDuplicates = DialogTools.decisionDialog(getActivity(),
                     R.string.dialog_information_title,
-                    R.string.dialog_insert_search_for_duplicates, android.R.string.yes,
-                    android.R.string.no, R.drawable.icon);
+                    R.string.dialog_insert_search_for_duplicates, R.drawable.icon);
 
             List<Integer> reminders = new ArrayList<Integer>();
 
-            while (DialogTools.decisionDialog(getActivity(), "Reminder",
-                    "Add a reminder? Will be used for all Events!",
-                    getActivity().getString(android.R.string.yes),
-                    getActivity().getString(android.R.string.no), R.drawable.icon)) {
+            while (DialogTools.decisionDialog(getActivity(), R.string.dialog_reminder_title,
+                        R.string.dialog_reminder_message, R.drawable.icon)) {
                 String time_in_minutes = DialogTools.questionDialog(getActivity(),
                         R.string.dialog_reminder_title,
-                        R.string.dialog_reminder_message,
+                        R.string.dialog_reminder_minutes_message,
                         android.R.string.ok, "10", true,
                         R.drawable.icon, false);
                 try {

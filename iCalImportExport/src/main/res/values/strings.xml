@@ -36,7 +36,8 @@
     <string name="dialog_choosefilename_title">Choose filename</string>
     <string name="dialog_choosefilename_message">Please enter filename below</string>
     <string name="dialog_reminder_title">Reminder</string>
-    <string name="dialog_reminder_message">Insert minutes for reminding before event</string>
+    <string name="dialog_reminder_message">Add a reminder? Will be used for all Events!</string>
+    <string name="dialog_reminder_minutes_message">Insert minutes for reminding before event</string>
     <plurals name="dialog_sucessfully_written_calendar">
          <item quantity="one">Successfully wrote %1$d event to file %2$s</item>
          <item quantity="other">Successfully wrote %1$d events to file %2$s</item>
