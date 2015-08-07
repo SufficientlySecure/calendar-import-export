@@ -69,14 +69,21 @@ public abstract class ProcessVEvent extends RunnableWithProgress {
     }
 
     private Cursor getFromContentValues(ContentValues cValues) {
-        String where = CalendarContract.Events.TITLE + " = ? AND "
-                + CalendarContract.Events.DTSTART + " = ?";
+        // FIXME: This should match UID's, once we correctly preserve them, i.e:
+        // (src.UID == search.UID) || (search.UID == null && src.title == search.title)
+        // If UID's cannot be re-used between different calendars then we should
+        // drop the CALENDAR_ID column from the where clause and make sure we handle
+        // importing the same UID into two calendars sanely.
+        String where = CalendarContract.Events.CALENDAR_ID + " = ? AND " +
+                CalendarContract.Events.TITLE + " = ? AND " +
+                CalendarContract.Events.DTSTART + " = ?";
         Log.d(TAG,
                 CalendarContract.Events.TITLE + " = "
                         + cValues.getAsString(CalendarContract.Events.TITLE) + " AND "
                         + CalendarContract.Events.DTSTART + " = "
                         + cValues.getAsString(CalendarContract.Events.DTSTART));
-        String[] values = new String[] { cValues.getAsString(CalendarContract.Events.TITLE),
+        String[] values = new String[] { cValues.getAsString(CalendarContract.Events.CALENDAR_ID),
+                cValues.getAsString(CalendarContract.Events.TITLE),
                 cValues.getAsString(CalendarContract.Events.DTSTART) };
         Cursor c = getActivity().getContentResolver().query(CalendarContract.Events.CONTENT_URI,
                 new String[] { CalendarContract.Events._ID }, where, values, null);
