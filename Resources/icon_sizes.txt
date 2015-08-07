@@ -4,6 +4,8 @@ ldpi: 36x36
 mdpi: 48x48
 hdpi: 72x72
 xhdpi: 96x96
+xxhdpi: 144x144
+xxxhdpi: 192x192
 google code: 55x55
 android market: 512x512
 
@@ -19,3 +21,5 @@ ldpi: 18x18
 mdpi: 24x24
 hdpi: 36x36
 xhdpi: 48x48
+xxhdpi: 48x48
+xxxhdpi: 48x48
