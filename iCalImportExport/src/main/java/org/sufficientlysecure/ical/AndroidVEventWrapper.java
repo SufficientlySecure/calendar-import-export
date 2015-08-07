@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.TimeZone;
 
@@ -104,12 +105,12 @@ public class AndroidVEventWrapper {
         private String keyAndroidEvent;
 
         public AndroidWrapper(String keyVEvent, String keyAndroidEvent) {
-            this.keyVEvent = keyVEvent.toUpperCase();
+            this.keyVEvent = keyVEvent.toUpperCase(Locale.US);
             this.keyAndroidEvent = keyAndroidEvent;
         }
 
         public AndroidWrapper(String key) {
-            this.keyVEvent = key.toUpperCase();
+            this.keyVEvent = key.toUpperCase(Locale.US);
             this.keyAndroidEvent = key;
         }
 
@@ -168,12 +169,12 @@ public class AndroidVEventWrapper {
         private String keyAndroidEvent;
 
         public AndroidDateWrapper(String keyVEvent, String keyAndroidEvent) {
-            this.keyVEvent = keyVEvent.toUpperCase();
+            this.keyVEvent = keyVEvent.toUpperCase(Locale.US);
             this.keyAndroidEvent = keyAndroidEvent;
         }
 
         public AndroidDateWrapper(String key) {
-            this.keyVEvent = key.toUpperCase();
+            this.keyVEvent = key.toUpperCase(Locale.US);
             this.keyAndroidEvent = key;
         }
 
@@ -231,12 +232,12 @@ public class AndroidVEventWrapper {
         private String keyVEvent;
 
         public VEventWrapper(String keyVEvent, String keyGoogleEvent) {
-            this.keyVEvent = keyVEvent.toUpperCase();
+            this.keyVEvent = keyVEvent.toUpperCase(Locale.US);
             this.keyAndroidEvent = keyGoogleEvent;
         }
 
         public VEventWrapper(String key) {
-            this.keyVEvent = key.toUpperCase();
+            this.keyVEvent = key.toUpperCase(Locale.US);
             this.keyAndroidEvent = key;
         }
 
@@ -255,12 +256,12 @@ public class AndroidVEventWrapper {
         private String keyAndroidEvent;
 
         public VEventDateWrapper(String keyVEvent, String keyAndroidEvent) {
-            this.keyVEvent = keyVEvent.toUpperCase();
+            this.keyVEvent = keyVEvent.toUpperCase(Locale.US);
             this.keyAndroidEvent = keyAndroidEvent;
         }
 
         public VEventDateWrapper(String key) {
-            this.keyVEvent = key.toUpperCase();
+            this.keyVEvent = key.toUpperCase(Locale.US);
             this.keyAndroidEvent = key;
         }
 
