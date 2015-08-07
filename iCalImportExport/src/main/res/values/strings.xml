@@ -9,6 +9,7 @@
     <string name="progress_writing_calendar_to_file">Writing calendar to file.</string>
     <string name="progress_deleting_calendarentries">Deleting calendar entries.</string>
     <string name="progress_insert_entries">Inserting entries.</string>
+    <string name="progress_parsing_url">Parsing URL&#8230;</string>
     <string name="button_search_files">From SDCard</string>
     <string name="button_show_information">Information</string>
     <string name="button_delete_entries">Delete entries</string>

@@ -33,17 +33,6 @@ public abstract class RunnableWithProgress {
         return this.activity;
     }
 
-    public void setProgressMessage(final String message) {
-        activity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                Log.d(DialogTools.class.getSimpleName(), Thread.currentThread().toString());
-                dialog.setMessage(message);
-            }
-        });
-    }
-
     protected void setProgressDialog(ProgressDialog dialog) {
         this.dialog = dialog;
     }
@@ -54,16 +43,6 @@ public abstract class RunnableWithProgress {
             @Override
             public void run() {
                 dialog.setTitle(activity.getString(titleResource));
-            }
-        });
-    }
-
-    public void setProgressTitle(final String title) {
-        activity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                dialog.setTitle(title);
             }
         });
     }

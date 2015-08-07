@@ -231,7 +231,7 @@ public class Controller implements OnClickListener {
                                                 ICalConstants.PREFERENCE_LAST_PASSWORD, ""), true,
                                         R.drawable.icon, true);
                             }
-                            setProgressMessage("Parsing url...");
+                            setProgressMessage(R.string.progress_parsing_url);
                             URL url = new URL(answer);
                             Editor editor = activity.getPreferenceStore().edit();
                             editor.putString(ICalConstants.PREFERENCE_LAST_URL, answer);
