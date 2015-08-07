@@ -85,48 +85,56 @@ public class InsertVEvents extends ProcessVEvent {
 
             dialog.setMax(vevents.size());
             ContentResolver resolver = getActivity().getContentResolver();
-            int i = 0;
-            int j = 0;
+            int numIns = 0;
+            int numDups = 0;
             for (Object event : vevents) {
-                ContentValues values = VEventWrapper.resolve((VEvent) event, getCalendarId());
-                if (reminders.size() > 0) {
-                    values.put(CalendarContract.Events.HAS_ALARM, 1);
-                }
-                if (!checkForDuplicates || !contains(values)) {
-                    Log.d(TAG, "values: " + values);
-
-                    Uri uri = resolver.insert(CalendarContract.Events.CONTENT_URI, values);
-                    Log.d(TAG, uri != null ? "Inserted calendar event: " + uri.toString()
-                            : "Could not insert calendar event.");
-                    if (uri != null) {
-                        i += 1;
-                        for (int time : reminders) {
-                            int id = Integer.parseInt(uri.getLastPathSegment());
-                            Log.d(TAG, "Inserting reminder for event with id: " + id);
-                            ContentValues reminderValues = new ContentValues();
-                            reminderValues.put(CalendarContract.Reminders.EVENT_ID, id);
-                            reminderValues.put(CalendarContract.Reminders.MINUTES, time);
-                            reminderValues.put(CalendarContract.Reminders.METHOD,
-                                    CalendarContract.Reminders.METHOD_ALERT);
-                            uri = resolver.insert(CalendarContract.Reminders.CONTENT_URI,
-                                    reminderValues);
-                            Log.d(TAG, uri != null ? "Inserted reminder: " + uri.toString()
-                                    : "Could not insert reminder.");
-                        }
-                    }
-                } else {
-                    j++;
-                }
                 incrementProgress(1);
+
+                ContentValues eventVals = VEventWrapper.resolve((VEvent) event, getCalendarId());
+                if (reminders.size() > 0) {
+                    eventVals.put(CalendarContract.Events.HAS_ALARM, 1);
+                }
+
+                Log.d(TAG, "eventVals: " + eventVals);
+
+                if (checkForDuplicates && contains(eventVals)) {
+                    Log.d(TAG, "Ignoring duplicate");
+                    numDups++;
+                    continue;
+                }
+
+                Uri uri = insertAndLog(resolver, CalendarContract.Events.CONTENT_URI,
+                        eventVals, "Event");
+                if (uri == null) {
+                    continue;
+                }
+
+                numIns++;
+
+                for (int time : reminders) {
+
+                    int id = Integer.parseInt(uri.getLastPathSegment());
+
+                    Log.d(TAG, "Inserting reminder for event with id: " + id);
+
+                    ContentValues reminderVals = new ContentValues();
+                    reminderVals.put(CalendarContract.Reminders.EVENT_ID, id);
+                    reminderVals.put(CalendarContract.Reminders.MINUTES, time);
+                    reminderVals.put(CalendarContract.Reminders.METHOD,
+                                    CalendarContract.Reminders.METHOD_ALERT);
+
+                    insertAndLog(resolver, CalendarContract.Reminders.CONTENT_URI, reminderVals,
+                            "Reminder");
+                }
             }
 
             Resources res = getActivity().getResources();
-            String message = res.getQuantityString(R.plurals.dialog_entries_inserted, i, i);
-            if (checkForDuplicates) {
-                message += "\n" + res.getQuantityString(R.plurals.dialog_found_duplicates, j, j);
-            }
+            String message = res.getQuantityString(R.plurals.dialog_entries_inserted, numIns, numIns)
+                + "\n" + res.getQuantityString(R.plurals.dialog_found_duplicates, numDups, numDups);
+
             DialogTools.showInformationDialog(getActivity(), R.string.dialog_information_title,
                     message, R.drawable.icon);
+
         } catch (Exception exc) {
             Log.e(TAG, "InsertVEvents", exc);
             try {
@@ -138,5 +146,15 @@ public class InsertVEvents extends ProcessVEvent {
             DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,
                     R.string.dialog_bug, R.drawable.icon);
         }
+    }
+
+    private Uri insertAndLog(ContentResolver resolver, Uri uri, ContentValues vals, String type) {
+        Uri result = resolver.insert(uri, vals);
+        if (result == null) {
+            Log.d(TAG, "Could not insert " + type);
+        } else {
+            Log.d(TAG,  "Inserted " + type + ": " + result.toString());
+        }
+        return result;
     }
 }
