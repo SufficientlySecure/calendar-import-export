@@ -35,16 +35,19 @@ public class CredentialInputAdapter extends BasicInputAdapter {
 
     @Override
     public URLConnection getConnection() throws IOException {
-        if (getURL().getProtocol().equals("ftp")) {
-            URL u = new URL("ftp://" + credentials.getUsername() + ":" + credentials.getPassword()
-                    + "@" + getURL().toExternalForm().substring(6));
+        URL url = getURL();
+        String protocol = url.getProtocol();
+        String userPass = credentials.getUsername() + ":" + credentials.getPassword();
+
+        if (protocol.equalsIgnoreCase("ftp") || protocol.equalsIgnoreCase("ftps")) {
+            URL u = new URL(protocol + "://" + userPass + "@" + url.toExternalForm().substring(6));
             return u.openConnection();
-        } else if (getURL().getProtocol().equals("http")) {
-            Base64 enc = new Base64();
-            byte[] encoded = enc.encode((credentials.getUsername() + ":" + credentials
-                    .getPassword()).getBytes());
-            URLConnection connection = getURL().openConnection();
-            connection.setRequestProperty("Authorization", "Basic " + new String(encoded));
+        }
+
+        if (protocol.equalsIgnoreCase("http") || protocol.equalsIgnoreCase("https")) {
+            String encoded = new String(new Base64().encode(userPass.getBytes()));
+            URLConnection connection = url.openConnection();
+            connection.setRequestProperty("Authorization", "Basic " + encoded);
             return connection;
         }
         return super.getConnection();
