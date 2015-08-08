@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <PreferenceCategory
+        android:title="@string/activity_settings_import" >
+
+        <CheckBoxPreference
+            android:key="setting_import_no_dupes"
+            android:title="@string/activity_settings_import_no_dupes"
+            android:summary="@string/activity_settings_import_no_dupes_desc"
+            android:defaultValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/activity_settings_compatibility" >
+
+        <!-- Note that we use the CompatibilityHints key value directly as our preference key,
+             since this makes it trivial to look them up in the code -->
+        <CheckBoxPreference
+            android:key="ical4j.unfolding.relaxed"
+            android:title="@string/activity_settings_relaxed_unfolding"
+            android:summary="@string/activity_settings_relaxed_unfolding_desc"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="ical4j.parsing.relaxed"
+            android:title="@string/activity_settings_relaxed_parsing"
+            android:summary="@string/activity_settings_relaxed_parsing_desc"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="ical4j.validation.relaxed"
+            android:title="@string/activity_settings_relaxed_validation"
+            android:summary="@string/activity_settings_relaxed_validation_desc"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="ical4j.compatibility.outlook"
+            android:title="@string/activity_settings_outlook_compatibility"
+            android:summary="@string/activity_settings_outlook_compatibility_desc"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="ical4j.compatibility.notes"
+            android:title="@string/activity_settings_notes_compatibility"
+            android:summary="@string/activity_settings_notes_compatibility_desc"
+            android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="ical4j.compatibility.vcard"
+            android:title="@string/activity_settings_vcard_compatibility"
+            android:summary="@string/activity_settings_vcard_compatibility_desc"
+            android:enabled="false"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

@@ -27,6 +27,7 @@ import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.util.ProviderTools;
 
 import android.annotation.SuppressLint;
@@ -35,6 +36,7 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.res.Resources;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.CalendarContract;
@@ -51,19 +53,15 @@ public class InsertVEvents extends ProcessVEvent {
     @Override
     public void run(ProgressDialog dialog) {
         try {
-            if (!DialogTools.decisionDialog(getActivity(), R.string.dialog_information_title,
-                    R.string.dialog_insert_entries, R.drawable.icon)) {
-                return;
-            }
-            boolean checkForDuplicates = DialogTools.decisionDialog(getActivity(),
-                    R.string.dialog_information_title,
-                    R.string.dialog_insert_search_for_duplicates, R.drawable.icon);
+            MainActivity activity = (MainActivity)getActivity();
+            SharedPreferences prefs = activity.getPreferenceStore();
+            boolean checkForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
 
             List<Integer> reminders = new ArrayList<Integer>();
 
-            while (DialogTools.decisionDialog(getActivity(), R.string.dialog_reminder_title,
+            while (DialogTools.decisionDialog(activity, R.string.dialog_reminder_title,
                         R.string.dialog_reminder_message, R.drawable.icon)) {
-                String time_in_minutes = DialogTools.questionDialog(getActivity(),
+                String time_in_minutes = DialogTools.questionDialog(activity,
                         R.string.dialog_reminder_title,
                         R.string.dialog_reminder_minutes_message,
                         android.R.string.ok, "10", true,
@@ -75,7 +73,7 @@ public class InsertVEvents extends ProcessVEvent {
                         }
                     }
                 } catch (Exception exc) {
-                    DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,
+                    DialogTools.showInformationDialog(activity, R.string.dialog_bug_title,
                             R.string.dialog_bug_minutes_parse, R.drawable.icon);
                 }
             }
@@ -84,7 +82,7 @@ public class InsertVEvents extends ProcessVEvent {
             ComponentList vevents = getCalendar().getComponents(VEvent.VEVENT);
 
             dialog.setMax(vevents.size());
-            ContentResolver resolver = getActivity().getContentResolver();
+            ContentResolver resolver = activity.getContentResolver();
             int numIns = 0;
             int numDups = 0;
             for (Object event : vevents) {
@@ -128,12 +126,17 @@ public class InsertVEvents extends ProcessVEvent {
                 }
             }
 
-            Resources res = getActivity().getResources();
-            String message = res.getQuantityString(R.plurals.dialog_entries_inserted, numIns, numIns)
-                + "\n" + res.getQuantityString(R.plurals.dialog_found_duplicates, numDups, numDups);
+            Resources res = activity.getResources();
+            String msg = res.getQuantityString(R.plurals.dialog_entries_inserted, numIns, numIns)
+                    + "\n";
+            if (checkForDuplicates) {
+                msg += res.getQuantityString(R.plurals.dialog_found_duplicates, numDups, numDups);
+            } else {
+                msg += res.getString(R.string.dialog_did_not_check_dupes);
+            }
 
-            DialogTools.showInformationDialog(getActivity(), R.string.dialog_information_title,
-                    message, R.drawable.icon);
+            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
+                    msg, R.drawable.icon);
 
         } catch (Exception exc) {
             Log.e(TAG, "InsertVEvents", exc);

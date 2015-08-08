@@ -38,6 +38,12 @@
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".ui.SettingsActivity"
+            android:label="@string/menu_settings" >
+        </activity>
+
     </application>
 
 </manifest>

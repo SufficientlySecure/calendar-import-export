@@ -33,6 +33,7 @@ import org.sufficientlysecure.ical.ICalConstants;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.SpinnerTools;
+import org.sufficientlysecure.ical.ui.SettingsActivity;
 import org.sufficientlysecure.ical.util.BasicInputAdapter;
 
 import android.app.Activity;
@@ -236,15 +237,27 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if (item.getItemId() == R.id.help) {
+        switch (item.getItemId()) {
+
+        case R.id.help:
             DialogTools.showInformationDialog(this, R.string.menu_help,
                     Html.fromHtml(ICalConstants.HELP), R.drawable.icon);
-        } else if (item.getItemId() == R.id.settings) {
-            // FIXME: Settings
-        } else if (item.getItemId() == R.id.license) {
+            break;
+
+        case R.id.settings:
+            // Show our Settings view
+            this.startActivity(new Intent(this, SettingsActivity.class));
+            break;
+
+        case R.id.license:
             DialogTools.showInformationDialog(this, R.string.menu_license, R.string.license,
                     R.drawable.icon);
+            break;
+
+        default:
+            return super.onContextItemSelected(item);
         }
-        return super.onContextItemSelected(item);
+
+        return true;
     }
 }

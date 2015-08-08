@@ -51,9 +51,6 @@
          <item quantity="other">Deleted %d calendar entries.</item>
     </plurals>
     <string name="dialog_delete_entries">Do you really want to delete the entries?</string>
-    <string name="dialog_insert_search_for_duplicates">Do you want to search for duplicates, will take
-		longer?"</string>
-    <string name="dialog_insert_entries">Insert entries into calendar?</string>
     <plurals name="dialog_entries_inserted">
          <item quantity="one">Inserted %d calendar entry.</item>
          <item quantity="other">Inserted %d calendar entries.</item>
@@ -65,6 +62,7 @@
          <item quantity="one">Found %d duplicate entry.</item>
          <item quantity="other">Found %d duplicate entries.</item>
     </plurals>
+    <string name="dialog_did_not_check_dupes">Did not check for duplicate entries.</string>
     <string name="dialog_bug_title">Error</string>
     <string name="dialog_bug_minutes_parse">Minutes could not be parsed</string>
     <string name="dialog_bug">I am sorry for you inconvinience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
@@ -107,5 +105,23 @@
 		LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
 		NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
 		SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</string>
+
+    <string name="activity_settings_import">Import</string>
+    <string name="activity_settings_import_no_dupes">Ignore duplicates</string>
+    <string name="activity_settings_import_no_dupes_desc">Ignore entries that are already in the destination calendar</string>
+
+    <string name="activity_settings_compatibility">Compatibility</string>
+    <string name="activity_settings_relaxed_unfolding">Allow different line endings</string>
+    <string name="activity_settings_relaxed_unfolding_desc">Support various line wrapping schemes used by different products</string>
+    <string name="activity_settings_relaxed_parsing">Permissive parsing</string>
+    <string name="activity_settings_relaxed_parsing_desc">Support various incorrect but common iCalendar file quirks</string>
+    <string name="activity_settings_relaxed_validation">Permissive export</string>
+    <string name="activity_settings_relaxed_validation_desc">Skip extensive validation of the output file when exporting calendars</string>
+    <string name="activity_settings_outlook_compatibility">Microsoft compatible</string>
+    <string name="activity_settings_outlook_compatibility_desc">Support calendars exported by Microsoft&#174; Outlook&#174; and Microsoft&#174; Exchange&#8482;</string>
+    <string name="activity_settings_notes_compatibility">Notes compatible</string>
+    <string name="activity_settings_notes_compatibility_desc">Support calendars exported by IBM&#174; Notes&#174; (Formerly Lotus Notes&#174;)</string>
+    <string name="activity_settings_vcard_compatibility">vCard compatible</string>
+    <string name="activity_settings_vcard_compatibility_desc">Support events in vCard format</string>
 
 </resources>

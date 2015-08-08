@@ -43,6 +43,7 @@ import android.app.ProgressDialog;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.net.Uri;
@@ -140,6 +141,10 @@ public class Controller implements OnClickListener {
         });
     }
 
+    private void setHint(SharedPreferences prefs, String key) {
+        CompatibilityHints.setHintEnabled(key, prefs.getBoolean(key, true));
+    }
+
     @Override
     public void onClick(View v) {
         // Handling search for file event
@@ -179,8 +184,14 @@ public class Controller implements OnClickListener {
                         setProgressMessage(R.string.progress_reading_ical);
                         InputStream in = activity.getSelectedURL().getConnection().getInputStream();
                         if (in != null) {
-                            // FIXME: Set all hints from options
-                            CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_UNFOLDING, true);
+                            SharedPreferences prefs = activity.getPreferenceStore();
+                            setHint(prefs, CompatibilityHints.KEY_RELAXED_UNFOLDING);
+                            setHint(prefs, CompatibilityHints.KEY_RELAXED_PARSING);
+                            setHint(prefs, CompatibilityHints.KEY_RELAXED_VALIDATION);
+                            setHint(prefs, CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
+                            setHint(prefs, CompatibilityHints.KEY_NOTES_COMPATIBILITY);
+                            // FIXME: Need to upgrade ical4j to use this
+                            //setHint(prefs, CompatibilityHints.KEY_VCARD_COMPATIBILITY);
                             calendar = calendarBuilder.build(in);
                         }
                         activity.setCalendar(calendar);
