@@ -16,6 +16,18 @@ android {
     }
 
     dependencies {
-        compile fileTree(dir: 'libs', include: '*.jar')
+        // Exclude commons-logging as Android has it built-in
+        compile fileTree(dir: 'libs', include: '*.jar', exclude: '**/commons-logging-1.2.jar')
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+        debug {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
     }
 }
