@@ -50,7 +50,6 @@
             android:key="ical4j.compatibility.vcard"
             android:title="@string/activity_settings_vcard_compatibility"
             android:summary="@string/activity_settings_vcard_compatibility_desc"
-            android:enabled="false"
             android:defaultValue="false"/>
     </PreferenceCategory>
 

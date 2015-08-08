@@ -190,8 +190,7 @@ public class Controller implements OnClickListener {
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_VALIDATION);
                             setHint(prefs, CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
                             setHint(prefs, CompatibilityHints.KEY_NOTES_COMPATIBILITY);
-                            // FIXME: Need to upgrade ical4j to use this
-                            //setHint(prefs, CompatibilityHints.KEY_VCARD_COMPATIBILITY);
+                            setHint(prefs, CompatibilityHints.KEY_VCARD_COMPATIBILITY);
                             calendar = calendarBuilder.build(in);
                         }
                         activity.setCalendar(calendar);
