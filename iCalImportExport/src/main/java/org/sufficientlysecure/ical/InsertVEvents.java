@@ -28,6 +28,7 @@ import net.fortuna.ical4j.model.component.VEvent;
 
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.MainActivity;
+import org.sufficientlysecure.ical.ui.RemindersDialog;
 import org.sufficientlysecure.ical.util.ProviderTools;
 
 import android.annotation.SuppressLint;
@@ -54,29 +55,10 @@ public class InsertVEvents extends ProcessVEvent {
     public void run(ProgressDialog dialog) {
         try {
             MainActivity activity = (MainActivity)getActivity();
-            SharedPreferences prefs = activity.getPreferenceStore();
+            SharedPreferences prefs = activity.preferences;
             boolean checkForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
 
-            List<Integer> reminders = new ArrayList<Integer>();
-
-            while (DialogTools.decisionDialog(activity, R.string.dialog_reminder_title,
-                        R.string.dialog_reminder_message, R.drawable.icon)) {
-                String time_in_minutes = DialogTools.questionDialog(activity,
-                        R.string.dialog_reminder_title,
-                        R.string.dialog_reminder_minutes_message,
-                        android.R.string.ok, "10", true,
-                        R.drawable.icon, false);
-                try {
-                    if (time_in_minutes != null) {
-                        if (!reminders.contains(Integer.parseInt(time_in_minutes))) {
-                            reminders.add(Integer.parseInt(time_in_minutes));
-                        }
-                    }
-                } catch (Exception exc) {
-                    DialogTools.showInformationDialog(activity, R.string.dialog_bug_title,
-                            R.string.dialog_bug_minutes_parse, R.drawable.icon);
-                }
-            }
+            List<Integer> reminders = RemindersDialog.getSavedRemindersInMinutes();
 
             setProgressMessage(R.string.progress_insert_entries);
             ComponentList vevents = getCalendar().getComponents(VEvent.VEVENT);

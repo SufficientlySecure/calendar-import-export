@@ -1,21 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+<!-- Note that we use ical4j CompatibilityHints key values directly as preference keys
+     for the settings since this makes it trivial to look them up in the code. -->
+<PreferenceScreen
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="settings_screen_main" >
 
     <PreferenceCategory
         android:title="@string/activity_settings_import" >
 
         <CheckBoxPreference
             android:key="setting_import_no_dupes"
-            android:title="@string/activity_settings_import_no_dupes"
-            android:summary="@string/activity_settings_import_no_dupes_desc"
+            android:title="@string/activity_settings_ignore_duplicates"
+            android:summary="@string/activity_settings_ignore_duplicates_desc"
             android:defaultValue="true"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/activity_settings_reminders" >
+
+        <CheckBoxPreference
+            android:key="setting_import_reminders"
+            android:title="@string/activity_settings_import_reminders"
+            android:summary="@string/activity_settings_import_reminders_desc"
+            android:defaultValue="false"/>
+
+        <org.sufficientlysecure.ical.ui.RemindersDialog
+            android:key="setting_import_reminders"
+            android:title="@string/activity_settings_edit_reminders"
+            android:summary="@string/activity_settings_edit_reminders_desc"
+            android:dialogLayout="@layout/reminders" />
     </PreferenceCategory>
 
     <PreferenceCategory
         android:title="@string/activity_settings_compatibility" >
 
-        <!-- Note that we use the CompatibilityHints key value directly as our preference key,
-             since this makes it trivial to look them up in the code -->
         <CheckBoxPreference
             android:key="ical4j.unfolding.relaxed"
             android:title="@string/activity_settings_relaxed_unfolding"
@@ -29,28 +47,34 @@
             android:defaultValue="true"/>
 
         <CheckBoxPreference
-            android:key="ical4j.validation.relaxed"
-            android:title="@string/activity_settings_relaxed_validation"
-            android:summary="@string/activity_settings_relaxed_validation_desc"
-            android:defaultValue="true"/>
-
-        <CheckBoxPreference
             android:key="ical4j.compatibility.outlook"
-            android:title="@string/activity_settings_outlook_compatibility"
-            android:summary="@string/activity_settings_outlook_compatibility_desc"
+            android:title="@string/activity_settings_outlook_compatible"
+            android:summary="@string/activity_settings_outlook_compatible_desc"
             android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:key="ical4j.compatibility.notes"
-            android:title="@string/activity_settings_notes_compatibility"
-            android:summary="@string/activity_settings_notes_compatibility_desc"
+            android:title="@string/activity_settings_notes_compatible"
+            android:summary="@string/activity_settings_notes_compatible_desc"
             android:defaultValue="true"/>
 
         <CheckBoxPreference
             android:key="ical4j.compatibility.vcard"
-            android:title="@string/activity_settings_vcard_compatibility"
-            android:summary="@string/activity_settings_vcard_compatibility_desc"
+            android:title="@string/activity_settings_vcard_compatible"
+            android:summary="@string/activity_settings_vcard_compatible_desc"
             android:defaultValue="false"/>
     </PreferenceCategory>
 
+    <PreferenceCategory
+        android:title="@string/activity_settings_export" >
+
+            <CheckBoxPreference
+                android:key="ical4j.validation.relaxed"
+                android:title="@string/activity_settings_relaxed_validation"
+                android:summary="@string/activity_settings_relaxed_validation_desc"
+                android:defaultValue="true"/>
+    </PreferenceCategory>
+<!--
+    </PreferenceScreen>
+-->
 </PreferenceScreen>

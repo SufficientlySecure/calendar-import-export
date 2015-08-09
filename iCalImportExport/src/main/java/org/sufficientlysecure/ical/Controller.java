@@ -184,7 +184,7 @@ public class Controller implements OnClickListener {
                         setProgressMessage(R.string.progress_reading_ical);
                         InputStream in = activity.getSelectedURL().getConnection().getInputStream();
                         if (in != null) {
-                            SharedPreferences prefs = activity.getPreferenceStore();
+                            SharedPreferences prefs = activity.preferences;
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_UNFOLDING);
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_PARSING);
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_VALIDATION);
@@ -212,9 +212,8 @@ public class Controller implements OnClickListener {
                             R.string.dialog_enter_url_title,
                             R.string.dialog_enter_url_message,
                             R.string.dialog_proceed,
-                            activity.getPreferenceStore().getString(
-                                    ICalConstants.PREFERENCE_LAST_URL, ""), true,
-                            R.drawable.icon, false);
+                            activity.preferences.getString(ICalConstants.PREFERENCE_LAST_URL, ""),
+                                true, R.drawable.icon, false);
                     if (answer != null && !answer.equals("")) {
                         try {
                             String username = DialogTools.questionDialog(
@@ -222,7 +221,7 @@ public class Controller implements OnClickListener {
                                     R.string.dialog_enter_username_title,
                                     R.string.dialog_enter_username_message,
                                     android.R.string.ok,
-                                    activity.getPreferenceStore().getString(
+                                    activity.preferences.getString(
                                             ICalConstants.PREFERENCE_LAST_USERNAME, ""), true,
                                     R.drawable.icon, false);
                             String password = null;
@@ -232,13 +231,13 @@ public class Controller implements OnClickListener {
                                         R.string.dialog_enter_password_title,
                                         R.string.dialog_enter_password_message,
                                         android.R.string.ok,
-                                        activity.getPreferenceStore().getString(
+                                        activity.preferences.getString(
                                                 ICalConstants.PREFERENCE_LAST_PASSWORD, ""), true,
                                         R.drawable.icon, true);
                             }
                             setProgressMessage(R.string.progress_parsing_url);
                             URL url = new URL(answer);
-                            Editor editor = activity.getPreferenceStore().edit();
+                            Editor editor = activity.preferences.edit();
                             editor.putString(ICalConstants.PREFERENCE_LAST_URL, answer);
                             editor.putString(ICalConstants.PREFERENCE_LAST_USERNAME, username);
                             editor.putString(ICalConstants.PREFERENCE_LAST_PASSWORD, password);

@@ -58,6 +58,8 @@ public class MainActivity extends Activity {
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 
+    public static SharedPreferences preferences;
+
     /*
      * Views
      */
@@ -87,6 +89,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
 
         this.controller = new Controller(this);
+        this.preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Retrieve views
         calendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);
@@ -192,10 +195,6 @@ public class MainActivity extends Activity {
                 }
             }
         });
-    }
-
-    public SharedPreferences getPreferenceStore() {
-        return PreferenceManager.getDefaultSharedPreferences(this);
     }
 
     public AndroidCalendar getSelectedCalendar() {
