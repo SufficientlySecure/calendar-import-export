@@ -37,12 +37,14 @@ import org.sufficientlysecure.ical.ui.SettingsActivity;
 import org.sufficientlysecure.ical.util.BasicInputAdapter;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -248,9 +250,8 @@ public class MainActivity extends Activity {
             this.startActivity(new Intent(this, SettingsActivity.class));
             break;
 
-        case R.id.license:
-            DialogTools.showInformationDialog(this, R.string.menu_license, R.string.license,
-                    R.drawable.icon);
+        case R.id.legal_notices:
+            showLegalNotices();
             break;
 
         default:
@@ -258,5 +259,15 @@ public class MainActivity extends Activity {
         }
 
         return true;
+    }
+
+    private void showLegalNotices() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        TextView text = new TextView(this);
+        text.setText(Html.fromHtml(getString(R.string.legal_notices)));
+        text.setMovementMethod(LinkMovementMethod.getInstance());
+        builder.setView(text);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }

@@ -9,8 +9,8 @@
         android:icon="@drawable/icon"
         android:title="@string/menu_settings"/>
     <item
-        android:id="@+id/license"
+        android:id="@+id/legal_notices"
         android:icon="@drawable/icon"
-        android:title="@string/menu_license"/>
+        android:title="@string/menu_legal_notices"/>
 
 </menu>
