@@ -140,7 +140,7 @@ public class DialogTools {
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    result[0] = editText.getText().toString();
+                                    result[0] = "";
                                     result[1] = "";
                                     dialog.cancel();
                                 }
