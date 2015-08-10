@@ -31,6 +31,7 @@ import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 
+import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
@@ -45,7 +46,8 @@ import android.util.Log;
 
 @SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
-    private final String TAG = SaveCalendar.class.getSimpleName();
+    private static final String TAG = SaveCalendar.class.getSimpleName();
+    private static final String PREF_FILE = "export_filename";
 
     private AndroidCalendar androidCalendar;
 
@@ -56,28 +58,32 @@ public class SaveCalendar extends RunnableWithProgress {
 
     @Override
     public void run(ProgressDialog dialog) {
-        String input = DialogTools.questionDialog(getActivity(),
+        MainActivity activity = (MainActivity)getActivity();
+
+        String file = DialogTools.questionDialog(activity,
                 R.string.dialog_choosefilename_title, R.string.dialog_choosefilename_message,
-                R.string.dialog_proceed, null, true, R.drawable.icon, false);
-        if (input == null || input.equals("")) {
+                activity.preferences.getString(PREF_FILE, ""), true, false);
+        if (file == null || file.equals("")) {
             return;
         }
-        if (!input.endsWith(".ics")) {
-            input += ".ics";
+        activity.preferences.edit().putString(PREF_FILE, file).commit();
+        if (!file.endsWith(".ics")) {
+            file += ".ics";
         }
-        String output = Environment.getExternalStorageDirectory() + File.separator + input;
+
+        String output = Environment.getExternalStorageDirectory() + File.separator + file;
         int i = 0;
         setProgressMessage(R.string.progress_loading_calendarentries);
 
         // query events
-        Cursor c = getActivity().getContentResolver().query(CalendarContract.Events.CONTENT_URI,
+        Cursor c = activity.getContentResolver().query(CalendarContract.Events.CONTENT_URI,
                 null, CalendarContract.Events.CALENDAR_ID + " = ?",
                 new String[] { Integer.toString(androidCalendar.getId()) }, null);
         dialog.setMax(c.getCount());
 
         // don't save empty calendars
         if (c.getCount() == 0) {
-            DialogTools.showInformationDialog(getActivity(), R.string.dialog_information_title,
+            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
                     R.string.dialog_empty_calendar, R.drawable.icon);
             return;
         }
@@ -104,19 +110,19 @@ public class SaveCalendar extends RunnableWithProgress {
         }
         c.close();
         CalendarOutputter outputter = new CalendarOutputter();
-        Resources res = getActivity().getResources();
+        Resources res = activity.getResources();
         try {
             setProgressMessage(R.string.progress_writing_calendar_to_file);
             outputter.output(calendar, new FileOutputStream(output));
 
             String txt = res.getQuantityString(R.plurals.dialog_sucessfully_written_calendar,
                     i, i, output);
-            DialogTools.showInformationDialog(getActivity(), R.string.dialog_success_title,
+            DialogTools.showInformationDialog(activity, R.string.dialog_success_title,
                     txt, R.drawable.icon);
         } catch (Exception e) {
             Log.e(TAG, "SaveCalendar", e);
 
-            DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,
+            DialogTools.showInformationDialog(activity, R.string.dialog_bug_title,
                     "Error:\n" + e.getMessage(), R.drawable.icon);
         }
 

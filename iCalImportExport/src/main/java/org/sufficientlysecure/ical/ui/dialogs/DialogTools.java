@@ -89,8 +89,8 @@ public class DialogTools {
     }
 
     public static String questionDialog(final Activity activity, final int titleResource,
-            final int messageResource, final int okResource, final String input,
-            final boolean cancelable, final int drawableResource, final boolean password) {
+            final int messageResource, final String input,
+            final boolean cancelable, final boolean password) {
         final String[] result = new String[2];
         activity.runOnUiThread(new Runnable() {
             @Override
@@ -125,7 +125,7 @@ public class DialogTools {
                 }
                 layout.addView(editText);
 
-                builder.setPositiveButton(activity.getString(okResource),
+                builder.setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

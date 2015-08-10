@@ -10,21 +10,18 @@
     <string name="progress_deleting_calendarentries">Deleting calendar entries.</string>
     <string name="progress_insert_entries">Inserting entries.</string>
     <string name="progress_parsing_url">Parsing URL&#8230;</string>
-    <string name="button_search_files">From SDCard</string>
+    <string name="button_import_file">Import File</string>
+    <string name="button_import_network">Import URL</string>
     <string name="button_show_information">Information</string>
     <string name="button_delete_entries">Delete entries</string>
     <string name="button_insert_entries">Insert entries</string>
     <string name="button_load_calendar">Load</string>
-    <string name="button_save_calendar">Save to iCal file</string>
-    <string name="button_set_http">Set URL</string>
-    <string name="textview_export">Export</string>
-    <string name="textview_import">Import</string>
-    <string name="textview_choose_calendar">Selected Calendar:</string>
+    <string name="button_export">Export</string>
+    <string name="textview_calendar">Calendar:</string>
     <plurals name="textview_calendar_short_information">
          <item quantity="one">Found %d event.</item>
          <item quantity="other">Found %d events.</item>
     </plurals>
-    <string name="spinner_choose_file">Select iCal file below</string>
     <string name="spinner_choose_calendar">Select a calendar</string>
     <string name="dialog_enter_url_title">Enter Calendar URL</string>
     <string name="dialog_enter_url_message">Please enter an URL of an iCal file below which
@@ -40,7 +37,6 @@
          <item quantity="other">Successfully wrote %1$d events to file %2$s</item>
     </plurals>
     <string name="dialog_empty_calendar">Will not persist empty calendar.</string>
-    <string name="dialog_proceed">Proceed</string>
     <string name="dialog_information_title">Information</string>
     <string name="dialog_success_title">Finished</string>
     <plurals name="dialog_entries_deleted">

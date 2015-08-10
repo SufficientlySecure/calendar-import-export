@@ -211,29 +211,26 @@ public class Controller implements OnClickListener {
                             activity,
                             R.string.dialog_enter_url_title,
                             R.string.dialog_enter_url_message,
-                            R.string.dialog_proceed,
                             activity.preferences.getString(ICalConstants.PREFERENCE_LAST_URL, ""),
-                                true, R.drawable.icon, false);
+                                true, false);
                     if (answer != null && !answer.equals("")) {
                         try {
                             String username = DialogTools.questionDialog(
                                     activity,
                                     R.string.dialog_enter_username_title,
                                     R.string.dialog_enter_username_message,
-                                    android.R.string.ok,
                                     activity.preferences.getString(
                                             ICalConstants.PREFERENCE_LAST_USERNAME, ""), true,
-                                    R.drawable.icon, false);
+                                    false);
                             String password = null;
                             if (username != null && !username.equals("")) {
                                 password = DialogTools.questionDialog(
                                         activity,
                                         R.string.dialog_enter_password_title,
                                         R.string.dialog_enter_password_message,
-                                        android.R.string.ok,
                                         activity.preferences.getString(
                                                 ICalConstants.PREFERENCE_LAST_PASSWORD, ""), true,
-                                        R.drawable.icon, true);
+                                        true);
                             }
                             setProgressMessage(R.string.progress_parsing_url);
                             URL url = new URL(answer);
