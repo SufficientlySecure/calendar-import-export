@@ -47,7 +47,7 @@ import android.util.Log;
 @SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
     private static final String TAG = SaveCalendar.class.getSimpleName();
-    private static final String PREF_FILE = "export_filename";
+    private static final String PREF_FILE = "lastExportFile";
 
     private AndroidCalendar androidCalendar;
 

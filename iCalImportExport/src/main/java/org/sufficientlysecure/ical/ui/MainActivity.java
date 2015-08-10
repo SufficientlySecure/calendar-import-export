@@ -29,7 +29,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 
 import org.sufficientlysecure.ical.AndroidCalendar;
 import org.sufficientlysecure.ical.Controller;
-import org.sufficientlysecure.ical.ICalConstants;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.SpinnerTools;
@@ -242,7 +241,7 @@ public class MainActivity extends Activity {
 
         case R.id.help:
             DialogTools.showInformationDialog(this, R.string.menu_help,
-                    Html.fromHtml(ICalConstants.HELP), R.drawable.icon);
+                    Html.fromHtml(getString(R.string.help)), R.drawable.icon);
             break;
 
         case R.id.settings:
