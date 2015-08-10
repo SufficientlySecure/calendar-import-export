@@ -27,6 +27,7 @@ import android.content.DialogInterface.OnClickListener;
 import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.view.ViewGroup.LayoutParams;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -122,6 +123,7 @@ public class DialogTools {
                         LayoutParams.WRAP_CONTENT));
                 if (input != null) {
                     editText.setText(input);
+                    editText.selectAll();
                 }
                 layout.addView(editText);
 
@@ -158,6 +160,8 @@ public class DialogTools {
 
                 builder.setView(layout);
                 AlertDialog dialog = builder.create();
+                dialog.getWindow().setSoftInputMode(
+                    WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                 dialog.show();
             }
         });
