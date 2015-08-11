@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="divider">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:paddingTop">8dp</item>
+<!--        <item name="android:paddingBottom">90dp</item> -->
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+
+</resources>
+

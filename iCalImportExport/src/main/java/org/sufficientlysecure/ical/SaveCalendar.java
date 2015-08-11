@@ -78,7 +78,7 @@ public class SaveCalendar extends RunnableWithProgress {
         // query events
         Cursor c = activity.getContentResolver().query(CalendarContract.Events.CONTENT_URI,
                 null, CalendarContract.Events.CALENDAR_ID + " = ?",
-                new String[] { Integer.toString(androidCalendar.getId()) }, null);
+                new String[] { Integer.toString(androidCalendar.id) }, null);
         dialog.setMax(c.getCount());
 
         // don't save empty calendars
@@ -89,20 +89,20 @@ public class SaveCalendar extends RunnableWithProgress {
         }
 
         Calendar calendar = new Calendar();
-        calendar.getProperties().add(new ProdId(androidCalendar.getOwnerAccount()));
+        calendar.getProperties().add(new ProdId(androidCalendar.owner));
         calendar.getProperties().add(Version.VERSION_2_0);
         // set calendar timezone, only defined on Google Calendars?
         // TODO: Test
-        if (androidCalendar.getTimezone() != null) {
+        if (androidCalendar.timezone != null) {
             TimeZoneRegistry registry = TimeZoneRegistryFactory.getInstance().createRegistry();
-            VTimeZone tz = registry.getTimeZone(androidCalendar.getTimezone()).getVTimeZone();
+            VTimeZone tz = registry.getTimeZone(androidCalendar.timezone).getVTimeZone();
 
             calendar.getComponents().add(tz);
         }
 
         while (c.moveToNext()) {
             VEvent vevent = VEventWrapper.resolve(c);
-            vevent.getProperties().add(new Uid((i + 1) + "+" + androidCalendar.getOwnerAccount()));
+            vevent.getProperties().add(new Uid((i + 1) + "+" + androidCalendar.owner));
             calendar.getComponents().add(vevent);
             Log.d(TAG, "Adding event to calendar");
             incrementProgress(1);

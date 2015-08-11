@@ -48,6 +48,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -66,15 +68,23 @@ public class MainActivity extends Activity {
      */
     private Spinner calendarSpinner;
     private Spinner fileSpinner;
-    private Button calendarInformation;
     private Button searchButton;
     private Button loadButton;
     private Button insertButton;
     private Button deleteButton;
     private Button setUrlButton;
-    private Button dumpCalendar;
+    private Button saveCalendar;
     private TextView icalInformation;
     private Controller controller;
+
+    private TextView textCalName;
+    private TextView textCalAccountName;
+    private TextView textCalAccountType;
+    private TextView textCalOwner;
+    private TextView textCalState;
+    private TextView textCalId;
+    private TextView textCalTimezone;
+    private TextView textCalSize;
 
     /*
      * Values
@@ -94,24 +104,46 @@ public class MainActivity extends Activity {
 
         // Retrieve views
         calendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);
+        calendarSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                AndroidCalendar calendar = calendars.get(pos);
+                textCalName.setText(calendar.name);
+                textCalAccountName.setText(calendar.accountName);
+                textCalAccountType.setText(calendar.accountType);
+                textCalOwner.setText(calendar.owner);
+                textCalState.setText(calendar.isActive ? R.string.active : R.string.inactive);
+                textCalId.setText(Integer.toString(calendar.id));
+                if (calendar.timezone == null) {
+                    textCalTimezone.setText(R.string.not_applicable);
+                } else {
+                    textCalTimezone.setText(calendar.timezone);
+                }
+                textCalSize.setText(Integer.toString(calendar.numEntries));
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) { }
+        });
+
         fileSpinner = (Spinner) findViewById(R.id.SpinnerFile);
-        searchButton = (Button) findViewById(R.id.SearchButton);
-        loadButton = (Button) findViewById(R.id.LoadButton);
-        insertButton = (Button) findViewById(R.id.InsertButton);
-        deleteButton = (Button) findViewById(R.id.DeleteButton);
-        calendarInformation = (Button) findViewById(R.id.ShowInformationButton);
-        dumpCalendar = (Button) findViewById(R.id.SaveButton);
+        searchButton = setupButton(R.id.SearchButton);
+        loadButton = setupButton(R.id.LoadButton);
+        insertButton = setupButton(R.id.InsertButton);
+        deleteButton = setupButton(R.id.DeleteButton);
+        saveCalendar = setupButton(R.id.SaveButton);
         icalInformation = (TextView) findViewById(R.id.IcalInfo);
         processGroup = (LinearLayout) findViewById(R.id.linearLayoutProcess);
-        setUrlButton = (Button) findViewById(R.id.SetUrlButton);
+        setUrlButton = setupButton(R.id.SetUrlButton);
 
-        searchButton.setOnClickListener(controller);
-        loadButton.setOnClickListener(controller);
-        calendarInformation.setOnClickListener(controller);
-        dumpCalendar.setOnClickListener(controller);
-        deleteButton.setOnClickListener(controller);
-        insertButton.setOnClickListener(controller);
-        setUrlButton.setOnClickListener(controller);
+        textCalName = (TextView)findViewById(R.id.TextCalName);
+        textCalAccountName = (TextView)findViewById(R.id.TextCalAccountName);
+        textCalAccountType = (TextView)findViewById(R.id.TextCalAccountType);
+        textCalOwner = (TextView)findViewById(R.id.TextCalOwner);
+        textCalState = (TextView)findViewById(R.id.TextCalState);
+        textCalId = (TextView)findViewById(R.id.TextCalId);
+        textCalTimezone = (TextView)findViewById(R.id.TextCalTimezone);
+        textCalSize = (TextView)findViewById(R.id.TextCalSize);
+
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -139,6 +171,12 @@ public class MainActivity extends Activity {
         }
     }
 
+    private Button setupButton(int resourceId) {
+        Button b = (Button)findViewById(resourceId);
+        b.setOnClickListener(controller);
+        return b;
+    }
+
     /**
      * Add a list of calendars to the user interface for selection.
      * 
@@ -148,16 +186,14 @@ public class MainActivity extends Activity {
         this.calendars = calendars;
         List<String> calendarStrings = new ArrayList<String>();
         for (AndroidCalendar cal : calendars) {
-            calendarStrings.add(cal.getDisplayName() + " (" + cal.getId() + ")");
+            calendarStrings.add(cal.displayName + " (" + cal.id + ")");
         }
         SpinnerTools.simpleSpinnerInUI(this, calendarSpinner, calendarStrings);
 
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                calendarInformation.setVisibility(MainActivity.this.calendars == null ? View.GONE
-                        : View.VISIBLE);
-                dumpCalendar.setVisibility(MainActivity.this.calendars == null ? View.GONE
+                saveCalendar.setVisibility(MainActivity.this.calendars == null ? View.GONE
                         : View.VISIBLE);
 
             }
@@ -202,7 +238,7 @@ public class MainActivity extends Activity {
         if (calendarSpinner.getSelectedItem() != null && calendars != null) {
             String calendarName = calendarSpinner.getSelectedItem().toString();
             for (AndroidCalendar cal : calendars) {
-                if ((cal.getDisplayName() + " (" + cal.getId() + ")").equals(calendarName)) {
+                if ((cal.displayName + " (" + cal.id + ")").equals(calendarName)) {
                     return cal;
                 }
             }
@@ -212,7 +248,7 @@ public class MainActivity extends Activity {
 
     public void selectCalendar(long id) {
         for (final AndroidCalendar cal : calendars) {
-            if (cal.getId() == id) {
+            if (cal.id == id) {
                 runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

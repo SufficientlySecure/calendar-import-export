@@ -8,29 +8,183 @@
         android:layout_height="wrap_content"
         android:orientation="vertical" >
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@android:style/TextAppearance.Small"
+            android:text="CALENDAR SELECTION" />
+
+        <View
+            style="@style/divider" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
+        <Spinner
+            android:id="@+id/SpinnerChooseCalendar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@android:style/TextAppearance.Medium"
+            android:prompt="@string/spinner_choose_calendar" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal" >
 
-            <TextView
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/textview_calendar" />
+                android:layout_weight="1"
+                android:orientation="vertical" >
 
-            <Spinner
-                android:id="@+id/SpinnerChooseCalendar"
-                android:layout_width="0dp"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Small"
+                    android:textStyle="italic"
+                    android:textColor="#FF888888"
+                    android:text="@string/cal_account_name" />
+
+                <TextView
+                    android:id="@+id/TextCalAccountName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Medium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Small"
+                    android:textStyle="italic"
+                    android:textColor="#FF888888"
+                    android:text="@string/cal_name" />
+
+                <TextView
+                    android:id="@+id/TextCalName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Medium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Small"
+                    android:textStyle="italic"
+                    android:textColor="#FF888888"
+                    android:text="@string/cal_owner" />
+
+                <TextView
+                    android:id="@+id/TextCalOwner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Medium" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Small"
+                    android:textStyle="italic"
+                    android:textColor="#FF888888"
+                    android:text="@string/cal_state" />
+
+                <TextView
+                    android:id="@+id/TextCalState"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    style="@android:style/TextAppearance.Medium" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:prompt="@string/spinner_choose_calendar" />
+                android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@android:style/TextAppearance.Small"
+                        android:textStyle="italic"
+                        android:textColor="#FF888888"
+                        android:text="@string/cal_account_type" />
+
+                    <TextView
+                        android:id="@+id/TextCalAccountType"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@android:style/TextAppearance.Medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@android:style/TextAppearance.Small"
+                        android:textStyle="italic"
+                        android:textColor="#FF888888"
+                        android:text="@string/cal_id" />
+
+                    <TextView
+                        android:id="@+id/TextCalId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@android:style/TextAppearance.Medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@android:style/TextAppearance.Small"
+                        android:textStyle="italic"
+                        android:textColor="#FF888888"
+                        android:text="@string/cal_timezone" />
+
+                    <TextView
+                        android:id="@+id/TextCalTimezone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@android:style/TextAppearance.Medium" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@android:style/TextAppearance.Small"
+                        android:textStyle="italic"
+                        android:textColor="#FF888888"
+                        android:text="@string/cal_events" />
+
+                    <TextView
+                        android:id="@+id/TextCalSize"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        style="@android:style/TextAppearance.Medium" />
+            </LinearLayout>
         </LinearLayout>
 
-        <Button
-            android:id="@+id/ShowInformationButton"
+        <View
             android:layout_width="match_parent"
+            android:layout_height="32dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/button_show_information" />
+            style="@android:style/TextAppearance.Small"
+            android:text="ACTIONS" />
+
+        <View
+            style="@style/divider"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="16dp" />
 
         <Button
             android:id="@+id/SaveButton"

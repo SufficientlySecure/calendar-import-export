@@ -18,110 +18,83 @@
 
 package org.sufficientlysecure.ical;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.annotation.SuppressLint;
+import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContract;
+import android.provider.CalendarContract.Calendars;
+import android.provider.CalendarContract.Events;
 
 @SuppressLint("NewApi")
 public class AndroidCalendar {
-    public static final String ID = CalendarContract.Calendars._ID;
-    public static final String SYNC_ACCOUNT = CalendarContract.Calendars.ACCOUNT_NAME;
-    public static final String SYNC_ACCOUNT_TYPE = CalendarContract.Calendars.ACCOUNT_TYPE;
-    public static final String SYNC_ID = CalendarContract.Calendars._SYNC_ID;
-    public static final String SYNC_DIRTY = CalendarContract.Calendars.DIRTY;
-    public static final String NAME = CalendarContract.Calendars.NAME;
-    public static final String DISPLAY_NAME = CalendarContract.Calendars.CALENDAR_DISPLAY_NAME;
-    public static final String COLOR = CalendarContract.Calendars.CALENDAR_COLOR;
-    public static final String ACCESS_LEVEL = CalendarContract.Calendars.CALENDAR_ACCESS_LEVEL;
-    public static final String SELECTED = CalendarContract.Calendars.VISIBLE;
-    public static final String SYNC_EVENTS = CalendarContract.Calendars.SYNC_EVENTS;
-    public static final String LOCATION = CalendarContract.Calendars.CALENDAR_LOCATION;
-    public static final String TIMEZONE = CalendarContract.Calendars.CALENDAR_TIME_ZONE;
-    public static final String OWNERACCOUNT = CalendarContract.Calendars.OWNER_ACCOUNT;
-    public static final Uri CONTENT_URI = CalendarContract.Calendars.CONTENT_URI;
+    public int id;
+    public String name;
+    public String displayName;
+    public String accountName;
+    public String accountType;
+    public boolean isLocal;
+    public String owner;
+    public boolean isActive;
+    public String timezone;
+    public int numEntries;
 
-    private int id;
-    private String name;
-    private String displayName;
-    private String ownerAccount;
-    private boolean isActive;
-    private String timezone;
+    // Load all available calendars.
+    // If an empty list is returned the caller probably needs to enable calendar
+    // read permissions in App Ops/XPrivacy etc.
+    public static List<AndroidCalendar> loadAll(ContentResolver resolver) {
 
-    private int entries;
+        if (!haveProvider(resolver, Calendars.CONTENT_URI) ||
+            !haveProvider(resolver, Events.CONTENT_URI)) {
+            return new ArrayList<AndroidCalendar>();
+        }
 
-    public String getName() {
-        return name;
+        Cursor src = resolver.query(Calendars.CONTENT_URI, null, null, null, null);
+        List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(src.getCount());
+
+        while (src.moveToNext()) {
+            AndroidCalendar calendar = new AndroidCalendar();
+            calendar.id = getInt(src, Calendars._ID);
+            calendar.name = getString(src, Calendars.NAME);
+            calendar.displayName = getString(src, Calendars.CALENDAR_DISPLAY_NAME);
+            calendar.accountName = getString(src, Calendars.ACCOUNT_NAME);
+            calendar.accountType = getString(src, Calendars.ACCOUNT_TYPE);
+            calendar.isLocal = calendar.accountType == CalendarContract.ACCOUNT_TYPE_LOCAL;
+            calendar.owner = getString(src, Calendars.OWNER_ACCOUNT);
+            calendar.isActive = getInt(src, Calendars.VISIBLE) == 1;
+            calendar.timezone = getString(src, Calendars.CALENDAR_TIME_ZONE);
+
+            final String idColQuery = Events.CALENDAR_ID + " = ?";
+            final String[] idColVal = new String[] { Integer.toString(calendar.id) };
+            Cursor sizer = resolver.query(Events.CONTENT_URI, null, idColQuery, idColVal, null);
+            calendar.numEntries = sizer.getCount();
+            sizer.close();
+            calendars.add(calendar);
+        }
+        src.close();
+
+        return calendars;
     }
 
-    public String getDisplayName() {
-        return displayName;
+    private static int getInt(Cursor src, String columnName) {
+        return src.getInt(src.getColumnIndex(columnName));
     }
 
-    public String getOwnerAccount() {
-        return ownerAccount;
+    private static String getString(Cursor src, String columnName) {
+        return src.getString(src.getColumnIndex(columnName));
     }
 
-    public boolean isActive() {
-        return isActive;
+    private static boolean haveProvider(ContentResolver resolver, Uri uri) {
+        // Check an individual provider is installed
+        ContentProviderClient provider = resolver.acquireContentProviderClient(uri);
+        if (provider == null) {
+            return false;
+        }
+        provider.release();
+        return true;
     }
-
-    public int getId() {
-        return id;
-    }
-
-    public String getTimezone() {
-        return timezone;
-    }
-
-    public void setTimezone(String timezone) {
-        this.timezone = timezone;
-    }
-
-    public static Uri getContentURI() {
-        return CONTENT_URI;
-    }
-
-    public static AndroidCalendar retrieve(Cursor c) {
-        AndroidCalendar calendar = new AndroidCalendar();
-        calendar.id = c.getInt(c.getColumnIndex(ID));
-        calendar.name = c.getString(c.getColumnIndex(NAME));
-        calendar.displayName = c.getString(c.getColumnIndex(DISPLAY_NAME));
-        calendar.ownerAccount = c.getString(c.getColumnIndex(OWNERACCOUNT));
-        calendar.isActive = c.getInt(c.getColumnIndex(SELECTED)) == 1;
-        calendar.timezone = c.getString(c.getColumnIndex(TIMEZONE));
-        return calendar;
-    }
-
-    public void setEntryCount(int entries) {
-        this.entries = entries;
-    }
-
-    @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("CalendarId: " + id + "\n");
-        builder.append("\nEvents: " + entries + "\n");
-        builder.append("\nDisplayName:" + displayName + "\n");
-        builder.append("\nName:" + name + "\n");
-        builder.append("\nOwner:" + ownerAccount + "\n");
-        builder.append("\nIsActive:" + isActive + "\n");
-        builder.append("\nTimezone:" + timezone + "\n");
-
-        return builder.toString();
-    }
-
-    public String toHtml() {
-        StringBuilder builder = new StringBuilder();
-        builder.append("<b>CalendarId:</b><br>" + id);
-        builder.append("<br><b>Events:</b><br>" + entries);
-        builder.append("<br><b>DisplayName:</b><br>" + displayName);
-        builder.append("<br><b>Name:</b><br>" + name);
-        builder.append("<br><b>Owner:</b><br>" + ownerAccount);
-        builder.append("<br><b>IsActive:</b><br>" + isActive);
-        builder.append("<br><b>Timezone:</b><br>" + timezone + "<br>");
-
-        return builder.toString();
-    }
-
 }

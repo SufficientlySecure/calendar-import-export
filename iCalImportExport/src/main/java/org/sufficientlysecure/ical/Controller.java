@@ -40,16 +40,10 @@ import org.sufficientlysecure.ical.util.CredentialInputAdapter;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
-import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
-import android.net.Uri;
 import android.os.Environment;
-import android.provider.CalendarContract;
-import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -70,56 +64,12 @@ public class Controller implements OnClickListener {
     }
 
     public void init(long calendarId) {
-        checkPrerequisites();
-
-        // Load our list of calendars
-        Cursor c = activity.getContentResolver().query(AndroidCalendar.getContentURI(), null, null,
-                null, null);
-        List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(c.getCount());
-
-        while (c.moveToNext()) {
-            AndroidCalendar cal = AndroidCalendar.retrieve(c);
-            Cursor cursor = activity.getContentResolver().query(
-                    CalendarContract.Events.CONTENT_URI, null,
-                    CalendarContract.Events.CALENDAR_ID + " = ?",
-                    new String[] { Integer.toString(cal.getId()) }, null);
-            cal.setEntryCount(cursor.getCount());
-            cursor.close();
-            calendars.add(cal);
-        }
-        c.close();
-
-        this.activity.setCalendars(calendars);
-        this.activity.selectCalendar(calendarId);
-    }
-
-    private void checkProvider(final ContentResolver resolver, final Uri uri) {
-        // Check an individual provider is installed
-        ContentProviderClient provider = resolver.acquireContentProviderClient(uri);
-        if (provider == null) {
+        List<AndroidCalendar> cals = AndroidCalendar.loadAll(activity.getContentResolver());
+        if (cals.isEmpty()) {
             noCalendarFinish();
         }
-        else
-        {
-            provider.release();
-        }
-    }
-
-    private void checkPrerequisites() {
-        // Check that all necessary providers are installed
-        ContentResolver resolver = activity.getContentResolver();
-        checkProvider(resolver, AndroidCalendar.getContentURI());
-        checkProvider(resolver, CalendarContract.Events.CONTENT_URI);
-
-        // Check that there is a calendar available
-        Cursor c = resolver.query(AndroidCalendar.getContentURI(), null, null, null, null);
-        if (c.getCount() == 0) {
-            noCalendarFinish();
-        }
-        else
-        {
-            c.close();
-        }
+        activity.setCalendars(cals);
+        activity.selectCalendar(calendarId);
     }
 
     private void noCalendarFinish() {
@@ -257,15 +207,12 @@ public class Controller implements OnClickListener {
             DialogTools.runWithProgress(activity,
                     new SaveCalendar(activity, activity.getSelectedCalendar()), false,
                     ProgressDialog.STYLE_HORIZONTAL);
-        } else if (v.getId() == R.id.ShowInformationButton) {
-            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
-                    Html.fromHtml(activity.getSelectedCalendar().toHtml()), R.drawable.icon);
         } else if (v.getId() == R.id.InsertButton) {
             DialogTools.runWithProgress(activity, new InsertVEvents(activity, calendar, activity
-                    .getSelectedCalendar().getId()), false, ProgressDialog.STYLE_HORIZONTAL);
+                    .getSelectedCalendar().id), false, ProgressDialog.STYLE_HORIZONTAL);
         } else if (v.getId() == R.id.DeleteButton) {
             DialogTools.runWithProgress(activity, new DeleteVEvents(activity, calendar, activity
-                    .getSelectedCalendar().getId()), false, ProgressDialog.STYLE_HORIZONTAL);
+                    .getSelectedCalendar().id), false, ProgressDialog.STYLE_HORIZONTAL);
         }
     }
 }

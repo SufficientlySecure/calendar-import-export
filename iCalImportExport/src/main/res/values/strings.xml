@@ -12,12 +12,10 @@
     <string name="progress_parsing_url">Parsing URL&#8230;</string>
     <string name="button_import_file">Import File</string>
     <string name="button_import_network">Import URL</string>
-    <string name="button_show_information">Information</string>
     <string name="button_delete_entries">Delete entries</string>
     <string name="button_insert_entries">Insert entries</string>
     <string name="button_load_calendar">Load</string>
     <string name="button_export">Export</string>
-    <string name="textview_calendar">Calendar:</string>
     <plurals name="textview_calendar_short_information">
          <item quantity="one">Found %d event.</item>
          <item quantity="other">Found %d events.</item>
@@ -86,6 +84,18 @@
     <string name="activity_settings_export">Export</string>
     <string name="activity_settings_relaxed_validation">Permissive export</string>
     <string name="activity_settings_relaxed_validation_desc">Skip extensive validation of the output file when exporting calendars</string>
+
+    <string name="cal_account_name">Account Name</string>
+    <string name="cal_account_type">Account Type</string>
+    <string name="cal_id">id</string>
+    <string name="cal_owner">Owner</string>
+    <string name="cal_timezone">Timezone</string>
+    <string name="cal_state">State</string>
+    <string name="cal_events">Events</string>
+    <string name="cal_name">Name</string>
+    <string name="active">Active</string>
+    <string name="inactive">Inactive</string>
+    <string name="not_applicable">N/A</string>
 
     <!-- Must match the minutes array in RemindersDialog.java -->
     <string-array name="reminder_time_values">
