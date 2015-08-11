@@ -57,6 +57,9 @@ public class AndroidCalendar {
         List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(src.getCount());
 
         while (src.moveToNext()) {
+            if (getInt(src, Calendars.DELETED) != 0) {
+                continue;
+            }
             AndroidCalendar calendar = new AndroidCalendar();
             calendar.id = getInt(src, Calendars._ID);
             calendar.name = getString(src, Calendars.NAME);
