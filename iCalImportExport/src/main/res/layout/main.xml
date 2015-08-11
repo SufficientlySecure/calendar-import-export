@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@android:style/TextAppearance.Small"
-            android:text="CALENDAR SELECTION" />
+            android:text="@string/calendar_selection" />
 
         <View
             style="@style/divider" />
@@ -177,7 +177,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@android:style/TextAppearance.Small"
-            android:text="ACTIONS" />
+            android:text="@string/actions" />
 
         <View
             style="@style/divider"/>

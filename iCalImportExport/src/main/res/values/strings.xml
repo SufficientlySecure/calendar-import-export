@@ -96,6 +96,8 @@
     <string name="active">Active</string>
     <string name="inactive">Inactive</string>
     <string name="not_applicable">N/A</string>
+    <string name="calendar_selection">CALENDAR SELECTION</string>
+    <string name="actions">ACTIONS</string>
 
     <!-- Must match the minutes array in RemindersDialog.java -->
     <string-array name="reminder_time_values">
