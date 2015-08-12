@@ -19,7 +19,6 @@
 package org.sufficientlysecure.ical;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.List;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -120,12 +119,14 @@ public class InsertVEvents extends ProcessVEvent {
             DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
                     msg, R.drawable.icon);
 
-        } catch (Exception exc) {
-            Log.e(TAG, "InsertVEvents", exc);
+        } catch (RuntimeException e) {
+            throw e;
+        } catch (Exception e) {
+            Log.e(TAG, "InsertVEvents", e);
             try {
                 ProviderTools.writeException(Environment.getExternalStorageDirectory()
-                        + File.separator + "ical_error.log", exc);
-            } catch (Exception e) {
+                        + File.separator + "ical_error.log", e);
+            } catch (Exception ignored) {
 
             }
             DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,

@@ -32,7 +32,6 @@ import org.sufficientlysecure.ical.Controller;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.SpinnerTools;
-import org.sufficientlysecure.ical.ui.SettingsActivity;
 import org.sufficientlysecure.ical.util.BasicInputAdapter;
 
 import android.app.Activity;
@@ -49,7 +48,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -177,11 +175,6 @@ public class MainActivity extends Activity {
         return b;
     }
 
-    /**
-     * Add a list of calendars to the user interface for selection.
-     * 
-     * @param calendars
-     */
     public void setCalendars(List<AndroidCalendar> calendars) {
         this.calendars = calendars;
         List<String> calendarStrings = new ArrayList<String>();
@@ -200,12 +193,6 @@ public class MainActivity extends Activity {
         });
     }
 
-    /**
-     * Set a list of url's for selection.
-     * 
-     * @param urls
-     *            Url's to display in the list
-     */
     public void setUrls(List<BasicInputAdapter> urls) {
         this.urls = urls;
         SpinnerTools.simpleSpinnerInUI(this, fileSpinner, urls);

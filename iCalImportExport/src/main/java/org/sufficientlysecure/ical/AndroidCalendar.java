@@ -37,7 +37,6 @@ public class AndroidCalendar {
     public String displayName;
     public String accountName;
     public String accountType;
-    public boolean isLocal;
     public String owner;
     public boolean isActive;
     public String timezone;
@@ -66,7 +65,6 @@ public class AndroidCalendar {
             calendar.displayName = getString(src, Calendars.CALENDAR_DISPLAY_NAME);
             calendar.accountName = getString(src, Calendars.ACCOUNT_NAME);
             calendar.accountType = getString(src, Calendars.ACCOUNT_TYPE);
-            calendar.isLocal = calendar.accountType == CalendarContract.ACCOUNT_TYPE_LOCAL;
             calendar.owner = getString(src, Calendars.OWNER_ACCOUNT);
             calendar.isActive = getInt(src, Calendars.VISIBLE) == 1;
             calendar.timezone = getString(src, Calendars.CALENDAR_TIME_ZONE);

@@ -19,7 +19,6 @@ package org.sufficientlysecure.ical.ui.dialogs;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.util.Log;
 
 public abstract class RunnableWithProgress {
     private Activity activity;

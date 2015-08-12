@@ -34,8 +34,8 @@ import android.util.Log;
 public class VEventWrapper {
     private static String TAG = VEventWrapper.class.getSimpleName();
 
-    private static String[] keys = new String[] { "rrule", "summary", "description", "location",
-            "dtstart", "dtend" };// "organizer",
+    private static String[] keys = { "rrule", "summary", "description", "location",
+            "dtstart", "dtend" }; // "organizer",
 
     public static VEvent resolve(Cursor c) {
         PropertyList properties = new PropertyList();

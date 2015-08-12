@@ -17,12 +17,9 @@
 
 package org.sufficientlysecure.ical.ui;
 
-import org.sufficientlysecure.ical.ui.MainActivity;
-
 import org.sufficientlysecure.ical.R;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -30,13 +27,10 @@ import java.util.Set;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.content.SharedPreferences.Editor;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -56,10 +50,11 @@ public class RemindersDialog extends DialogPreference {
 
     public RemindersDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
+        inflater = ((Activity)context).getLayoutInflater();
         newId = 1;
     }
 
-    static public List<Integer> getSavedRemindersInMinutes() {
+    public static List<Integer> getSavedRemindersInMinutes() {
         List<Integer> result = new ArrayList<Integer>();
         for (String item: MainActivity.preferences.getString(PREF_KEY, "").split(",")) {
             if (item.length() > 0) {
@@ -74,7 +69,6 @@ public class RemindersDialog extends DialogPreference {
         super.onBindDialogView(view);
 
         reminderItemsHolder = (LinearLayout)view.findViewById(R.id.reminder_holder);
-        inflater = ((Activity)getContext()).getLayoutInflater();
 
         for (String item: MainActivity.preferences.getString(PREF_KEY, "").split(",")) {
             if (item.length() > 0) {

@@ -32,9 +32,8 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class DialogTools {
+final public class DialogTools {
     private DialogTools() {
-
     }
 
     public static void showInformationDialog(final Activity activity, final int title,

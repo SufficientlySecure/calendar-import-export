@@ -93,11 +93,11 @@ public class AndroidVEventWrapper {
     }
 
     interface IAndroidWrapper {
-        public void wrap(PropertyList properties, Cursor c);
+        void wrap(PropertyList properties, Cursor c);
     }
 
     interface IVEventWrapper {
-        public void wrap(ContentValues values, VEvent vevent);
+        void wrap(ContentValues values, VEvent vevent);
     }
 
     private class AndroidWrapper implements IAndroidWrapper {
