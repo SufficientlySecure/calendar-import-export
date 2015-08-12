@@ -209,10 +209,10 @@ public class Controller implements OnClickListener {
                     ProgressDialog.STYLE_HORIZONTAL);
         } else if (v.getId() == R.id.InsertButton) {
             DialogTools.runWithProgress(activity, new InsertVEvents(activity, calendar, activity
-                    .getSelectedCalendar().id), false, ProgressDialog.STYLE_HORIZONTAL);
+                    .getSelectedCalendar()), false, ProgressDialog.STYLE_HORIZONTAL);
         } else if (v.getId() == R.id.DeleteButton) {
             DialogTools.runWithProgress(activity, new DeleteVEvents(activity, calendar, activity
-                    .getSelectedCalendar().id), false, ProgressDialog.STYLE_HORIZONTAL);
+                    .getSelectedCalendar()), false, ProgressDialog.STYLE_HORIZONTAL);
         }
     }
 }

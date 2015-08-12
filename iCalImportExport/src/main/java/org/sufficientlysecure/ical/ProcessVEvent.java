@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.AndroidCalendar;
 
 import net.fortuna.ical4j.model.Calendar;
 import android.annotation.SuppressLint;
@@ -33,22 +34,19 @@ import android.util.Log;
 
 @SuppressLint("NewApi")
 public abstract class ProcessVEvent extends RunnableWithProgress {
-    private Calendar calendar;
-    private int calendarId;
     private final String TAG = ProcessVEvent.class.getSimpleName();
 
-    public ProcessVEvent(Activity activity, Calendar calendar, int calendarId) {
+    private Calendar calendar;
+    protected AndroidCalendar androidCalendar;
+
+    public ProcessVEvent(Activity activity, Calendar calendar, AndroidCalendar androidCalendar) {
         super(activity);
         this.calendar = calendar;
-        this.calendarId = calendarId;
+        this.androidCalendar = androidCalendar;
     }
 
     public Calendar getCalendar() {
         return calendar;
-    }
-
-    public int getCalendarId() {
-        return calendarId;
     }
 
     public List<Integer> getIds(ContentValues cValues) {

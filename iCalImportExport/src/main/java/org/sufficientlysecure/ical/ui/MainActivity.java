@@ -72,7 +72,6 @@ public class MainActivity extends Activity {
     private Button deleteButton;
     private Button setUrlButton;
     private Button exportButton;
-    private TextView icalInformation;
     private Controller controller;
 
     private TextView textCalName;
@@ -89,7 +88,7 @@ public class MainActivity extends Activity {
      */
     private List<BasicInputAdapter> urls;
     private List<AndroidCalendar> calendars;
-    private LinearLayout processGroup;
+    private LinearLayout insertDeleteLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -117,21 +116,28 @@ public class MainActivity extends Activity {
                 } else {
                     textCalTimezone.setText(calendar.timezone);
                 }
-                textCalSize.setText(Integer.toString(calendar.numEntries));
-                exportButton.setEnabled(calendar.numEntries > 0);
+                updateNumEntries(calendar);
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) { }
         });
 
         fileSpinner = (Spinner) findViewById(R.id.SpinnerFile);
+        fileSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
+                insertDeleteLayout.setVisibility(View.GONE);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> arg0) { }
+        });
+
         searchButton = setupButton(R.id.SearchButton);
         loadButton = setupButton(R.id.LoadButton);
         insertButton = setupButton(R.id.InsertButton);
         deleteButton = setupButton(R.id.DeleteButton);
         exportButton = setupButton(R.id.SaveButton);
-        icalInformation = (TextView) findViewById(R.id.IcalInfo);
-        processGroup = (LinearLayout) findViewById(R.id.linearLayoutProcess);
+        insertDeleteLayout = (LinearLayout) findViewById(R.id.InsertDeleteLayout);
         setUrlButton = setupButton(R.id.SetUrlButton);
 
         textCalName = (TextView)findViewById(R.id.TextCalName);
@@ -168,6 +174,18 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void updateNumEntries(AndroidCalendar calendar) {
+        final int entries = calendar.numEntries;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                textCalSize.setText(Integer.toString(entries));
+                exportButton.setEnabled(entries > 0);
+                insertDeleteLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
     private Button setupButton(int resourceId) {
@@ -209,15 +227,18 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                icalInformation.setVisibility(calendar == null ? View.GONE : View.VISIBLE);
-                processGroup.setVisibility(calendar == null ? View.GONE : View.VISIBLE);
-                if (calendar != null) {
-                    final int numEvents = calendar.getComponents(VEvent.VEVENT).size();
-                    Resources res = getResources();
-                    String txt = res.getQuantityString(R.plurals.textview_calendar_short_information,
-                            numEvents, numEvents);
-                    icalInformation.setText(txt);
+                if (calendar == null) {
+                    insertDeleteLayout.setVisibility(View.GONE);
+                    return;
                 }
+
+                final int numEvents = calendar.getComponents(VEvent.VEVENT).size();
+                Resources res = getResources();
+                insertButton.setText(res.getQuantityString(R.plurals.dialog_entries_insert,
+                        numEvents, numEvents));
+                deleteButton.setText(res.getQuantityString(R.plurals.dialog_entries_delete,
+                        numEvents, numEvents));
+                insertDeleteLayout.setVisibility(View.VISIBLE);
             }
         });
     }

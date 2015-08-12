@@ -46,8 +46,8 @@ import android.util.Log;
 public class InsertVEvents extends ProcessVEvent {
     private static final String TAG = InsertVEvents.class.getSimpleName();
 
-    public InsertVEvents(Activity activity, Calendar calendar, int calendarId) {
-        super(activity, calendar, calendarId);
+    public InsertVEvents(Activity activity, Calendar calendar, AndroidCalendar androidCalendar) {
+        super(activity, calendar, androidCalendar);
     }
 
     @Override
@@ -69,7 +69,7 @@ public class InsertVEvents extends ProcessVEvent {
             for (Object event : vevents) {
                 incrementProgress(1);
 
-                ContentValues eventVals = VEventWrapper.resolve((VEvent) event, getCalendarId());
+                ContentValues eventVals = VEventWrapper.resolve((VEvent)event, androidCalendar.id);
                 if (reminders.size() > 0) {
                     eventVals.put(CalendarContract.Events.HAS_ALARM, 1);
                 }
@@ -106,6 +106,9 @@ public class InsertVEvents extends ProcessVEvent {
                             "Reminder");
                 }
             }
+
+            androidCalendar.numEntries += numIns;
+            activity.updateNumEntries(androidCalendar);
 
             Resources res = activity.getResources();
             String msg = res.getQuantityString(R.plurals.dialog_entries_inserted, numIns, numIns)

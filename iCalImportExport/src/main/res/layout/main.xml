@@ -217,13 +217,8 @@
             android:text="@string/button_load_calendar"
             android:visibility="gone" />
 
-        <TextView
-            android:id="@+id/IcalInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-
         <LinearLayout
-            android:id="@+id/linearLayoutProcess"
+            android:id="@+id/InsertDeleteLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"

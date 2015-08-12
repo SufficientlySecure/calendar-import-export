@@ -24,6 +24,7 @@ import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
 
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+import org.sufficientlysecure.ical.ui.MainActivity;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -37,14 +38,16 @@ import android.provider.CalendarContract;
 @SuppressLint("NewApi")
 public class DeleteVEvents extends ProcessVEvent {
 
-    public DeleteVEvents(Activity activity, Calendar calendar, int calendarId) {
-        super(activity, calendar, calendarId);
+    public DeleteVEvents(Activity activity, Calendar calendar, AndroidCalendar androidCalendar) {
+        super(activity, calendar, androidCalendar);
         // TODO Auto-generated constructor stub
     }
 
     @Override
     public void run(ProgressDialog dialog) {
-        if (!DialogTools.decisionDialog(getActivity(), R.string.dialog_information_title,
+        MainActivity activity = (MainActivity)getActivity();
+
+        if (!DialogTools.decisionDialog(activity, R.string.dialog_information_title,
                 R.string.dialog_delete_entries, R.drawable.icon)) {
             return;
         }
@@ -53,14 +56,14 @@ public class DeleteVEvents extends ProcessVEvent {
 
         dialog.setMax(vevents.size());
 
-        int i = 0;
-        ContentResolver contentResolver = getActivity().getContentResolver();
+        int numDel = 0;
+        ContentResolver contentResolver = activity.getContentResolver();
         for (Object event : vevents) {
-            ContentValues values = VEventWrapper.resolve((VEvent) event, getCalendarId());
+            ContentValues values = VEventWrapper.resolve((VEvent) event,androidCalendar.id);
             List<Integer> ids = getIds(values);
 
             for (Integer id : ids) {
-                i += contentResolver.delete(
+                numDel += contentResolver.delete(
                         Uri.withAppendedPath(CalendarContract.Events.CONTENT_URI, Integer.toString(id)),
                         null, null);
                 // Delete reminder
@@ -71,9 +74,12 @@ public class DeleteVEvents extends ProcessVEvent {
             incrementProgress(1);
         }
 
-        Resources res = getActivity().getResources();
-        String txt = res.getQuantityString(R.plurals.dialog_entries_deleted, i, i);
-        DialogTools.showInformationDialog(getActivity(), R.string.dialog_information_title,
+        androidCalendar.numEntries -= numDel;
+        activity.updateNumEntries(androidCalendar);
+
+        Resources res = activity.getResources();
+        String txt = res.getQuantityString(R.plurals.dialog_entries_deleted, numDel, numDel);
+        DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
                 txt, R.drawable.icon);
     }
 }
