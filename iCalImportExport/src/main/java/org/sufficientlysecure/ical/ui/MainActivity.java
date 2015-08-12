@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
     private Button insertButton;
     private Button deleteButton;
     private Button setUrlButton;
-    private Button saveCalendar;
+    private Button exportButton;
     private TextView icalInformation;
     private Controller controller;
 
@@ -118,6 +118,7 @@ public class MainActivity extends Activity {
                     textCalTimezone.setText(calendar.timezone);
                 }
                 textCalSize.setText(Integer.toString(calendar.numEntries));
+                exportButton.setEnabled(calendar.numEntries > 0);
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) { }
@@ -128,7 +129,7 @@ public class MainActivity extends Activity {
         loadButton = setupButton(R.id.LoadButton);
         insertButton = setupButton(R.id.InsertButton);
         deleteButton = setupButton(R.id.DeleteButton);
-        saveCalendar = setupButton(R.id.SaveButton);
+        exportButton = setupButton(R.id.SaveButton);
         icalInformation = (TextView) findViewById(R.id.IcalInfo);
         processGroup = (LinearLayout) findViewById(R.id.linearLayoutProcess);
         setUrlButton = setupButton(R.id.SetUrlButton);
@@ -186,7 +187,7 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                saveCalendar.setVisibility(MainActivity.this.calendars == null ? View.GONE
+                exportButton.setVisibility(MainActivity.this.calendars == null ? View.GONE
                         : View.VISIBLE);
 
             }

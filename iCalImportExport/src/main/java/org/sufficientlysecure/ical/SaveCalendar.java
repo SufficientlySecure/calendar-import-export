@@ -81,13 +81,6 @@ public class SaveCalendar extends RunnableWithProgress {
                 new String[] { Integer.toString(androidCalendar.id) }, null);
         dialog.setMax(c.getCount());
 
-        // don't save empty calendars
-        if (c.getCount() == 0) {
-            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
-                    R.string.dialog_empty_calendar, R.drawable.icon);
-            return;
-        }
-
         Calendar calendar = new Calendar();
         calendar.getProperties().add(new ProdId(androidCalendar.owner));
         calendar.getProperties().add(Version.VERSION_2_0);

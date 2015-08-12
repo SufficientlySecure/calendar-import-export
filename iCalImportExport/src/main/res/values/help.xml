@@ -24,7 +24,8 @@
 <p><h2>Exporting</h2></p>
 <p>Select the <u>source calendar</u> from the drop down list at the top of the screen.<p>
 <br>
-<p>Click <i>Export</i> and enter the file name to save.</p>
+<p>Click <i>Export</i> and enter the file name to save. Note that if the calendar is empty,
+the <i>Export</i> button will not be enabled.</p>
 <br>
 <p>Click <i>OK</i> to complete the export.</p>
 <br>
