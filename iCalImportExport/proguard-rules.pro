@@ -1,4 +1,3 @@
-
 # From backport-util-concurrent-3.1.jar
 -dontwarn sun.misc.Perf
 
@@ -8,6 +7,9 @@
 # ical4j uses groovy internally
 -dontwarn net.fortuna.ical4j.model.ContentBuilder
 -dontwarn net.fortuna.ical4j.model.**Factory
+
+# We use our own CalendarContract with extra backwards compatibility support
+-dontnote android.provider.CalendarContract**
 
 # Dont rename stuff, we want stack traces to make sense in bug reports
 -keepnames interface ** { *; }
