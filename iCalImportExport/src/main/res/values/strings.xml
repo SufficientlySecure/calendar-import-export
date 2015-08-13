@@ -62,6 +62,9 @@
     <string name="menu_settings">Settings</string>
     <string name="menu_legal_notices">Legal Notices</string>
 
+    <string name="activity_settings_general">General</string>
+    <string name="activity_settings_save_passwords">Save passwords</string>
+    <string name="activity_settings_save_passwords_desc">Store user entered passwords in insecure local storage</string>
     <string name="activity_settings_import">Import</string>
     <string name="activity_settings_ignore_duplicates">Ignore duplicates</string>
     <string name="activity_settings_ignore_duplicates_desc">Ignore entries that are already in the destination calendar</string>

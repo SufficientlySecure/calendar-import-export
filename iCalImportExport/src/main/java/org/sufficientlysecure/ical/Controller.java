@@ -31,6 +31,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.sufficientlysecure.ical.ui.MainActivity;
+import org.sufficientlysecure.ical.ui.SettingsActivity;
 import org.sufficientlysecure.ical.ui.dialogs.Credentials;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
@@ -52,8 +53,8 @@ import android.view.View.OnClickListener;
 public class Controller implements OnClickListener {
     private static final String TAG = Controller.class.getName();
     private static final String PREF_LAST_URL = "lastUrl";
-    private static final String PREF_LAST_USERNAME = "lastUsername";
-    private static final String PREF_LAST_PASSWORD = "lastPassword";
+    private static final String PREF_LAST_USERNAME = "lastUrlUsername";
+    private static final String PREF_LAST_PASSWORD = SettingsActivity.PREF_LAST_URL_PASSWORD;
 
     private MainActivity activity;
     public static CalendarBuilder calendarBuilder;
@@ -161,30 +162,32 @@ public class Controller implements OnClickListener {
             RunnableWithProgress run = new RunnableWithProgress(activity) {
                 @Override
                 public void run(ProgressDialog dialog) {
+                    SharedPreferences prefs = activity.preferences;
                     String answer = DialogTools.questionDialog(activity,
                             R.string.dialog_enter_url_title, R.string.dialog_enter_url_message,
-                            activity.preferences.getString(PREF_LAST_URL, ""), true, false);
+                            prefs.getString(PREF_LAST_URL, ""), true, false);
                     if (answer != null && !answer.equals("")) {
                         try {
                             String username = DialogTools.questionDialog(activity,
                                     R.string.dialog_enter_username_title,
                                     R.string.dialog_enter_username_message,
-                                    activity.preferences.getString(PREF_LAST_USERNAME, ""), true,
+                                    prefs.getString(PREF_LAST_USERNAME, ""), true,
                                     false);
                             String password = null;
                             if (username != null && !username.equals("")) {
                                 password = DialogTools.questionDialog(activity,
                                         R.string.dialog_enter_password_title,
                                         R.string.dialog_enter_password_message,
-                                        activity.preferences.getString(PREF_LAST_PASSWORD, ""), true,
+                                        prefs.getString(PREF_LAST_PASSWORD, ""), true,
                                         true);
                             }
                             setProgressMessage(R.string.progress_parsing_url);
                             URL url = new URL(answer);
-                            Editor editor = activity.preferences.edit();
+                            Editor editor = prefs.edit();
                             editor.putString(PREF_LAST_URL, answer);
                             editor.putString(PREF_LAST_USERNAME, username);
-                            editor.putString(PREF_LAST_PASSWORD, password);
+                            boolean save = prefs.getBoolean("setting_save_passwords", false);
+                            editor.putString(PREF_LAST_PASSWORD, save ? password : "");
                             editor.commit();
                             if (username != null && !username.equals("") && password != null) {
                                 activity.setUrls(Arrays

@@ -6,6 +6,16 @@
     android:key="settings_screen_main" >
 
     <PreferenceCategory
+        android:title="@string/activity_settings_general" >
+
+        <CheckBoxPreference
+            android:key="setting_save_passwords"
+            android:title="@string/activity_settings_save_passwords"
+            android:summary="@string/activity_settings_save_passwords_desc"
+            android:defaultValue="false"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
         android:title="@string/activity_settings_import" >
 
         <CheckBoxPreference
