@@ -82,7 +82,7 @@
     <string name="activity_settings_reminders">Reminders</string>
     <string name="activity_settings_reminder_delete">Delete</string>
     <string name="activity_settings_import_reminders">Import reminders</string>
-    <string name="activity_settings_import_reminders_desc">Use reminders from the imported file instead of default reminders</string>
+    <string name="activity_settings_import_reminders_desc">Use reminders from the imported file instead of default reminders when present</string>
     <string name="activity_settings_edit_reminders">Default reminders</string>
     <string name="activity_settings_add_reminder">Add Reminder</string>
     <string name="activity_settings_edit_reminders_desc">Choose the reminders to apply to imported events</string>

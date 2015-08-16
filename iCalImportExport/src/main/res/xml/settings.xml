@@ -35,7 +35,6 @@
             android:defaultValue="false"/>
 
         <org.sufficientlysecure.ical.ui.RemindersDialog
-            android:key="setting_import_reminders"
             android:title="@string/activity_settings_edit_reminders"
             android:summary="@string/activity_settings_edit_reminders_desc"
             android:dialogLayout="@layout/reminders" />
