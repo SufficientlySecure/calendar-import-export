@@ -1239,6 +1239,12 @@ public final class CalendarContract {
          */
         public static final String CUSTOM_APP_URI = legacyApi? null : "customAppUri";
 
+        /**
+         * The UID for events added from the RFC 2445 iCalendar format.
+         * Column name.
+         * <P>Type: TEXT</P>
+         */
+        public static final String UID_2445 = legacyApi? null : "uid2445";
     }
 
     /**
