@@ -172,45 +172,4 @@ final public class DialogTools {
         }
         return result[0];
     }
-
-    public static boolean decisionDialog(final Activity activity, final int title,
-            final int message, final int drawableResource) {
-
-        final boolean[] result = new boolean[1];
-        final Object[] obj = new Object[1];
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-                AlertDialog dialog = builder.setMessage(activity.getString(message))
-                        .setCancelable(false)
-                        .setPositiveButton(android.R.string.yes, new OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                result[0] = true;
-                                obj[0] = new Object();
-                                dialog.cancel();
-                            }
-                        }).setNegativeButton(android.R.string.no, new OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                result[0] = false;
-                                obj[0] = new Object();
-                                dialog.cancel();
-                            }
-                        }).setTitle(activity.getString(title)).setIcon(drawableResource).create();
-
-                dialog.show();
-            }
-        });
-        while (obj[0] == null) {
-            try {
-                Thread.sleep(30);
-            } catch (InterruptedException e) {
-            }
-        }
-        return result[0];
-    }
 }

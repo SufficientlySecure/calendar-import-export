@@ -31,14 +31,9 @@
     </plurals>
     <string name="dialog_information_title">Information</string>
     <string name="dialog_success_title">Finished</string>
-    <plurals name="dialog_entries_deleted">
-         <item quantity="one">Deleted %d calendar entry.</item>
-         <item quantity="other">Deleted %d calendar entries.</item>
-    </plurals>
-    <string name="dialog_delete_entries">Do you really want to delete the entries?</string>
-    <plurals name="dialog_entries_inserted">
-         <item quantity="one">Inserted %d calendar entry.</item>
-         <item quantity="other">Inserted %d calendar entries.</item>
+    <plurals name="dialog_entries_processed">
+         <item quantity="one">Processed %d calendar entry.</item>
+         <item quantity="other">Processed %d calendar entries.</item>
     </plurals>
     <plurals name="dialog_entries_insert">
          <item quantity="one">Insert %d entry</item>

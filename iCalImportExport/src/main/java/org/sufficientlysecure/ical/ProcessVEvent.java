@@ -49,11 +49,11 @@ public abstract class ProcessVEvent extends RunnableWithProgress {
         return calendar;
     }
 
-    public List<Integer> getIds(ContentValues cValues) {
+    public List<String> getIds(ContentValues cValues) {
         Cursor c = getFromContentValues(cValues);
-        List<Integer> ids = new ArrayList<Integer>(c.getCount());
+        List<String> ids = new ArrayList<String>(c.getCount());
         while (c.moveToNext()) {
-            ids.add(c.getInt(0));
+            ids.add(c.getString(0));
         }
         c.close();
         return ids;

@@ -207,15 +207,17 @@ public class Controller implements OnClickListener {
             };
             DialogTools.runWithProgress(activity, run, false);
         } else if (v.getId() == R.id.SaveButton) {
+
             DialogTools.runWithProgress(activity,
                     new SaveCalendar(activity, activity.getSelectedCalendar()), false,
                     ProgressDialog.STYLE_HORIZONTAL);
-        } else if (v.getId() == R.id.InsertButton) {
-            DialogTools.runWithProgress(activity, new InsertVEvents(activity, calendar, activity
-                    .getSelectedCalendar()), false, ProgressDialog.STYLE_HORIZONTAL);
-        } else if (v.getId() == R.id.DeleteButton) {
-            DialogTools.runWithProgress(activity, new DeleteVEvents(activity, calendar, activity
-                    .getSelectedCalendar()), false, ProgressDialog.STYLE_HORIZONTAL);
+
+        } else if (v.getId() == R.id.InsertButton || v.getId() == R.id.DeleteButton) {
+
+            boolean isInserter = v.getId() == R.id.InsertButton;
+            RunnableWithProgress dialog = new InsertVEvents(activity, calendar,
+                    activity.getSelectedCalendar(), isInserter);
+            DialogTools.runWithProgress(activity, dialog, false, ProgressDialog.STYLE_HORIZONTAL);
         }
     }
 }

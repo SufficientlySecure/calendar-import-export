@@ -63,8 +63,12 @@ public class InsertVEvents extends ProcessVEvent {
     private static final Duration oneDay = createDuration("P1D");
     private static final Duration zeroMins = createDuration("P0M");
 
-    public InsertVEvents(Activity activity, Calendar calendar, AndroidCalendar androidCalendar) {
+    private static boolean isInserter;
+
+    public InsertVEvents(Activity activity, Calendar calendar, AndroidCalendar androidCalendar,
+            boolean isInserter) {
         super(activity, calendar, androidCalendar);
+        this.isInserter = isInserter;
     }
 
     @Override
@@ -83,6 +87,7 @@ public class InsertVEvents extends ProcessVEvent {
 
             dialog.setMax(vevents.size());
             ContentResolver resolver = activity.getContentResolver();
+            int numDel = 0;
             int numIns = 0;
             int numDups = 0;
 
@@ -96,6 +101,17 @@ public class InsertVEvents extends ProcessVEvent {
                 Log.d(TAG, "source event: " + e.toString());
 
                 ContentValues c = convertToDB(e, defReminders, reminders, androidCalendar.id);
+
+                if (!isInserter) {
+                    for (String id : getIds(c)) {
+                        Uri eventUri = Uri.withAppendedPath(Events.CONTENT_URI, id);
+                        numDel += resolver.delete(eventUri, null, null);
+                        String WHERE = Reminders.EVENT_ID + "=?";
+                        resolver.delete(Reminders.CONTENT_URI, WHERE, new String[] { id });
+                    }
+                    continue;
+                }
+
                 if (checkForDuplicates && contains(c)) {
                     Log.d(TAG, "Ignoring duplicate event");
                     numDups++;
@@ -122,15 +138,19 @@ public class InsertVEvents extends ProcessVEvent {
             }
 
             androidCalendar.numEntries += numIns;
+            androidCalendar.numEntries -= numDel;
             activity.updateNumEntries(androidCalendar);
 
             Resources res = activity.getResources();
-            String msg = res.getQuantityString(R.plurals.dialog_entries_inserted, numIns, numIns)
-                    + "\n";
-            if (checkForDuplicates) {
-                msg += res.getQuantityString(R.plurals.dialog_found_duplicates, numDups, numDups);
-            } else {
-                msg += res.getString(R.string.dialog_did_not_check_dupes);
+            int n = isInserter ? numIns : numDel;
+            String msg = res.getQuantityString(R.plurals.dialog_entries_processed, n, n) + "\n";
+            if (isInserter) {
+                msg += "\n";
+                if (checkForDuplicates) {
+                    msg += res.getQuantityString(R.plurals.dialog_found_duplicates, numDups, numDups);
+                } else {
+                    msg += res.getString(R.string.dialog_did_not_check_dupes);
+                }
             }
 
             DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
