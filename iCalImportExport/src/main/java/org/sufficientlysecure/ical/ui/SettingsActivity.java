@@ -18,7 +18,6 @@
 package org.sufficientlysecure.ical.ui;
 
 import org.sufficientlysecure.ical.R;
-import org.sufficientlysecure.ical.ui.MainActivity;
 
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;

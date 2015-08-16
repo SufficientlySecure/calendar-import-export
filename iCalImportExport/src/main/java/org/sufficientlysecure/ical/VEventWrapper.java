@@ -21,8 +21,6 @@ import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtStamp;
 
-import org.sufficientlysecure.ical.AndroidVEventWrapper.IAndroidWrapper;
-
 import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.util.Log;

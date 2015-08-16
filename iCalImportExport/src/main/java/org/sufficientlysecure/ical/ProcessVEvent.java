@@ -29,7 +29,6 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.Property;
 
@@ -49,7 +48,6 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.CalendarContract;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.text.format.Time;
@@ -342,7 +340,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         return result;
     }
 
-    public boolean doesDbContain(ContentResolver resolver, ContentValues c) {
+    private boolean doesDbContain(ContentResolver resolver, ContentValues c) {
         Cursor cur = getFromContentValues(resolver, c);
         int count = cur.getCount();
         cur.close();

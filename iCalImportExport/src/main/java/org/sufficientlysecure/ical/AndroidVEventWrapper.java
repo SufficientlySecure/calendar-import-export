@@ -21,32 +21,24 @@ package org.sufficientlysecure.ical;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.TimeZone;
 
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.PropertyList;
-import net.fortuna.ical4j.model.TimeZoneRegistry;
 import net.fortuna.ical4j.model.TimeZoneRegistryImpl;
-import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.TzId;
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.database.Cursor;
 import android.provider.CalendarContract;
-import android.text.format.Time;
 import android.util.Log;
 
 @SuppressLint("NewApi")
-public class AndroidVEventWrapper {
+public final class AndroidVEventWrapper {
     private Map<String, IAndroidWrapper> androidToVEvent;
     private static AndroidVEventWrapper wrapper;
     private static final String TAG = AndroidVEventWrapper.class.getSimpleName();
