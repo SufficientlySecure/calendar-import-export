@@ -26,10 +26,16 @@ import java.util.List;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.parameter.Related;
+import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.Transp;
+import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.Property;
 
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
@@ -288,13 +294,40 @@ public class ProcessVEvent extends RunnableWithProgress {
         copyProperty(c, Events.CUSTOM_APP_URI, e, Property.URL);
         copyProperty(c, Events.UID_2445, e, Property.UID);
 
-        // FIXME: Iterate and set  reminders: for (Object a: e.getAlarms()) {
+
+        for (Object alarm: e.getAlarms()) {
+            VAlarm a = (VAlarm)alarm;
+
+            if (a.getAction() != Action.AUDIO && a.getAction() != Action.DISPLAY) {
+                continue; // Ignore email and procedure alarms
+            }
+
+            Trigger t = a.getTrigger();
+            long startMs = e.getStartDate().getDate().getTime();
+            long alarmMs;
+
+            if (t.getDateTime() != null) {
+                alarmMs = t.getDateTime().getTime(); // Absolute
+            } else if (t.getDuration() != null && t.getDuration().isNegative()) {
+                Parameter rel = t.getParameter(Parameter.RELATED);
+                if (rel != null && ((Related)rel) == Related.END) {
+                    startMs = e.getEndDate().getDate().getTime();
+                }
+                alarmMs = startMs - durationToMs(t.getDuration()); // Relative
+            } else {
+                continue; // FIXME: Log this unsupported alarm
+            }
+            int reminder = (int)((startMs - alarmMs) / 1000 / 60);
+            if (reminder >=0 && !reminders.contains(reminder)) {
+                reminders.add(reminder);
+            }
+        }
 
         if (defReminders.size() > 0 || reminders.size() > 0) {
             c.put(Events.HAS_ALARM, 1);
         }
 
-        // FIXME: Attendees
+        // FIXME: Attendees, SELF_ATTENDEE_STATUS
         return c;
     }
 
@@ -302,6 +335,15 @@ public class ProcessVEvent extends RunnableWithProgress {
         Duration d = new Duration();
         d.setValue(value);
         return d;
+    }
+
+    private static long durationToMs(Dur d) {
+        long sec = d.getSeconds();
+        sec += d.getMinutes() * (60);
+        sec += d.getHours() * (60 * 60);
+        sec += d.getDays() * (60 * 60 * 24);
+        sec += d.getWeeks() * (60 * 60 * 24 * 7);
+        return sec * 1000;
     }
 
     private boolean hasProperty(VEvent e, String name) {
