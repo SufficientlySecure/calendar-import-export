@@ -57,6 +57,7 @@ public class DeleteVEvents extends ProcessVEvent {
         dialog.setMax(vevents.size());
 
         int numDel = 0;
+/* FIXME: Disabled temporarily
         ContentResolver contentResolver = activity.getContentResolver();
         for (Object event : vevents) {
             ContentValues values = VEventWrapper.resolve((VEvent) event,androidCalendar.id);
@@ -73,7 +74,7 @@ public class DeleteVEvents extends ProcessVEvent {
             }
             incrementProgress(1);
         }
-
+*/
         androidCalendar.numEntries -= numDel;
         activity.updateNumEntries(androidCalendar);
 

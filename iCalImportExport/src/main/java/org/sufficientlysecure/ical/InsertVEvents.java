@@ -1,4 +1,5 @@
 /**
+ *  Copyright (C) 2015  Jon Griffiths (jon_p_griffiths@yahoo.com)
  *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
@@ -19,11 +20,19 @@
 package org.sufficientlysecure.ical;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.DtEnd;
+import net.fortuna.ical4j.model.property.Transp;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.PropertyFactoryImpl;
 
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.MainActivity;
@@ -40,11 +49,19 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract.Reminders;
+import android.text.format.Time;
 import android.util.Log;
 
 @SuppressLint("NewApi")
 public class InsertVEvents extends ProcessVEvent {
     private static final String TAG = InsertVEvents.class.getSimpleName();
+
+    private static final PropertyFactoryImpl factory = PropertyFactoryImpl.getInstance();
+
+    private static final Duration oneDay = createDuration("P1D");
+    private static final Duration zeroMins = createDuration("P0M");
 
     public InsertVEvents(Activity activity, Calendar calendar, AndroidCalendar androidCalendar) {
         super(activity, calendar, androidCalendar);
@@ -56,8 +73,10 @@ public class InsertVEvents extends ProcessVEvent {
             MainActivity activity = (MainActivity)getActivity();
             SharedPreferences prefs = activity.preferences;
             boolean checkForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
+            boolean useReminders = prefs.getBoolean("setting_import_reminders", false);
 
-            List<Integer> reminders = RemindersDialog.getSavedRemindersInMinutes();
+            List<Integer> defReminders = RemindersDialog.getSavedRemindersInMinutes();
+            List<Integer> reminders = new ArrayList<Integer>();
 
             setProgressMessage(R.string.progress_insert_entries);
             ComponentList vevents = getCalendar().getComponents(VEvent.VEVENT);
@@ -66,44 +85,39 @@ public class InsertVEvents extends ProcessVEvent {
             ContentResolver resolver = activity.getContentResolver();
             int numIns = 0;
             int numDups = 0;
-            for (Object event : vevents) {
+
+            ContentValues alarm = new ContentValues();
+            alarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+
+            for (Object ve: vevents) {
                 incrementProgress(1);
 
-                ContentValues eventVals = VEventWrapper.resolve((VEvent)event, androidCalendar.id);
-                if (reminders.size() > 0) {
-                    eventVals.put(CalendarContract.Events.HAS_ALARM, 1);
-                }
+                VEvent e = (VEvent)ve;
+                Log.d(TAG, "source event: " + e.toString());
 
-                Log.d(TAG, "eventVals: " + eventVals);
-
-                if (checkForDuplicates && contains(eventVals)) {
-                    Log.d(TAG, "Ignoring duplicate");
+                ContentValues c = convertToDB(e, defReminders, reminders, androidCalendar.id);
+                if (checkForDuplicates && contains(c)) {
+                    Log.d(TAG, "Ignoring duplicate event");
                     numDups++;
                     continue;
                 }
 
-                Uri uri = insertAndLog(resolver, CalendarContract.Events.CONTENT_URI,
-                        eventVals, "Event");
+                Log.d(TAG, "destination values: " + c);
+
+                Uri uri = insertAndLog(resolver, Events.CONTENT_URI, c, "Event");
                 if (uri == null) {
-                    continue;
+                    continue; // FIXME: Note the failure
                 }
+                final int id = Integer.parseInt(uri.getLastPathSegment());
 
                 numIns++;
 
-                for (int time : reminders) {
-
-                    int id = Integer.parseInt(uri.getLastPathSegment());
-
+                for (int time : (useReminders && reminders.size() > 0 ? reminders : defReminders)) {
                     Log.d(TAG, "Inserting reminder for event with id: " + id);
 
-                    ContentValues reminderVals = new ContentValues();
-                    reminderVals.put(CalendarContract.Reminders.EVENT_ID, id);
-                    reminderVals.put(CalendarContract.Reminders.MINUTES, time);
-                    reminderVals.put(CalendarContract.Reminders.METHOD,
-                                    CalendarContract.Reminders.METHOD_ALERT);
-
-                    insertAndLog(resolver, CalendarContract.Reminders.CONTENT_URI, reminderVals,
-                            "Reminder");
+                    alarm.put(Reminders.EVENT_ID, id);
+                    alarm.put(Reminders.MINUTES, time);
+                    insertAndLog(resolver, Reminders.CONTENT_URI, alarm, "Reminder");
                 }
             }
 
@@ -134,6 +148,161 @@ public class InsertVEvents extends ProcessVEvent {
             }
             DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,
                     R.string.dialog_bug, R.drawable.icon);
+        }
+    }
+
+    private ContentValues convertToDB(VEvent e, List<Integer> defReminders,
+                                      List<Integer> reminders, int calendarId) {
+
+        reminders.clear();
+        boolean allDay = false;
+
+        // Munge a VEvent so Android doesn't reject it once converted
+        if (!hasProperty(e, Property.DTEND) && !hasProperty(e, Property.DURATION)) {
+            // From RFC 2445:
+            // - If the start date is a date, the event lasts all day, midnight to midnight.
+            // - If the start date is a datetime, the event lasts no time (end = start).
+            // However according to the Android calendar docs,
+            //  - You cannot provide both a DURATION and DTEND.
+            //  - If an event is recurring it must have a DURATION, otherwise it must have DTEND.
+            //  - If an event is marked as all day it must be in the UTC timezone.
+            //
+            boolean startIsDate = !(e.getStartDate().getDate() instanceof DateTime);
+            boolean isRecurring = hasProperty(e, Property.RRULE) || hasProperty(e, Property.RDATE);
+
+            if (startIsDate) {
+                e.getProperties().add(oneDay);
+                allDay = true;
+                e.getStartDate().setUtc(true);
+            } else {
+                e.getProperties().add(zeroMins);
+                // Zero time events are always free time so override/set TRANSP accordingly
+                e.getProperties().remove(Property.TRANSP);
+                e.getProperties().add(Transp.TRANSPARENT);
+            }
+
+            if (!isRecurring) {
+                // Calculate end date from duration, set it and remove the duration.
+                e.getProperties().add(e.getEndDate());
+                e.getProperties().remove(Property.DURATION);
+            }
+        }
+
+        // Now populate and return the db values for the event
+        ContentValues c = new ContentValues();
+
+        c.put(Events.CALENDAR_ID, calendarId);
+        copyProperty(c, Events.TITLE, e, Property.SUMMARY);
+        copyProperty(c, Events.DESCRIPTION, e, Property.DESCRIPTION);
+
+        if (hasProperty(e, Property.ORGANIZER)) {
+            copyProperty(c, Events.ORGANIZER, e, Property.ORGANIZER);
+            c.put(Events.GUESTS_CAN_MODIFY, 1); // Ensure we can edit the item if not the organiser
+        }
+
+        copyProperty(c, Events.EVENT_LOCATION, e, Property.LOCATION);
+
+        if (hasProperty(e, Property.STATUS))
+        {
+            String status = e.getProperty(Property.STATUS).getValue();
+            if (status.equals("TENTATIVE")) {
+                c.put(Events.STATUS, Events.STATUS_TENTATIVE);
+            } else if (status.equals("CONFIRMED")) {
+                c.put(Events.STATUS, Events.STATUS_CONFIRMED);
+            } else if (status.equals("CANCELED")) {
+                c.put(Events.STATUS, Events.STATUS_CANCELED);
+            }
+        }
+
+        copyProperty(c, Events.DURATION, e, Property.DURATION);
+
+        if (allDay) {
+            c.put(Events.ALL_DAY, 1);
+        }
+
+        copyDateProperty(c, Events.DTSTART, Events.EVENT_TIMEZONE, e.getStartDate());
+        if (hasProperty(e, Property.DTEND)) {
+            copyDateProperty(c, Events.DTEND, Events.EVENT_END_TIMEZONE, e.getEndDate());
+        }
+
+        if (hasProperty(e, Property.CLASS))
+        {
+            String access = e.getProperty(Property.CLASS).getValue();
+            int accessLevel = Events.ACCESS_DEFAULT;
+            if (access.equals("PUBLIC")) {
+                accessLevel = Events.ACCESS_PUBLIC;
+            } else if (access.equals("PRIVATE")) {
+                accessLevel = Events.ACCESS_PRIVATE;
+            } else if (access.equals("CONFIDENTIAL")) {
+                accessLevel = Events.ACCESS_CONFIDENTIAL;
+            }
+            c.put(Events.ACCESS_LEVEL, accessLevel);
+        }
+
+        // Work out availability. This is confusing as FREEBUSY and TRANSP overlap.
+        if (Events.AVAILABILITY != null) {
+            int availability = Events.AVAILABILITY_BUSY;
+            if (hasProperty(e, Property.TRANSP)) {
+                if (e.getTransparency() == Transp.TRANSPARENT) {
+                    availability = Events.AVAILABILITY_FREE;
+                }
+            } else if (hasProperty(e, Property.FREEBUSY)) {
+                String fbtype = e.getProperty(Property.FREEBUSY).getValue();
+                if (fbtype.equals("FREE")) {
+                    availability = Events.AVAILABILITY_FREE;
+                } else if (fbtype.equals("BUSY-TENTATIVE")) {
+                    availability = Events.AVAILABILITY_TENTATIVE;
+                }
+            }
+            c.put(Events.AVAILABILITY, availability);
+        }
+
+        copyProperty(c, Events.RRULE, e, Property.RRULE);
+        copyProperty(c, Events.RDATE, e, Property.RDATE);
+        copyProperty(c, Events.EXRULE, e, Property.EXRULE);
+        copyProperty(c, Events.EXDATE, e, Property.EXDATE);
+        copyProperty(c, Events.CUSTOM_APP_URI, e, Property.URL);
+        copyProperty(c, Events.UID_2445, e, Property.UID);
+
+        // FIXME: Iterate and set  reminders: for (Object a: e.getAlarms()) {
+
+        if (defReminders.size() > 0 || reminders.size() > 0) {
+            c.put(Events.HAS_ALARM, 1);
+        }
+
+        // FIXME: Attendees
+        return c;
+    }
+
+    private static Duration createDuration(String value) {
+        Duration d = new Duration();
+        d.setValue(value);
+        return d;
+    }
+
+    private boolean hasProperty(VEvent e, String name) {
+        return e.getProperty(name) != null;
+    }
+
+    private void copyProperty(ContentValues c, String dbName, VEvent e, String evName) {
+        if (dbName != null) {
+            Property p = e.getProperty(evName);
+            if (p != null) {
+                c.put(dbName, p.getValue());
+            }
+        }
+    }
+
+    private void copyDateProperty(ContentValues c, String dbName, String dbTzName, DateProperty date) {
+        if (dbName != null && date.getDate() != null) {
+            c.put(dbName, date.getDate().getTime()); // ms since epoc in GMT
+            if (dbTzName != null) {
+                if (date.isUtc() || date.getTimeZone() == null) {
+                    c.put(dbTzName, Time.TIMEZONE_UTC);
+                } else {
+                    c.put(dbTzName, date.getTimeZone().getID());
+                }
+            }
         }
     }
 

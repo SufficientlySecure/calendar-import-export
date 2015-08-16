@@ -22,12 +22,9 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.property.DtStamp;
 
 import org.sufficientlysecure.ical.AndroidVEventWrapper.IAndroidWrapper;
-import org.sufficientlysecure.ical.AndroidVEventWrapper.IVEventWrapper;
 
 import android.annotation.SuppressLint;
-import android.content.ContentValues;
 import android.database.Cursor;
-import android.provider.CalendarContract;
 import android.util.Log;
 
 @SuppressLint("NewApi")
@@ -41,25 +38,12 @@ public class VEventWrapper {
         PropertyList properties = new PropertyList();
         AndroidVEventWrapper wrapperInstance = AndroidVEventWrapper.getInstance();
         for (String key : keys) {
-            IAndroidWrapper wrapper = wrapperInstance.getAndroidWrapper(key);
-            wrapper.wrap(properties, c);
+            wrapperInstance.getAndroidWrapper(key).wrap(properties, c);
         }
 
         VEvent vevent = new VEvent(properties);
         vevent.getProperties().add(new DtStamp());
         Log.d(TAG, "VEvent resolved from cursor");
         return vevent;
-    }
-
-    public static ContentValues resolve(VEvent vevent, int calendar_id) {
-        ContentValues values = new ContentValues();
-        AndroidVEventWrapper wrapperInstance = AndroidVEventWrapper.getInstance();
-        for (String key : keys) {
-            IVEventWrapper wrapper = wrapperInstance.getVEventWrapper(key);
-            wrapper.wrap(values, vevent);
-        }
-        values.put(CalendarContract.Events.CALENDAR_ID, calendar_id);
-        Log.d(TAG, "VEvent ready to insert into db");
-        return values;
     }
 }
