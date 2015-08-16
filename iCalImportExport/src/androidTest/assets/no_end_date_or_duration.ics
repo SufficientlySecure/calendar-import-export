@@ -2,48 +2,89 @@ BEGIN:VCALENDAR
 CALSCALE:GREGORIAN
 
 BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
 SUMMARY:Case 1.1
 DESCRIPTION: Start Date=Date/No End Date/Recurring. Should be all day and marked busy.
 COMMENT: Where a start date and no end or duration is given, the even is 24 hours and busy.
-DTSTAMP:20141231T173501Z
 DTSTART;VALUE=DATE:20150901
-RRULE:FREQ=MONTHLY;BYDAY=-1MO,-1TU,-1WE,-1TH,-1FR;BYSETPOS=-1
+RRULE:FREQ=MONTHLY;COUNT=2
 END:VEVENT
 
 BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
 SUMMARY:Case 1.2
 DESCRIPTION: Start Date=Date Format/No End Date/Recurring. Should be zero time and marked free.
 COMMENT: As per 1.1 but the date is not in canonical date format and so is treated as a time like 1.4.
-DTSTAMP:20141231T173501Z
 DTSTART:20150902
-RRULE:FREQ=MONTHLY;BYDAY=-1MO,-1TU,-1WE,-1TH,-1FR;BYSETPOS=-1
+RRULE:FREQ=MONTHLY;COUNT=2
 END:VEVENT
 
 BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
 SUMMARY:Case 1.3
 DESCRIPTION: Start Date=Time/No End Date/Recurring. Should be zero time and marked free.
 COMMENT: Where a start time and no end or duration is given, the event is zero time and transparent.
-DTSTAMP:20141231T173501Z
 DTSTART:20150903T123000
-RRULE:FREQ=MONTHLY;BYDAY=-1MO,-1TU,-1WE,-1TH,-1FR;BYSETPOS=-1
+RRULE:FREQ=MONTHLY;COUNT=2
 END:VEVENT
 
 BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
 SUMMARY:Case 1.4
 DESCRIPTION: Start Date=Midnight Time/No End Date/Recurring. Should be zero time and marked free.
 COMMENT: As per 1.1 but the date is a time that just happens to be midnight so behaves like 1.3.
-DTSTAMP:20141231T173501Z
 DTSTART:20150904T000000Z
-RRULE:FREQ=MONTHLY;BYDAY=-1MO,-1TU,-1WE,-1TH,-1FR;BYSETPOS=-1
+RRULE:FREQ=MONTHLY;COUNT=2
 END:VEVENT
 
 BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
 SUMMARY:Case 1.5
 DESCRIPTION: Start Date=Date/No End Date/Recurring/Transparent. Should be all day and marked free.
 COMMENT: As per 1.1 but we explicitly set the event as free using TRANSP.
-DTSTAMP:20141231T173501Z
 DTSTART;VALUE=DATE:20150905
-RRULE:FREQ=MONTHLY;BYDAY=-1MO,-1TU,-1WE,-1TH,-1FR;BYSETPOS=-1
+RRULE:FREQ=MONTHLY;COUNT=2
+TRANSP:TRANSPARENT
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
+SUMMARY:Case 1.6
+DESCRIPTION: Start Date=Date/No End Date/Non-Recurring. Should be all day and marked busy.
+COMMENT: As per 1.1 but non-recurring.
+DTSTART;VALUE=DATE:20150906
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
+SUMMARY:Case 1.7
+DESCRIPTION: Start Date=Date Format/No End Date/Non-Recurring. Should be zero time and marked free.
+COMMENT: As per 1.2 but non-recurring.
+DTSTART:20150907
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
+SUMMARY:Case 1.8
+DESCRIPTION: Start Date=Time/No End Date/Non-Recurring. Should be zero time and marked free.
+COMMENT: As per 1.3 but non-recurring.
+DTSTART:20150908T123000
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
+SUMMARY:Case 1.8
+DESCRIPTION: Start Date=Midnight Time/No End Date/Non-Recurring. Should be zero time and marked free.
+COMMENT: As per 1.4 but non-recurring.
+DTSTART:20150909T000000Z
+END:VEVENT
+
+BEGIN:VEVENT
+DTSTAMP:20141231T173501Z
+SUMMARY:Case 1.10
+DESCRIPTION: Start Date=Date/No End Date/Non-Recurring/Transparent. Should be all day and marked free.
+COMMENT: As per 1.5 but non-recurring.
+DTSTART;VALUE=DATE:20150910
 TRANSP:TRANSPARENT
 END:VEVENT
 

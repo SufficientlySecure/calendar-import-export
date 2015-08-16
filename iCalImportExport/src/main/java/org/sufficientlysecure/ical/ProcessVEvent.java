@@ -201,14 +201,14 @@ public class ProcessVEvent extends RunnableWithProgress {
             } else {
                 e.getProperties().add(zeroMins);
                 // Zero time events are always free time so override/set TRANSP accordingly
-                e.getProperties().remove(Property.TRANSP);
+                e.getProperties().remove(e.getProperty(Property.TRANSP));
                 e.getProperties().add(Transp.TRANSPARENT);
             }
 
             if (!isRecurring) {
                 // Calculate end date from duration, set it and remove the duration.
                 e.getProperties().add(e.getEndDate());
-                e.getProperties().remove(Property.DURATION);
+                e.getProperties().remove(e.getProperty(Property.DURATION));
             }
         }
 
