@@ -214,9 +214,8 @@ public class Controller implements OnClickListener {
 
         } else if (v.getId() == R.id.InsertButton || v.getId() == R.id.DeleteButton) {
 
-            boolean isInserter = v.getId() == R.id.InsertButton;
-            RunnableWithProgress dialog = new InsertVEvents(activity, calendar,
-                    activity.getSelectedCalendar(), isInserter);
+            RunnableWithProgress dialog = new ProcessVEvent(activity, calendar,
+                    activity.getSelectedCalendar(), v.getId() == R.id.InsertButton);
             DialogTools.runWithProgress(activity, dialog, false, ProgressDialog.STYLE_HORIZONTAL);
         }
     }

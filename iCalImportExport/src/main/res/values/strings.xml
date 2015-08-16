@@ -7,7 +7,6 @@
     <string name="progress_searching_ical_files">Searching for iCalendar files.</string>
     <string name="progress_loading_calendarentries">Loading calendar entries.</string>
     <string name="progress_writing_calendar_to_file">Writing calendar to file.</string>
-    <string name="progress_deleting_calendarentries">Deleting calendar entries.</string>
     <string name="progress_insert_entries">Inserting entries.</string>
     <string name="progress_parsing_url">Parsing URL&#8230;</string>
     <string name="button_import_file">Import File</string>
