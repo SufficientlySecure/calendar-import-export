@@ -162,7 +162,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                 }
             }
 
-            DialogTools.info(activity, R.string.dialog_information_title, msg);
+            activity.showToast(msg);
 
         } catch (RuntimeException e) {
             throw e;

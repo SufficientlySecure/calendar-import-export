@@ -25,11 +25,10 @@
     <string name="dialog_choosefilename_title">Choose filename</string>
     <string name="dialog_choosefilename_message">Please enter the filename to save to.</string>
     <plurals name="dialog_sucessfully_written_calendar">
-         <item quantity="one">Successfully wrote %1$d event to file %2$s</item>
-         <item quantity="other">Successfully wrote %1$d events to file %2$s</item>
+         <item quantity="one">Wrote %1$d event to %2$s</item>
+         <item quantity="other">Wrote %1$d events to %2$s</item>
     </plurals>
     <string name="dialog_information_title">Information</string>
-    <string name="dialog_success_title">Finished</string>
     <plurals name="dialog_entries_processed">
          <item quantity="one">Processed %d calendar entry.</item>
          <item quantity="other">Processed %d calendar entries.</item>

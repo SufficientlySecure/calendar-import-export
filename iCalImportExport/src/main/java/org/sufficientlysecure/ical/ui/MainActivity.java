@@ -51,6 +51,7 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -175,6 +176,15 @@ public class MainActivity extends Activity {
                 e.printStackTrace();
             }
         }
+    }
+
+    public void showToast(final String msg) {
+        runOnUiThread(new Runnable() {
+                          @Override
+                          public void run() {
+                              Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+                          }
+                      });
     }
 
     public void updateNumEntries(AndroidCalendar calendar) {
