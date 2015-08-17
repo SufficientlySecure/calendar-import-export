@@ -31,7 +31,7 @@ public abstract class CalendarUtils {
 
     private static void searchFiles(File root, List<File> files, String... extension) {
         if (root.isFile()) {
-            for (String string : extension) {
+            for (String string: extension) {
                 if (root.toString().endsWith(string)) {
                     files.add(root);
                 }
@@ -39,7 +39,7 @@ public abstract class CalendarUtils {
         } else {
             File[] children = root.listFiles();
             if (children != null) {
-                for (File file : children) {
+                for (File file: children) {
                     searchFiles(file, files, extension);
                 }
             }

@@ -46,8 +46,8 @@ public class AndroidCalendar {
     // read permissions in App Ops/XPrivacy etc.
     public static List<AndroidCalendar> loadAll(ContentResolver resolver) {
 
-        if (!haveProvider(resolver, Calendars.CONTENT_URI) ||
-            !haveProvider(resolver, Events.CONTENT_URI)) {
+        if (!haveProvider(resolver, Calendars.CONTENT_URI)
+            || !haveProvider(resolver, Events.CONTENT_URI)) {
             return new ArrayList<AndroidCalendar>();
         }
 

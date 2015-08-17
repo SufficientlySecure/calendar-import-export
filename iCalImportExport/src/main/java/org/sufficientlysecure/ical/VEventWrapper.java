@@ -30,12 +30,12 @@ public class VEventWrapper {
     private static String TAG = VEventWrapper.class.getSimpleName();
 
     private static String[] keys = { "rrule", "summary", "description", "location",
-            "dtstart", "dtend" }; // "organizer",
+                                     "dtstart", "dtend" }; // "organizer",
 
     public static VEvent resolve(Cursor c) {
         PropertyList properties = new PropertyList();
         AndroidVEventWrapper wrapperInstance = AndroidVEventWrapper.getInstance();
-        for (String key : keys) {
+        for (String key: keys) {
             wrapperInstance.getAndroidWrapper(key).wrap(properties, c);
         }
 

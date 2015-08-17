@@ -23,7 +23,6 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -45,6 +44,7 @@ import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Environment;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,26 +74,28 @@ public class Controller implements OnClickListener {
     }
 
     private void noCalendarFinish() {
-        activity.runOnUiThread(new Runnable() {
+        Runnable task;
+        task = new Runnable() {
             @Override
             public void run() {
-                AlertDialog dialog = new AlertDialog.Builder(activity)
-                        .setMessage(R.string.dialog_exiting)
-                        .setIcon(R.drawable.icon)
-                        .setTitle(R.string.dialog_information_title)
-                        .setCancelable(false)
-                        .setPositiveButton(android.R.string.ok,
-                                new DialogInterface.OnClickListener() {
-
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        dialog.cancel();
-                                        activity.finish();
-                                    }
-                                }).create();
-                dialog.show();
+                DialogInterface.OnClickListener buttonTask;
+                buttonTask = new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                        activity.finish();
+                    }
+                };
+                AlertDialog d = new AlertDialog.Builder(activity)
+                                .setMessage(R.string.dialog_exiting)
+                                .setIcon(R.drawable.icon)
+                                .setTitle(R.string.dialog_information_title)
+                                .setCancelable(false)
+                                .setPositiveButton(android.R.string.ok, buttonTask).create();
+                d.show();
             }
-        });
+        };
+        activity.runOnUiThread(task);
     }
 
     private void setHint(SharedPreferences prefs, String key) {
@@ -102,20 +104,24 @@ public class Controller implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        RunnableWithProgress task = null;
+        int style = ProgressDialog.STYLE_SPINNER;
+
         // Handling search for file event
         if (v.getId() == R.id.SearchButton) {
-            RunnableWithProgress run = new RunnableWithProgress(activity) {
+
+            task = new RunnableWithProgress(activity) {
                 @Override
                 public void run(ProgressDialog dialog) {
-                    setProgressMessage(R.string.progress_searching_ical_files);
+                    setMessage(R.string.progress_searching_ical_files);
 
                     List<File> files = CalendarUtils.searchFiles(
-                            Environment.getExternalStorageDirectory(), "ics", "ical", "icalendar");
+                        Environment.getExternalStorageDirectory(), "ics", "ical", "icalendar");
                     List<BasicInputAdapter> urls = new ArrayList<BasicInputAdapter>(files.size());
 
-                    for (File file : files) {
+                    for (File file: files) {
                         try {
-                            urls.add(new BasicInputAdapter(file.toURL()));
+                            urls.add(new BasicInputAdapter(file.toURI().toURL()));
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
@@ -124,19 +130,18 @@ public class Controller implements OnClickListener {
                     activity.setUrls(urls);
                 }
             };
-            DialogTools.runWithProgress(activity, run, false);
         }
-
         else if (v.getId() == R.id.LoadButton) {
-            RunnableWithProgress run = new RunnableWithProgress(activity) {
+
+            task = new RunnableWithProgress(activity) {
                 @Override
                 public void run(ProgressDialog dialog) {
                     if (calendarBuilder == null) {
-                        setProgressMessage(R.string.progress_loading_builder);
+                        setMessage(R.string.progress_loading_builder);
                         calendarBuilder = new CalendarBuilder();
                     }
                     try {
-                        setProgressMessage(R.string.progress_reading_ical);
+                        setMessage(R.string.progress_reading_ical);
                         InputStream in = activity.getSelectedURL().getConnection().getInputStream();
                         if (in != null) {
                             SharedPreferences prefs = activity.preferences;
@@ -150,73 +155,77 @@ public class Controller implements OnClickListener {
                         }
                         activity.setCalendar(calendar);
                     } catch (Exception exc) {
-                        DialogTools.showInformationDialog(activity, R.string.dialog_error_title,
-                                activity.getString(R.string.dialog_error_unparseable)
-                                        + exc.getMessage(), R.drawable.icon);
+                        String msg = activity.getString(R.string.dialog_error_unparseable)
+                                     + exc.getMessage();
+                        DialogTools.info(activity, R.string.dialog_error_title, msg);
                         Log.d(TAG, "Error", exc);
                     }
                 }
             };
-            DialogTools.runWithProgress(activity, run, false);
         } else if (v.getId() == R.id.SetUrlButton) {
-            RunnableWithProgress run = new RunnableWithProgress(activity) {
+
+            task = new RunnableWithProgress(activity) {
                 @Override
                 public void run(ProgressDialog dialog) {
+                    // FIXME: This should really be a dialog or something
                     SharedPreferences prefs = activity.preferences;
-                    String answer = DialogTools.questionDialog(activity,
-                            R.string.dialog_enter_url_title, R.string.dialog_enter_url_message,
-                            prefs.getString(PREF_LAST_URL, ""), true, false);
-                    if (answer != null && !answer.equals("")) {
+                    String url = DialogTools.ask(activity, R.string.dialog_enter_url_title,
+                                                 R.string.dialog_enter_url_message,
+                                                 prefs.getString(PREF_LAST_URL, ""), true, false);
+
+                    if (!TextUtils.isEmpty(url)) {
                         try {
-                            String username = DialogTools.questionDialog(activity,
-                                    R.string.dialog_enter_username_title,
-                                    R.string.dialog_enter_username_message,
-                                    prefs.getString(PREF_LAST_USERNAME, ""), true,
-                                    false);
-                            String password = null;
-                            if (username != null && !username.equals("")) {
-                                password = DialogTools.questionDialog(activity,
-                                        R.string.dialog_enter_password_title,
-                                        R.string.dialog_enter_password_message,
-                                        prefs.getString(PREF_LAST_PASSWORD, ""), true,
-                                        true);
+                            String user = DialogTools.ask(activity,
+                                                          R.string.dialog_enter_username_title,
+                                                          R.string.dialog_enter_username_message,
+                                                          prefs.getString(PREF_LAST_USERNAME, ""),
+                                                          true, false);
+                            String pass = null;
+                            if (!TextUtils.isEmpty(user)) {
+                                pass = DialogTools.ask(activity,
+                                                       R.string.dialog_enter_password_title,
+                                                       R.string.dialog_enter_password_message,
+                                                       prefs.getString(PREF_LAST_PASSWORD, ""),
+                                                       true, true);
                             }
-                            setProgressMessage(R.string.progress_parsing_url);
-                            URL url = new URL(answer);
-                            Editor editor = prefs.edit();
-                            editor.putString(PREF_LAST_URL, answer);
-                            editor.putString(PREF_LAST_USERNAME, username);
+                            setMessage(R.string.progress_parsing_url);
                             boolean save = prefs.getBoolean("setting_save_passwords", false);
-                            editor.putString(PREF_LAST_PASSWORD, save ? password : "");
+
+                            Editor editor = prefs.edit();
+                            editor.putString(PREF_LAST_URL, url);
+                            editor.putString(PREF_LAST_USERNAME, user);
+                            editor.putString(PREF_LAST_PASSWORD, save ? pass : "");
                             editor.commit();
-                            if (username != null && !username.equals("") && password != null) {
-                                activity.setUrls(Arrays
-                                        .asList((BasicInputAdapter) new CredentialInputAdapter(url,
-                                                new Credentials(username, password))));
+
+                            if (!TextUtils.isEmpty(user) && pass != null) {
+                                Credentials creds = new Credentials(user, pass);
+                                activity.setUrl(new CredentialInputAdapter(new URL(url), creds));
                             } else {
-                                activity.setUrls(Arrays.asList(new BasicInputAdapter(url)));
+                                activity.setUrl(new BasicInputAdapter(new URL(url)));
                             }
                         } catch (MalformedURLException exc) {
                             Log.d(TAG, "Controller", exc);
 
-                            DialogTools.showInformationDialog(activity, R.string.dialog_error_title,
-                                    "URL was not parseable..." + exc.getMessage(), R.drawable.icon);
+                            String msg = "URL was not parsable..." + exc.getMessage();
+                            DialogTools.info(activity, R.string.dialog_error_title, msg);
                         }
                     }
                 }
             };
-            DialogTools.runWithProgress(activity, run, false);
+
         } else if (v.getId() == R.id.SaveButton) {
 
-            DialogTools.runWithProgress(activity,
-                    new SaveCalendar(activity, activity.getSelectedCalendar()), false,
-                    ProgressDialog.STYLE_HORIZONTAL);
+            task = new SaveCalendar(activity);
+            style = ProgressDialog.STYLE_HORIZONTAL;
 
         } else if (v.getId() == R.id.InsertButton || v.getId() == R.id.DeleteButton) {
 
-            RunnableWithProgress dialog = new ProcessVEvent(activity, calendar,
-                    activity.getSelectedCalendar(), v.getId() == R.id.InsertButton);
-            DialogTools.runWithProgress(activity, dialog, false, ProgressDialog.STYLE_HORIZONTAL);
+            task = new ProcessVEvent(activity, calendar, v.getId() == R.id.InsertButton);
+            style = ProgressDialog.STYLE_HORIZONTAL;
+        }
+
+        if (task != null) {
+            DialogTools.progress(activity, task, false, style);
         }
     }
 }

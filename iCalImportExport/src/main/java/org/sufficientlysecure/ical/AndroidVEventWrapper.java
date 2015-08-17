@@ -30,11 +30,12 @@ import net.fortuna.ical4j.model.ParameterList;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.PropertyList;
+import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistryImpl;
 import net.fortuna.ical4j.model.parameter.TzId;
 import android.annotation.SuppressLint;
 import android.database.Cursor;
-import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
 import android.util.Log;
 
 @SuppressLint("NewApi")
@@ -90,7 +91,7 @@ public final class AndroidVEventWrapper {
                 if (value != null) {
                     try {
                         Log.d(TAG, "AndroidWrapper, VEvent: " + keyVEvent + " AndroidEvent: "
-                                + keyAndroidEvent + " Value: " + value);
+                              + keyAndroidEvent + " Value: " + value);
                         properties.add(createProperty(keyVEvent, value));
                     } catch (Exception exc) {
                         Log.d(TAG, "Error", exc);
@@ -121,29 +122,27 @@ public final class AndroidVEventWrapper {
                 if (value != null) {
                     try {
                         Log.d(TAG, "AndroidDateWrapper, VEvent: " + keyVEvent + " AndroidEvent: "
-                                + keyAndroidEvent + " Value: " + value);
+                              + keyAndroidEvent + " Value: " + value);
                         // Find timezone
-                        String dbTimezone = c.getString(c
-                                .getColumnIndex(CalendarContract.Events.EVENT_TIMEZONE));
-                        Log.d(TAG, "timezone from Android: " + dbTimezone);
-                        net.fortuna.ical4j.model.TimeZone timezone = new TimeZoneRegistryImpl()
-                                .getTimeZone(dbTimezone);
+                        String dbTz = c.getString(c.getColumnIndex(Events.EVENT_TIMEZONE));
+                        Log.d(TAG, "timezone from Android: " + dbTz);
+                        TimeZone tz = new TimeZoneRegistryImpl().getTimeZone(dbTz);
 
                         // TODO: Do we need to convert this timezone??? To account for GMT
                         // conversion to string?
-                        Log.d(TAG, "timezone display name: " + timezone.getDisplayName());
-                        Log.d(TAG, "vtimezone id: " + timezone.getVTimeZone().getTimeZoneId());
+                        Log.d(TAG, "timezone display name: " + tz.getDisplayName());
+                        Log.d(TAG, "vtimezone id: " + tz.getVTimeZone().getTimeZoneId());
 
                         // Time needs to be the local time (i.e. the time in the timezone of the
                         // event)
                         // see FORM#3, http://www.kanzaki.com/docs/ical/dateTime.html
-                        DateTime dateTime = new DateTime(Long.valueOf(value));
-                        dateTime.setTimeZone(timezone);
-                        Log.d(TAG, "dateTime: " + dateTime.toString());
+                        DateTime dt = new DateTime(Long.valueOf(value));
+                        dt.setTimeZone(tz);
+                        Log.d(TAG, "dateTime: " + dt.toString());
 
                         // Add timezone to event
                         // create tzid parameter..
-                        TzId tzParam = new TzId(timezone.getID());
+                        TzId tzParam = new TzId(tz.getID());
                         // create value parameter..
                         // Value type = Value.TIME;
                         ParameterList params = new ParameterList();
@@ -151,10 +150,7 @@ public final class AndroidVEventWrapper {
                         // params.add(type);
 
                         PropertyFactoryImpl factory = PropertyFactoryImpl.getInstance();
-                        Property property = factory.createProperty(keyVEvent, params,
-                                dateTime.toString());
-
-                        properties.add(property);
+                        properties.add(factory.createProperty(keyVEvent, params, dt.toString()));
                     } catch (Exception exc) {
                         Log.d(TAG, "Error", exc);
                     }
@@ -163,8 +159,8 @@ public final class AndroidVEventWrapper {
         }
     }
 
-    private Property createProperty(String key, String value) throws IOException,
-            URISyntaxException, ParseException {
+    private Property createProperty(String key, String value)
+            throws IOException, URISyntaxException, ParseException {
         PropertyFactoryImpl factory = PropertyFactoryImpl.getInstance();
         Property property = factory.createProperty(key);
         property.setValue(value);

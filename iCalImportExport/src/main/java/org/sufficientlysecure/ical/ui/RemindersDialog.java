@@ -42,7 +42,8 @@ public class RemindersDialog extends DialogPreference {
 
     // Must match the list items in strings.xml
     private static final int[] minutes = { 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440,
-        2880, 4320, 5760, 7200, 8640, 10080, 20160, 30240, 40320 };
+                                           2880, 4320, 5760, 7200, 8640, 10080, 20160, 30240,
+                                           40320 };
 
     private LinearLayout reminderItemsHolder;
     private LayoutInflater inflater;
@@ -87,8 +88,7 @@ public class RemindersDialog extends DialogPreference {
 
     private void addReminder(int index) {
 
-        LinearLayout newItem = (LinearLayout)inflater.inflate(R.layout.reminder,
-                (ViewGroup)reminderItemsHolder, false);
+        View newItem = inflater.inflate(R.layout.reminder, reminderItemsHolder, false);
         final int id = newId++;
         newItem.setId(id);
         Spinner dropDown = (Spinner)newItem.findViewById(R.id.reminder_item);

@@ -21,7 +21,7 @@ package org.sufficientlysecure.ical.ui;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import net.fortuna.ical4j.model.Calendar;
@@ -54,8 +54,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
-    private static final String TAG = MainActivity.class.getSimpleName();
-
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 
@@ -66,11 +64,9 @@ public class MainActivity extends Activity {
      */
     private Spinner calendarSpinner;
     private Spinner fileSpinner;
-    private Button searchButton;
     private Button loadButton;
     private Button insertButton;
     private Button deleteButton;
-    private Button setUrlButton;
     private Button exportButton;
     private Controller controller;
 
@@ -101,7 +97,8 @@ public class MainActivity extends Activity {
 
         // Retrieve views
         calendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);
-        calendarSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        AdapterView.OnItemSelectedListener calListener;
+        calListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 AndroidCalendar calendar = calendars.get(pos);
@@ -119,26 +116,31 @@ public class MainActivity extends Activity {
                 updateNumEntries(calendar);
             }
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) { }
-        });
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        };
+        calendarSpinner.setOnItemSelectedListener(calListener);
 
         fileSpinner = (Spinner) findViewById(R.id.SpinnerFile);
-        fileSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+        AdapterView.OnItemSelectedListener fileListener;
+        fileListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 insertDeleteLayout.setVisibility(View.GONE);
             }
             @Override
-            public void onNothingSelected(AdapterView<?> arg0) { }
-        });
+            public void onNothingSelected(AdapterView<?> arg0) {
+            }
+        };
+        fileSpinner.setOnItemSelectedListener(fileListener);
 
-        searchButton = setupButton(R.id.SearchButton);
+        setupButton(R.id.SearchButton);
         loadButton = setupButton(R.id.LoadButton);
         insertButton = setupButton(R.id.InsertButton);
         deleteButton = setupButton(R.id.DeleteButton);
         exportButton = setupButton(R.id.SaveButton);
         insertDeleteLayout = (LinearLayout) findViewById(R.id.InsertDeleteLayout);
-        setUrlButton = setupButton(R.id.SetUrlButton);
+        setupButton(R.id.SetUrlButton);
 
         textCalName = (TextView)findViewById(R.id.TextCalName);
         textCalAccountName = (TextView)findViewById(R.id.TextCalAccountName);
@@ -148,7 +150,6 @@ public class MainActivity extends Activity {
         textCalId = (TextView)findViewById(R.id.TextCalId);
         textCalTimezone = (TextView)findViewById(R.id.TextCalTimezone);
         textCalSize = (TextView)findViewById(R.id.TextCalSize);
-
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -160,16 +161,16 @@ public class MainActivity extends Activity {
         final int id = action.equals(LOAD_CALENDAR) ? intent.getIntExtra(EXTRA_CALENDAR_ID, -1) : -1;
 
         new Thread(new Runnable() {
-            @Override
-            public void run() {
-                controller.init(id);
-            }
-        }).start();
+                       @Override
+                       public void run() {
+                           controller.init(id);
+                       }
+                   }).start();
 
         if (action.equals(Intent.ACTION_VIEW)) {
             // File intent
             try {
-                setUrls(Arrays.asList(new BasicInputAdapter(new URL(intent.getDataString()))));
+                setUrl(new BasicInputAdapter(new URL(intent.getDataString())));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -179,13 +180,13 @@ public class MainActivity extends Activity {
     public void updateNumEntries(AndroidCalendar calendar) {
         final int entries = calendar.numEntries;
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                textCalSize.setText(Integer.toString(entries));
-                exportButton.setEnabled(entries > 0);
-                insertDeleteLayout.setVisibility(View.GONE);
-            }
-        });
+                          @Override
+                          public void run() {
+                              textCalSize.setText(Integer.toString(entries));
+                              exportButton.setEnabled(entries > 0);
+                              insertDeleteLayout.setVisibility(View.GONE);
+                          }
+                      });
     }
 
     private Button setupButton(int resourceId) {
@@ -203,44 +204,48 @@ public class MainActivity extends Activity {
         SpinnerTools.simpleSpinnerInUI(this, calendarSpinner, calendarStrings);
 
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                exportButton.setVisibility(MainActivity.this.calendars == null ? View.GONE
-                        : View.VISIBLE);
-
-            }
-        });
+                          @Override
+                          public void run() {
+                              List<AndroidCalendar> l = MainActivity.this.calendars;
+                              exportButton.setVisibility(l == null ? View.GONE : View.VISIBLE);
+                          }
+                      });
     }
 
     public void setUrls(List<BasicInputAdapter> urls) {
         this.urls = urls;
         SpinnerTools.simpleSpinnerInUI(this, fileSpinner, urls);
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                loadButton.setVisibility(MainActivity.this.urls == null ? View.GONE : View.VISIBLE);
-            }
-        });
+                          @Override
+                          public void run() {
+                              loadButton.setVisibility(MainActivity.this.urls == null ? View.GONE : View.VISIBLE);
+                          }
+                      });
+    }
+
+    public void setUrl(BasicInputAdapter urls) {
+        setUrls(Collections.singletonList(urls));
     }
 
     public void setCalendar(final Calendar calendar) {
         runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if (calendar == null) {
-                    insertDeleteLayout.setVisibility(View.GONE);
-                    return;
-                }
+                          @Override
+                          public void run() {
+                              if (calendar == null) {
+                                  insertDeleteLayout.setVisibility(View.GONE);
+                                  return;
+                              }
 
-                final int numEvents = calendar.getComponents(VEvent.VEVENT).size();
-                Resources res = getResources();
-                insertButton.setText(res.getQuantityString(R.plurals.dialog_entries_insert,
-                        numEvents, numEvents));
-                deleteButton.setText(res.getQuantityString(R.plurals.dialog_entries_delete,
-                        numEvents, numEvents));
-                insertDeleteLayout.setVisibility(View.VISIBLE);
-            }
-        });
+                              Resources res = getResources();
+                              final int n = calendar.getComponents(VEvent.VEVENT).size();
+                              insertButton.setText(get(res, R.plurals.dialog_entries_insert, n));
+                              deleteButton.setText(get(res, R.plurals.dialog_entries_delete, n));
+                              insertDeleteLayout.setVisibility(View.VISIBLE);
+                          }
+                          private String get(Resources res, int id, int n) {
+                              return res.getQuantityString(id, n, n);
+                          }
+                      });
     }
 
     public AndroidCalendar getSelectedCalendar() {
@@ -259,18 +264,18 @@ public class MainActivity extends Activity {
         for (final AndroidCalendar cal : calendars) {
             if (cal.id == id) {
                 runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        calendarSpinner.setSelection(calendars.indexOf(cal));
-                    }
-                });
+                                  @Override
+                                  public void run() {
+                                      calendarSpinner.setSelection(calendars.indexOf(cal));
+                                  }
+                              });
             }
         }
     }
 
     public BasicInputAdapter getSelectedURL() {
-        return fileSpinner.getSelectedItem() != null ? (BasicInputAdapter) fileSpinner
-                .getSelectedItem() : null;
+        Object sel = fileSpinner.getSelectedItem();
+        return sel == null ? null : (BasicInputAdapter)sel;
     }
 
     @Override
@@ -285,8 +290,7 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
 
         case R.id.help:
-            DialogTools.showInformationDialog(this, R.string.menu_help,
-                    Html.fromHtml(getString(R.string.help)), R.drawable.icon);
+            DialogTools.info(this, R.string.menu_help, Html.fromHtml(getString(R.string.help)));
             break;
 
         case R.id.settings:

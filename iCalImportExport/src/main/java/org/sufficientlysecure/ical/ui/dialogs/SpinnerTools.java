@@ -30,9 +30,9 @@ public abstract class SpinnerTools {
 
     }
 
-    public static <E> void simpleSpinner(Context context, Spinner spinner, List<E> input) {
-        ArrayAdapter<E> adapter = new ArrayAdapter<E>(context,
-                android.R.layout.simple_spinner_item, input);
+    private static <E> void simpleSpinner(Context context, Spinner spinner, List<E> input) {
+        final int id = android.R.layout.simple_spinner_item;
+        ArrayAdapter<E> adapter = new ArrayAdapter<E>(context, id, input);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(adapter);
         if (input != null && input.size() != 0) {
@@ -41,12 +41,12 @@ public abstract class SpinnerTools {
     }
 
     public static <E> void simpleSpinnerInUI(final Activity activity, final Spinner spinner,
-            final List<E> input) {
+                                             final List<E> input) {
         activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                simpleSpinner(activity, spinner, input);
-            }
-        });
+                                   @Override
+                                   public void run() {
+                                       simpleSpinner(activity, spinner, input);
+                                   }
+                               });
     }
 }

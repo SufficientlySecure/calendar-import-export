@@ -17,27 +17,22 @@
 
 package org.sufficientlysecure.ical.ui;
 
-import org.sufficientlysecure.ical.R;
-
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.os.Bundle;
-import android.preference.PreferenceActivity;
 
 
-public class SettingsActivity extends PreferenceActivity
-    implements OnSharedPreferenceChangeListener {
+public class SettingsActivity extends android.preference.PreferenceActivity
+                              implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String PREF_LAST_URL_PASSWORD = "lastUrlPassword";
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(android.os.Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        addPreferencesFromResource(R.xml.settings);
+        addPreferencesFromResource(org.sufficientlysecure.ical.R.xml.settings);
     }
 
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         if (key.equals("setting_save_passwords")) {
             // Blank any stored password when this setting is changed
             MainActivity.preferences.edit().putString(PREF_LAST_URL_PASSWORD, "").commit();
@@ -47,14 +42,14 @@ public class SettingsActivity extends PreferenceActivity
     @Override
     protected void onResume() {
         super.onResume();
-        getPreferenceScreen().getSharedPreferences()
-            .registerOnSharedPreferenceChangeListener(this);
+        SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
+        prefs.registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        getPreferenceScreen().getSharedPreferences()
-            .unregisterOnSharedPreferenceChangeListener(this);
+        SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
+        prefs.unregisterOnSharedPreferenceChangeListener(this);
     }
 }

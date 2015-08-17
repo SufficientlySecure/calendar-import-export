@@ -19,7 +19,8 @@
 
 package org.sufficientlysecure.ical;
 
-import java.io.File;
+import java.io.FileOutputStream;
+import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +43,6 @@ import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.RemindersDialog;
-import org.sufficientlysecure.ical.util.ProviderTools;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -68,13 +68,12 @@ public class ProcessVEvent extends RunnableWithProgress {
 
     private Calendar iCalCalendar;
     private AndroidCalendar androidCalendar;
-    private static boolean isInserter;
+    private boolean isInserter;
 
-    public ProcessVEvent(Activity activity, Calendar iCalCalendar, AndroidCalendar androidCalendar,
-            boolean isInserter) {
+    public ProcessVEvent(Activity activity, Calendar iCalCalendar, boolean isInserter) {
         super(activity);
         this.iCalCalendar = iCalCalendar;
-        this.androidCalendar = androidCalendar;
+        androidCalendar = ((MainActivity)activity).getSelectedCalendar();
         this.isInserter = isInserter;
     }
 
@@ -89,7 +88,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             List<Integer> defReminders = RemindersDialog.getSavedRemindersInMinutes();
             List<Integer> reminders = new ArrayList<Integer>();
 
-            setProgressMessage(R.string.progress_insert_entries);
+            setMessage(R.string.progress_insert_entries);
             ComponentList vevents = iCalCalendar.getComponents(VEvent.VEVENT);
 
             dialog.setMax(vevents.size());
@@ -102,7 +101,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             alarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
 
             for (Object ve: vevents) {
-                incrementProgress(1);
+                incrementProgressBy(1);
 
                 VEvent e = (VEvent)ve;
                 Log.d(TAG, "source event: " + e.toString());
@@ -138,7 +137,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
                 numIns++;
 
-                for (int time : (useReminders && reminders.size() > 0 ? reminders : defReminders)) {
+                for (int time: (useReminders && reminders.size() > 0 ? reminders : defReminders)) {
                     Log.d(TAG, "Inserting reminder for event with id: " + id);
 
                     alarm.put(Reminders.EVENT_ID, id);
@@ -163,21 +162,20 @@ public class ProcessVEvent extends RunnableWithProgress {
                 }
             }
 
-            DialogTools.showInformationDialog(activity, R.string.dialog_information_title,
-                    msg, R.drawable.icon);
+            DialogTools.info(activity, R.string.dialog_information_title, msg);
 
         } catch (RuntimeException e) {
             throw e;
         } catch (Exception e) {
             Log.e(TAG, "ProcessVEvent", e);
             try {
-                ProviderTools.writeException(Environment.getExternalStorageDirectory()
-                        + File.separator + "ical_error.log", e);
+                String p = Environment.getExternalStorageDirectory() + "/ical_error.log";
+                PrintStream out = new PrintStream(new FileOutputStream(p));
+                e.printStackTrace(out);
             } catch (Exception ignored) {
 
             }
-            DialogTools.showInformationDialog(getActivity(), R.string.dialog_bug_title,
-                    R.string.dialog_bug, R.drawable.icon);
+            DialogTools.info(getActivity(), R.string.dialog_bug_title, R.string.dialog_bug);
         }
     }
 
@@ -232,8 +230,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         copyProperty(c, Events.EVENT_LOCATION, e, Property.LOCATION);
 
-        if (hasProperty(e, Property.STATUS))
-        {
+        if (hasProperty(e, Property.STATUS)) {
             String status = e.getProperty(Property.STATUS).getValue();
             if (status.equals("TENTATIVE")) {
                 c.put(Events.STATUS, Events.STATUS_TENTATIVE);
@@ -277,10 +274,10 @@ public class ProcessVEvent extends RunnableWithProgress {
                     availability = Events.AVAILABILITY_FREE;
                 }
             } else if (hasProperty(e, Property.FREEBUSY)) {
-                String fbtype = e.getProperty(Property.FREEBUSY).getValue();
-                if (fbtype.equals("FREE")) {
+                String fbType = e.getProperty(Property.FREEBUSY).getValue();
+                if (fbType.equals("FREE")) {
                     availability = Events.AVAILABILITY_FREE;
-                } else if (fbtype.equals("BUSY-TENTATIVE")) {
+                } else if (fbType.equals("BUSY-TENTATIVE")) {
                     availability = Events.AVAILABILITY_TENTATIVE;
                 }
             }
@@ -309,8 +306,8 @@ public class ProcessVEvent extends RunnableWithProgress {
             if (t.getDateTime() != null) {
                 alarmMs = t.getDateTime().getTime(); // Absolute
             } else if (t.getDuration() != null && t.getDuration().isNegative()) {
-                Parameter rel = t.getParameter(Parameter.RELATED);
-                if (rel != null && ((Related)rel) == Related.END) {
+                Related rel = (Related)t.getParameter(Parameter.RELATED);
+                if (rel != null && rel == Related.END) {
                     startMs = e.getEndDate().getDate().getTime();
                 }
                 alarmMs = startMs - durationToMs(t.getDuration()); // Relative
@@ -395,12 +392,12 @@ public class ProcessVEvent extends RunnableWithProgress {
         // If UID's cannot be re-used between different calendars then we should
         // drop the CALENDAR_ID column from the where clause and make sure we handle
         // importing the same UID into two calendars sanely.
-        String where = Events.CALENDAR_ID + "=? AND " + Events.TITLE + "=? AND " +
-                Events.DTSTART + "=?";
+        String where = Events.CALENDAR_ID + "=? AND " + Events.TITLE + "=? AND "
+                       + Events.DTSTART + "=?";
         String[] args = new String[] {
-                c.getAsString(Events.CALENDAR_ID),
-                c.getAsString(Events.TITLE),
-                c.getAsString(Events.DTSTART)
+            c.getAsString(Events.CALENDAR_ID),
+            c.getAsString(Events.TITLE),
+            c.getAsString(Events.DTSTART)
         };
         return resolver.query(Events.CONTENT_URI, new String[] { Events._ID }, where, args, null);
     }

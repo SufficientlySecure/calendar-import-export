@@ -38,10 +38,12 @@ import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Environment;
-import android.provider.CalendarContract;
+import android.provider.CalendarContract.Events;
+import android.text.TextUtils;
 import android.util.Log;
 
 @SuppressLint("NewApi")
@@ -51,19 +53,19 @@ public class SaveCalendar extends RunnableWithProgress {
 
     private AndroidCalendar androidCalendar;
 
-    public SaveCalendar(Activity activity, AndroidCalendar calendar) {
+    public SaveCalendar(Activity activity) {
         super(activity);
-        this.androidCalendar = calendar;
+        androidCalendar = ((MainActivity)activity).getSelectedCalendar();
     }
 
     @Override
     public void run(ProgressDialog dialog) {
         MainActivity activity = (MainActivity)getActivity();
 
-        String file = DialogTools.questionDialog(activity,
-                R.string.dialog_choosefilename_title, R.string.dialog_choosefilename_message,
-                activity.preferences.getString(PREF_FILE, ""), true, false);
-        if (file == null || file.equals("")) {
+        String file = DialogTools.ask(activity, R.string.dialog_choosefilename_title,
+                                      R.string.dialog_choosefilename_message,
+                                      activity.preferences.getString(PREF_FILE, ""), true, false);
+        if (TextUtils.isEmpty(file)) {
             return;
         }
         activity.preferences.edit().putString(PREF_FILE, file).commit();
@@ -73,12 +75,12 @@ public class SaveCalendar extends RunnableWithProgress {
 
         String output = Environment.getExternalStorageDirectory() + File.separator + file;
         int i = 0;
-        setProgressMessage(R.string.progress_loading_calendarentries);
+        setMessage(R.string.progress_loading_calendarentries);
 
         // query events
-        Cursor c = activity.getContentResolver().query(CalendarContract.Events.CONTENT_URI,
-                null, CalendarContract.Events.CALENDAR_ID + " = ?",
-                new String[] { Integer.toString(androidCalendar.id) }, null);
+        ContentResolver resolver = activity.getContentResolver();
+        String[] args = new String[] { Integer.toString(androidCalendar.id) };
+        Cursor c = resolver.query(Events.CONTENT_URI, null, Events.CALENDAR_ID + "=?", args, null);
         dialog.setMax(c.getCount());
 
         Calendar calendar = new Calendar();
@@ -98,25 +100,23 @@ public class SaveCalendar extends RunnableWithProgress {
             vevent.getProperties().add(new Uid((i + 1) + "+" + androidCalendar.owner));
             calendar.getComponents().add(vevent);
             Log.d(TAG, "Adding event to calendar");
-            incrementProgress(1);
+            incrementProgressBy(1);
             i++;
         }
         c.close();
         CalendarOutputter outputter = new CalendarOutputter();
         Resources res = activity.getResources();
         try {
-            setProgressMessage(R.string.progress_writing_calendar_to_file);
+            setMessage(R.string.progress_writing_calendar_to_file);
             outputter.output(calendar, new FileOutputStream(output));
 
             String txt = res.getQuantityString(R.plurals.dialog_sucessfully_written_calendar,
-                    i, i, output);
-            DialogTools.showInformationDialog(activity, R.string.dialog_success_title,
-                    txt, R.drawable.icon);
+                                               i, i, file);
+            DialogTools.info(activity, R.string.dialog_success_title, txt);
         } catch (Exception e) {
             Log.e(TAG, "SaveCalendar", e);
 
-            DialogTools.showInformationDialog(activity, R.string.dialog_bug_title,
-                    "Error:\n" + e.getMessage(), R.drawable.icon);
+            DialogTools.info(activity, R.string.dialog_bug_title, "Error:\n" + e.getMessage());
         }
 
     }

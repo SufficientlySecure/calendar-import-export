@@ -36,49 +36,23 @@ public abstract class RunnableWithProgress {
         this.dialog = dialog;
     }
 
-    public void setProgressTitle(final int titleResource) {
+    public void setMessage(final int resource) {
         activity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                dialog.setTitle(activity.getString(titleResource));
-            }
-        });
+                                   @Override
+                                   public void run() {
+                                       dialog.setMessage(activity.getString(resource));
+                                   }
+                               });
     }
 
-    public void setProgressMessage(final int resource) {
+    public void incrementProgressBy(final int progress) {
         activity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                dialog.setMessage(activity.getString(resource));
-            }
-        });
-    }
-
-    public void setProgress(final int progress) {
-        activity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                dialog.setProgress(progress);
-            }
-        });
-    }
-
-    public void incrementProgress(final int progress) {
-        activity.runOnUiThread(new Runnable() {
-
-            @Override
-            public void run() {
-                dialog.incrementProgressBy(progress);
-            }
-        });
+                                   @Override
+                                   public void run() {
+                                       dialog.incrementProgressBy(progress);
+                                   }
+                               });
     }
 
     public abstract void run(ProgressDialog dialog);
-
-    public int getProgress() {
-        return -1;
-    }
 }
