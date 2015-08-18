@@ -254,8 +254,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             copyDateProperty(c, Events.DTEND, Events.EVENT_END_TIMEZONE, e.getEndDate());
         }
 
-        if (hasProperty(e, Property.CLASS))
-        {
+        if (hasProperty(e, Property.CLASS)) {
             String access = e.getProperty(Property.CLASS).getValue();
             int accessLevel = Events.ACCESS_DEFAULT;
             if (access.equals("PUBLIC")) {
