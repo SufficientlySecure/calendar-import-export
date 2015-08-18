@@ -181,44 +181,55 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
     }
 
+    // Munge a VEvent so Android won't reject it, then convert to ContentValues for inserting
     private ContentValues convertToDB(VEvent e, List<Integer> defReminders,
                                       List<Integer> reminders, int calendarId) {
-
         reminders.clear();
+
         boolean allDay = false;
+        boolean startIsDate = !(e.getStartDate().getDate() instanceof DateTime);
+        boolean isRecurring = hasProperty(e, Property.RRULE) || hasProperty(e, Property.RDATE);
 
-        // Munge a VEvent so Android doesn't reject it once converted
-        if (!hasProperty(e, Property.DTEND) && !hasProperty(e, Property.DURATION)) {
-            // From RFC 2445:
-            // - If the start date is a date, the event lasts all day, midnight to midnight.
-            // - If the start date is a datetime, the event lasts no time (end = start).
-            // However according to the Android calendar docs,
-            //  - You cannot provide both a DURATION and DTEND.
-            //  - If an event is recurring it must have a DURATION, otherwise it must have DTEND.
-            //  - If an event is marked as all day it must be in the UTC timezone.
-            //
-            boolean startIsDate = !(e.getStartDate().getDate() instanceof DateTime);
-            boolean isRecurring = hasProperty(e, Property.RRULE) || hasProperty(e, Property.RDATE);
-
-            if (startIsDate) {
-                e.getProperties().add(oneDay);
-                allDay = true;
-                e.getStartDate().setUtc(true);
-            } else {
-                e.getProperties().add(zeroMins);
-                // Zero time events are always free time so override/set TRANSP accordingly
-                e.getProperties().remove(e.getProperty(Property.TRANSP));
-                e.getProperties().add(Transp.TRANSPARENT);
-            }
-
-            if (!isRecurring) {
-                // Calculate end date from duration, set it and remove the duration.
-                e.getProperties().add(e.getEndDate());
-                e.getProperties().remove(e.getProperty(Property.DURATION));
-            }
+        if (startIsDate) {
+            // If the start date is a DATE, the event is all-day, midnight to midnight (RFC 2445).
+            // Add a duration of 1 day and remove the end date. If the event is non-recurring then
+            // we will convert the duration to an end date below, which fixes all-day cases where
+            // the end date is set to the same day at 23:59:59, rolls over because of a TZ, etc.
+            e.getProperties().add(oneDay);
+            allDay = true;
+            //  If an event is marked as all day it must be in the UTC timezone.
+            e.getStartDate().setUtc(true);
+            removeProperty(e, Property.DTEND);
         }
 
-        // Now populate and return the db values for the event
+        if (!hasProperty(e, Property.DTEND) && !hasProperty(e, Property.DURATION)) {
+            // No end date or duration given.
+            // Since we added a duration above when the start date is a DATE:
+            // - The start date is a DATETIME, the event lasts no time at all (RFC 2445).
+            e.getProperties().add(zeroMins);
+            // Zero time events are always free (RFC 2445), so override/set TRANSP accordingly.
+            removeProperty(e, Property.TRANSP);
+            e.getProperties().add(Transp.TRANSPARENT);
+        }
+
+        if (isRecurring) {
+            // Recurring event. Android insists on a duration.
+            if (!hasProperty(e, Property.DURATION)) {
+                // Calculate duration from start to end date
+                Duration d = new Duration(e.getStartDate().getDate(), e.getEndDate().getDate());
+                e.getProperties().add(d);
+            }
+            removeProperty(e, Property.DTEND);
+        } else {
+            // Non-recurring event. Android insists on an end date.
+            if (!hasProperty(e, Property.DTEND)) {
+                // Calculate end date from duration, set it and remove the duration.
+                e.getProperties().add(e.getEndDate());
+            }
+            removeProperty(e, Property.DURATION);
+        }
+
+        // Now calculate the db values for the event
         ContentValues c = new ContentValues();
 
         c.put(Events.CALENDAR_ID, calendarId);
@@ -254,7 +265,8 @@ public class ProcessVEvent extends RunnableWithProgress {
             copyDateProperty(c, Events.DTEND, Events.EVENT_END_TIMEZONE, e.getEndDate());
         }
 
-        if (hasProperty(e, Property.CLASS)) {
+        if (hasProperty(e, Property.CLASS))
+        {
             String access = e.getProperty(Property.CLASS).getValue();
             int accessLevel = Events.ACCESS_DEFAULT;
             if (access.equals("PUBLIC")) {
@@ -346,6 +358,13 @@ public class ProcessVEvent extends RunnableWithProgress {
 
     private boolean hasProperty(VEvent e, String name) {
         return e.getProperty(name) != null;
+    }
+
+    private void removeProperty(VEvent e, String name) {
+        Property p = e.getProperty(name);
+        if (p != null) {
+            e.getProperties().remove(p);
+        }
     }
 
     private void copyProperty(ContentValues c, String dbName, VEvent e, String evName) {
