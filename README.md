@@ -1,24 +1,38 @@
 # iCal Import/Export
 
-This app allows you to import iCalender files to your calender without using google synchronization services.
+This app allows you to import iCalendar files to your calender without using Google synchronization services.
 
-This is a updated fork from iCal Import/Export, found on Googlecode (http://code.google.com/p/ical-import-export/).
+This is a updated fork from iCal Import/Export, found on Google code (http://code.google.com/p/ical-import-export/).
 
-# Build with Gradle
+# Build
 
-1. Have Android SDK "tools", "platform-tools", and "build-tools" directories in your PATH (http://developer.android.com/sdk/index.html)
-2. Open the Android SDK Manager (shell command: ``android``). Expand the Extras directory and install "Android Support Repository"
-3. Export ANDROID_HOME pointing to your Android SDK
-4. Download Android Support Repository, and Google Repository using Android SDK Manager
-5. Execute ``./gradlew build``
+## Prerequisites
+
+1. Run the _Android SDK Manager_ (shell command: ``android``)
+2. Expand the "Extras" directory and install "Android Support Repository" and "Google Repository"
+3. Make sure the *ANDROID_HOME* environment variable is set and points to your Android SDK
+   install directory (shell command ``export ANDROID_HOME=~/AndroidSDK/``)
+4. Make sure the Android SDK directories "platform-tools", and "tools" are in your
+   *PATH* (shell command ``export PATH="$ANDROID_HOME/platform-tools/:$ANDROID_HOME/tools/:$PATH``)
+
+## Build with Gradle
+
+1. Run the Gradle wrapper (shell commands ``./gradlew build``, ``./gradlew clean`` etc)
+
+## Build with Android Studio
+
+1. Start Android Studio
+2. Choose the "Import project" option.
+3. Select the "build.gradle" file in this directory and click OK.
+4. Once imported, use the build action from the "Build" menu.
 
 # Contribute
 
-Fork the git repository and do a Pull Request. I will merge your changes back into the main project.
+Fork the git repository, make changes and submit a Pull Request. I will merge your changes back into the main project.
 
 # Libraries
 
-All JAR-Libraries are provided in this repository under "libs".
+All jar files are stored in this repository under "iCalImportExport/libs/".
 
 # Coding Style
 
@@ -33,13 +47,13 @@ See http://source.android.com/source/code-style.html
 
 ## XML
 * XML Maximum line width 999
-* XML: Split multiple attributes each on a new line (Eclipse: Properties -> XML -> XML Files -> Editor)
-* XML: Indent using spaces with Indention size 4 (Eclipse: Properties -> XML -> XML Files -> Editor)
+* XML: Split multiple attributes each on a new line
+* XML: Indent using spaces with Indention size 4
 
 See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-with-eclipse/
 
 # Licenses
-iCal Import/Export is licensed under the GPLv3+.
+iCal Import/Export is licensed under the GPL v3+.
 The file LICENSE includes the full license text.
 
 ## Details
@@ -60,7 +74,7 @@ along with iCal Import/Export.  If not, see <http://www.gnu.org/licenses/>.
 
 * iCal4J
   https://github.com/ical4j
-  New BSD License
+  See LICENSE.iCal4j
 
 * Apache Commons
   http://commons.apache.org
@@ -76,4 +90,4 @@ along with iCal Import/Export.  If not, see <http://www.gnu.org/licenses/>.
   Based on Tango Icon Library and RRZE Icon Set
   http://tango.freedesktop.org
   http://rrze-icon-set.berlios.de
-  Public Domain (Tango Icon Library) and Creative Commons Attribution Share-Alike licence 3.0. (RRZE Icon Set)
+  Public Domain (Tango Icon Library) and Creative Commons Attribution Share-Alike license 3.0. (RRZE Icon Set)
