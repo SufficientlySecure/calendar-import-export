@@ -18,6 +18,9 @@ This is a updated fork from iCal Import/Export, found on Google code (http://cod
 ## Build with Gradle
 
 1. Run the Gradle wrapper (shell commands ``./gradlew build``, ``./gradlew clean`` etc)
+2. Run ``./gradlew --help`` for help and ``./gradlew tasks`` for a list of available build tasks.
+2. If needed, edit "iCalImportExport/build.gradle" to change the "compileSdkVersion"
+   and/or "buildToolsVersion" numbers to match what you installed using the SDK Manager.
 
 ## Build with Android Studio
 
@@ -28,7 +31,7 @@ This is a updated fork from iCal Import/Export, found on Google code (http://cod
 
 # Contribute
 
-Fork the git repository, make changes and submit a Pull Request. I will merge your changes back into the main project.
+Fork the git repository, make changes and submit a pull request with the details.
 
 # Libraries
 
