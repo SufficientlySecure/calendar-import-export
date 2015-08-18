@@ -88,7 +88,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             List<Integer> defReminders = RemindersDialog.getSavedRemindersInMinutes();
             List<Integer> reminders = new ArrayList<Integer>();
 
-            setMessage(R.string.progress_insert_entries);
+            setMessage(R.string.progress_processing_entries);
             ComponentList vevents = iCalCalendar.getComponents(VEvent.VEVENT);
 
             dialog.setMax(vevents.size());
