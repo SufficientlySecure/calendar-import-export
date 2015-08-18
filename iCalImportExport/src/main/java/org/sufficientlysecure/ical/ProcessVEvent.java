@@ -110,14 +110,16 @@ public class ProcessVEvent extends RunnableWithProgress {
 
                 if (!isInserter) {
                     Cursor cur = getFromContentValues(resolver, c);
-                    while (cur.moveToNext()) {
-                        String id = cur.getString(0);
-                        Uri eventUri = Uri.withAppendedPath(Events.CONTENT_URI, id);
-                        numDel += resolver.delete(eventUri, null, null);
-                        String where = Reminders.EVENT_ID + "=?";
-                        resolver.delete(Reminders.CONTENT_URI, where, new String[] { id });
+                    if (cur != null) {
+                        while (cur.moveToNext()) {
+                            String id = cur.getString(0);
+                            Uri eventUri = Uri.withAppendedPath(Events.CONTENT_URI, id);
+                            numDel += resolver.delete(eventUri, null, null);
+                            String where = Reminders.EVENT_ID + "=?";
+                            resolver.delete(Reminders.CONTENT_URI, where, new String[] { id });
+                        }
+                        cur.close();
                     }
-                    cur.close();
                     continue;
                 }
 
@@ -381,6 +383,9 @@ public class ProcessVEvent extends RunnableWithProgress {
 
     private boolean doesDbContain(ContentResolver resolver, ContentValues c) {
         Cursor cur = getFromContentValues(resolver, c);
+        if (cur == null) {
+            return false;
+        }
         int count = cur.getCount();
         cur.close();
         return count > 0;
@@ -392,13 +397,30 @@ public class ProcessVEvent extends RunnableWithProgress {
         // If UID's cannot be re-used between different calendars then we should
         // drop the CALENDAR_ID column from the where clause and make sure we handle
         // importing the same UID into two calendars sanely.
-        String where = Events.CALENDAR_ID + "=? AND " + Events.TITLE + "=? AND "
-                       + Events.DTSTART + "=?";
-        String[] args = new String[] {
-            c.getAsString(Events.CALENDAR_ID),
-            c.getAsString(Events.TITLE),
-            c.getAsString(Events.DTSTART)
-        };
+
+        if (!c.containsKey(Events.CALENDAR_ID) || !c.containsKey(Events.DTSTART)) {
+            return null;
+        }
+
+        StringBuilder b = new StringBuilder();
+        b.append(Events.CALENDAR_ID).append("=? AND ")
+        .append(Events.DTSTART).append("=? AND ")
+        .append(Events.TITLE);
+
+        List<String> argsList = new ArrayList<String>();
+        argsList.add(c.getAsString(Events.CALENDAR_ID));
+        argsList.add(c.getAsString(Events.DTSTART));
+
+        if (c.containsKey(Events.TITLE)) {
+            b.append("=?");
+            argsList.add(c.getAsString(Events.TITLE));
+        } else {
+            b.append(" is null");
+        }
+
+        String where = b.toString();
+        String[] args = argsList.toArray(new String[argsList.size()]);
+
         return resolver.query(Events.CONTENT_URI, new String[] { Events._ID }, where, args, null);
     }
 }
