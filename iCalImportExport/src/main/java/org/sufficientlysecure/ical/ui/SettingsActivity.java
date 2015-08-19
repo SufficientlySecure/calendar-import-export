@@ -39,17 +39,19 @@ public class SettingsActivity extends android.preference.PreferenceActivity
         }
     }
 
+    private SharedPreferences getPreferences() {
+        return getPreferenceScreen().getSharedPreferences();
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
-        SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
-        prefs.registerOnSharedPreferenceChangeListener(this);
+        getPreferences().registerOnSharedPreferenceChangeListener(this);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
-        SharedPreferences prefs = getPreferenceScreen().getSharedPreferences();
-        prefs.unregisterOnSharedPreferenceChangeListener(this);
+        getPreferences().unregisterOnSharedPreferenceChangeListener(this);
     }
 }
