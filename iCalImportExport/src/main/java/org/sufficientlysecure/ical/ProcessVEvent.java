@@ -57,6 +57,7 @@ import android.os.Environment;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
 import android.text.format.Time;
+import android.text.TextUtils;
 import android.util.Log;
 
 @SuppressLint("NewApi")
@@ -70,6 +71,27 @@ public class ProcessVEvent extends RunnableWithProgress {
     private AndroidCalendar androidCalendar;
     private boolean isInserter;
 
+    private final class Options {
+        public boolean checkForDuplicates;
+        public boolean useUIDs;
+        public boolean useReminders;
+        private List<Integer> defaultReminders;
+
+        public Options(SharedPreferences prefs) {
+            checkForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
+            useUIDs = prefs.getBoolean("setting_import_uids", true);
+            useReminders = prefs.getBoolean("setting_import_reminders", false);
+            defaultReminders = RemindersDialog.getSavedRemindersInMinutes();
+        }
+
+        public List<Integer> getReminders(List<Integer> eventReminders) {
+            if (useReminders && eventReminders.size() > 0) {
+                return eventReminders;
+            }
+            return defaultReminders;
+        }
+    }
+
     public ProcessVEvent(Activity activity, Calendar iCalCalendar, boolean isInserter) {
         super(activity);
         this.iCalCalendar = iCalCalendar;
@@ -81,11 +103,8 @@ public class ProcessVEvent extends RunnableWithProgress {
     public void run(ProgressDialog dialog) {
         try {
             MainActivity activity = (MainActivity)getActivity();
-            SharedPreferences prefs = activity.preferences;
-            boolean checkForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
-            boolean useReminders = prefs.getBoolean("setting_import_reminders", false);
+            Options options = new Options(activity.preferences);
 
-            List<Integer> defReminders = RemindersDialog.getSavedRemindersInMinutes();
             List<Integer> reminders = new ArrayList<Integer>();
 
             setMessage(R.string.progress_processing_entries);
@@ -106,10 +125,10 @@ public class ProcessVEvent extends RunnableWithProgress {
                 VEvent e = (VEvent)ve;
                 Log.d(TAG, "source event: " + e.toString());
 
-                ContentValues c = convertToDB(e, defReminders, reminders, androidCalendar.id);
+                ContentValues c = convertToDB(e, options, reminders, androidCalendar.id);
 
                 if (!isInserter) {
-                    Cursor cur = getFromContentValues(resolver, c);
+                    Cursor cur = query(resolver, options, c);
                     if (cur != null) {
                         while (cur.moveToNext()) {
                             String id = cur.getString(0);
@@ -123,7 +142,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                     continue;
                 }
 
-                if (checkForDuplicates && doesDbContain(resolver, c)) {
+                if (dbHasDuplicate(resolver, options, c)) {
                     Log.d(TAG, "Ignoring duplicate event");
                     numDups++;
                     continue;
@@ -139,7 +158,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
                 numIns++;
 
-                for (int time: (useReminders && reminders.size() > 0 ? reminders : defReminders)) {
+                for (int time: options.getReminders(reminders)) {
                     Log.d(TAG, "Inserting reminder for event with id: " + id);
 
                     alarm.put(Reminders.EVENT_ID, id);
@@ -157,7 +176,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             String msg = res.getQuantityString(R.plurals.dialog_entries_processed, n, n) + "\n";
             if (isInserter) {
                 msg += "\n";
-                if (checkForDuplicates) {
+                if (options.checkForDuplicates) {
                     msg += res.getQuantityString(R.plurals.dialog_found_duplicates, numDups, numDups);
                 } else {
                     msg += res.getString(R.string.dialog_did_not_check_dupes);
@@ -182,7 +201,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     // Munge a VEvent so Android won't reject it, then convert to ContentValues for inserting
-    private ContentValues convertToDB(VEvent e, List<Integer> defReminders,
+    private ContentValues convertToDB(VEvent e, Options options,
                                       List<Integer> reminders, int calendarId) {
         reminders.clear();
 
@@ -303,7 +322,10 @@ public class ProcessVEvent extends RunnableWithProgress {
         copyProperty(c, Events.EXDATE, e, Property.EXDATE);
         copyProperty(c, Events.CUSTOM_APP_URI, e, Property.URL);
         copyProperty(c, Events.UID_2445, e, Property.UID);
-
+        if (c.containsKey(Events.UID_2445) && TextUtils.isEmpty(c.getAsString(Events.UID_2445))) {
+            // Remove null/empty UIDs
+            c.remove(Events.UID_2445);
+        }
 
         for (Object alarm: e.getAlarms()) {
             VAlarm a = (VAlarm)alarm;
@@ -333,7 +355,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             }
         }
 
-        if (defReminders.size() > 0 || reminders.size() > 0) {
+        if (options.getReminders(reminders).size() > 0) {
             c.put(Events.HAS_ALARM, 1);
         }
 
@@ -399,8 +421,11 @@ public class ProcessVEvent extends RunnableWithProgress {
         return result;
     }
 
-    private boolean doesDbContain(ContentResolver resolver, ContentValues c) {
-        Cursor cur = getFromContentValues(resolver, c);
+    private boolean dbHasDuplicate(ContentResolver resolver, Options options, ContentValues c) {
+        if (!options.checkForDuplicates) {
+            return false;
+        }
+        Cursor cur = query(resolver, options, c);
         if (cur == null) {
             return false;
         }
@@ -409,13 +434,13 @@ public class ProcessVEvent extends RunnableWithProgress {
         return count > 0;
     }
 
-    private Cursor getFromContentValues(ContentResolver resolver, ContentValues c) {
-        // FIXME: This should match UID's, once we correctly preserve them, i.e:
-        // (src.UID == search.UID) || (search.UID == null && src.title == search.title)
-        // If UID's cannot be re-used between different calendars then we should
-        // drop the CALENDAR_ID column from the where clause and make sure we handle
-        // importing the same UID into two calendars sanely.
+    private Cursor query(ContentResolver resolver, Options options, ContentValues c) {
+        if (options.useUIDs && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
+            return queryUID(resolver, options, c);
+        }
 
+        // Without a UID to match, we can only check the start date and title within
+        // the current calendar.
         if (!c.containsKey(Events.CALENDAR_ID) || !c.containsKey(Events.DTSTART)) {
             return null;
         }
@@ -438,6 +463,13 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         String where = b.toString();
         String[] args = argsList.toArray(new String[argsList.size()]);
+
+        return resolver.query(Events.CONTENT_URI, new String[] { Events._ID }, where, args, null);
+    }
+
+    private Cursor queryUID(ContentResolver resolver, Options options, ContentValues c) {
+        String where = Events.UID_2445 + "=?";
+        String[] args = new String[] { c.getAsString(Events.UID_2445) };
 
         return resolver.query(Events.CONTENT_URI, new String[] { Events._ID }, where, args, null);
     }

@@ -61,6 +61,8 @@
     <string name="activity_settings_import">Import</string>
     <string name="activity_settings_ignore_duplicates">Ignore duplicates</string>
     <string name="activity_settings_ignore_duplicates_desc">Ignore entries that are already in the destination calendar</string>
+    <string name="activity_settings_import_uids">Keep UIDs</string>
+    <string name="activity_settings_import_uids_desc">Use any existing unique identifiers to identify and find duplicate events</string>
     <string name="activity_settings_compatibility">Compatibility</string>
     <string name="activity_settings_relaxed_unfolding">Allow different line endings</string>
     <string name="activity_settings_relaxed_unfolding_desc">Support various line wrapping schemes used by different products</string>

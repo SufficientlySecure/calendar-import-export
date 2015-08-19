@@ -23,6 +23,12 @@
             android:title="@string/activity_settings_ignore_duplicates"
             android:summary="@string/activity_settings_ignore_duplicates_desc"
             android:defaultValue="true"/>
+
+        <CheckBoxPreference
+            android:key="setting_import_uids"
+            android:title="@string/activity_settings_import_uids"
+            android:summary="@string/activity_settings_import_uids_desc"
+            android:defaultValue="true"/>
     </PreferenceCategory>
 
     <PreferenceCategory
