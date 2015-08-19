@@ -23,6 +23,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
@@ -59,6 +60,8 @@ public class MainActivity extends Activity {
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 
     public static SharedPreferences preferences;
+    private long uidMs = 0;
+    private String uidTail;
 
     /*
      * Views
@@ -286,6 +289,25 @@ public class MainActivity extends Activity {
     public BasicInputAdapter getSelectedURL() {
         Object sel = fileSpinner.getSelectedItem();
         return sel == null ? null : (BasicInputAdapter)sel;
+    }
+
+    public String generateUid() {
+        // Generated UIDs take the form <ms>-<uuid>@ical.sufficientlysecure.org.
+        if (uidTail == null) {
+            String uidPid = preferences.getString("uidPid", null);
+            if (uidPid == null) {
+                uidPid = UUID.randomUUID().toString().replace("-", "");
+                preferences.edit().putString("uidPid", uidPid).commit();
+            }
+            uidTail = "-" + uidPid + "@ical.sufficientlysecure.org";
+        }
+
+        long ms = System.currentTimeMillis();
+        if (uidMs == ms) {
+            ms++; // Force ms to be unique within the app
+        }
+        uidMs = ms;
+        return Long.toString(ms) + uidTail;
     }
 
     @Override

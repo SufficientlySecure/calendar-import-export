@@ -154,6 +154,12 @@ public class ProcessVEvent extends RunnableWithProgress {
                     continue;
                 }
 
+                if (Events.UID_2445 != null && !c.containsKey(Events.UID_2445)) {
+                    // Create a UID for this event to use. We create it here so if
+                    // exported multiple times it will always have the same id.
+                    c.put(Events.UID_2445, activity.generateUid());
+                }
+
                 Log.d(TAG, "destination values: " + c);
 
                 Uri uri = insertAndLog(resolver, Events.CONTENT_URI, c, "Event");
@@ -290,8 +296,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             copyDateProperty(c, Events.DTEND, Events.EVENT_END_TIMEZONE, e.getEndDate());
         }
 
-        if (hasProperty(e, Property.CLASS))
-        {
+        if (hasProperty(e, Property.CLASS)) {
             String access = e.getProperty(Property.CLASS).getValue();
             int accessLevel = Events.ACCESS_DEFAULT;
             if (access.equals("PUBLIC")) {
@@ -441,12 +446,17 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private Cursor query(ContentResolver resolver, Options options, ContentValues c) {
+
+        final String[] eventsId = new String[] { Events._ID };
+
         if (options.useUIDs && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
-            return queryUID(resolver, options, c);
+            String where = Events.UID_2445 + "=?";
+            String[] args = new String[] { c.getAsString(Events.UID_2445) };
+            return resolver.query(Events.CONTENT_URI, eventsId, where, args, null);
         }
 
-        // Without a UID to match, we can only check the start date and title within
-        // the current calendar.
+        // Without UIDs, the best we can do is check the start date and title within
+        // the current calendar, even though this may return false duplicates.
         if (!c.containsKey(Events.CALENDAR_ID) || !c.containsKey(Events.DTSTART)) {
             return null;
         }
@@ -470,13 +480,6 @@ public class ProcessVEvent extends RunnableWithProgress {
         String where = b.toString();
         String[] args = argsList.toArray(new String[argsList.size()]);
 
-        return resolver.query(Events.CONTENT_URI, new String[] { Events._ID }, where, args, null);
-    }
-
-    private Cursor queryUID(ContentResolver resolver, Options options, ContentValues c) {
-        String where = Events.UID_2445 + "=?";
-        String[] args = new String[] { c.getAsString(Events.UID_2445) };
-
-        return resolver.query(Events.CONTENT_URI, new String[] { Events._ID }, where, args, null);
+        return resolver.query(Events.CONTENT_URI, eventsId, where, args, null);
     }
 }
