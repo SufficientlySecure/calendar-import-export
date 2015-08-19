@@ -292,14 +292,14 @@ public class MainActivity extends Activity {
     }
 
     public String generateUid() {
-        // Generated UIDs take the form <ms>-<uuid>@ical.sufficientlysecure.org.
+        // Generated UIDs take the form <ms>-<uuid>@sufficientlysecure.org.
         if (uidTail == null) {
             String uidPid = preferences.getString("uidPid", null);
             if (uidPid == null) {
                 uidPid = UUID.randomUUID().toString().replace("-", "");
                 preferences.edit().putString("uidPid", uidPid).commit();
             }
-            uidTail = "-" + uidPid + "@ical.sufficientlysecure.org";
+            uidTail = uidPid + "@sufficientlysecure.org";
         }
 
         long ms = System.currentTimeMillis();
