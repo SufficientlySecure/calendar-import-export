@@ -125,6 +125,12 @@ public class ProcessVEvent extends RunnableWithProgress {
                 VEvent e = (VEvent)ve;
                 Log.d(TAG, "source event: " + e.toString());
 
+                if (e.getRecurrenceId() != null) {
+                    // FIXME: Support these edited instances
+                    Log.d(TAG, "Ignoring edited instance of a recurring event");
+                    continue;
+                }
+
                 ContentValues c = convertToDB(e, options, reminders, androidCalendar.id);
 
                 if (!isInserter) {
