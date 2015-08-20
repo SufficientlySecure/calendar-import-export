@@ -65,7 +65,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     private static final String TAG = ProcessVEvent.class.getSimpleName();
 
     private static final Duration oneDay = createDuration("P1D");
-    private static final Duration zeroMins = createDuration("P0M");
+    private static final Duration zeroSecs = createDuration("PT0S");
 
     private Calendar iCalCalendar;
     private AndroidCalendar androidCalendar;
@@ -237,7 +237,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             // No end date or duration given.
             // Since we added a duration above when the start date is a DATE:
             // - The start date is a DATETIME, the event lasts no time at all (RFC 2445).
-            e.getProperties().add(zeroMins);
+            e.getProperties().add(zeroSecs);
             // Zero time events are always free (RFC 2445), so override/set TRANSP accordingly.
             removeProperty(e, Property.TRANSP);
             e.getProperties().add(Transp.TRANSPARENT);
@@ -299,12 +299,12 @@ public class ProcessVEvent extends RunnableWithProgress {
         if (hasProperty(e, Property.CLASS)) {
             String access = e.getProperty(Property.CLASS).getValue();
             int accessLevel = Events.ACCESS_DEFAULT;
-            if (access.equals("PUBLIC")) {
-                accessLevel = Events.ACCESS_PUBLIC;
+            if (access.equals("CONFIDENTIAL")) {
+                accessLevel = Events.ACCESS_CONFIDENTIAL;
             } else if (access.equals("PRIVATE")) {
                 accessLevel = Events.ACCESS_PRIVATE;
-            } else if (access.equals("CONFIDENTIAL")) {
-                accessLevel = Events.ACCESS_CONFIDENTIAL;
+            } else if (access.equals("PUBLIC")) {
+                accessLevel = Events.ACCESS_PUBLIC;
             }
             c.put(Events.ACCESS_LEVEL, accessLevel);
         }

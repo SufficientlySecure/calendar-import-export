@@ -25,6 +25,7 @@ import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -32,19 +33,22 @@ import java.util.Set;
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VTimeZone;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
+import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
-import net.fortuna.ical4j.model.parameter.Value;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.ParameterList;
+import net.fortuna.ical4j.model.property.XProperty;
+import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.PropertyList;
@@ -64,6 +68,7 @@ import android.content.ContentResolver;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.os.Environment;
 import android.provider.CalendarContract.Events;
 import android.text.format.Time;
@@ -77,8 +82,12 @@ public class SaveCalendar extends RunnableWithProgress {
 
     private AndroidCalendar androidCalendar;
     private PropertyFactoryImpl factory = PropertyFactoryImpl.getInstance();
-    TimeZoneRegistry tzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
-    Set<TimeZone> insertedTimeZones = new HashSet<TimeZone>();
+    private TimeZoneRegistry tzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    private Set<TimeZone> insertedTimeZones = new HashSet<TimeZone>();
+
+    private final List<String> statusEnum = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELED");
+    private final List<String> classEnum = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
+    private final List<String> availEnum = Arrays.asList(null, "FREE", "BUSY-TENTATIVE");
 
     public SaveCalendar(Activity activity) {
         super(activity);
@@ -113,6 +122,9 @@ public class SaveCalendar extends RunnableWithProgress {
         Cursor cur = resolver.query(Events.CONTENT_URI, null, where, args, null);
         dialog.setMax(cur.getCount());
 
+        String key = "ical4j.validation.relaxed";
+        CompatibilityHints.setHintEnabled(key, activity.preferences.getBoolean(key, true));
+
         Calendar cal = new Calendar();
         String name = activity.getPackageName();
         String ver;
@@ -126,7 +138,10 @@ public class SaveCalendar extends RunnableWithProgress {
         cal.getProperties().add(Version.VERSION_2_0);
         cal.getProperties().add(CalScale.GREGORIAN);
         if (androidCalendar.timezone != null) {
-            // FIXME: set X-WR-TIMEZONE
+            // We don't write any events with floating times, but export this
+            // anyway so the default timezone for new events is correct when
+            // the file is imported into a system that supports it.
+            cal.getProperties().add(new XProperty("X-WR-TIMEZONE", androidCalendar.timezone));
         }
 
         DtStamp timestamp = new DtStamp(); // Same timestamp for all events
@@ -150,15 +165,11 @@ public class SaveCalendar extends RunnableWithProgress {
             cal.getComponents().add(v);
         }
 
-        String key = "ical4j.validation.relaxed";
-        CompatibilityHints.setHintEnabled(key, activity.preferences.getBoolean(key, true));
-
-        CalendarOutputter outputter = new CalendarOutputter();
-        Resources res = activity.getResources();
         try {
             setMessage(R.string.progress_writing_calendar_to_file);
-            outputter.output(cal, new FileOutputStream(output));
+            new CalendarOutputter().output(cal, new FileOutputStream(output));
 
+            Resources res = activity.getResources();
             String msg = res.getQuantityString(R.plurals.dialog_sucessfully_written_calendar,
                                                i, i, file);
             activity.showToast(msg);
@@ -175,9 +186,12 @@ public class SaveCalendar extends RunnableWithProgress {
             throws IOException {
         PropertyList l = new PropertyList();
 
+        String cursorContents = DatabaseUtils.dumpCurrentRowToString(cur);
+        Log.d(TAG, "cursor: " + cursorContents);
+
         l.add(timestamp);
         if (!copyProperty(l, Property.UID, cur, Events.UID_2445)) {
-            // Generate a UID. Not ideal, since its not reproducable
+            // Generate a UID. Not ideal, since its not reproducible
             l.add(new Uid(activity.generateUid()));
         }
 
@@ -185,37 +199,85 @@ public class SaveCalendar extends RunnableWithProgress {
         copyProperty(l, Property.DESCRIPTION, cur, Events.DESCRIPTION);
         copyProperty(l, Property.ORGANIZER, cur, Events.ORGANIZER);
         copyProperty(l, Property.LOCATION, cur, Events.EVENT_LOCATION);
-        // FIXME: copyProperty(l, Property.STATUS, cur, Events.STATUS);
+        copyEnumProperty(l, Property.STATUS, cur, Events.STATUS, statusEnum);
 
         boolean allDay = TextUtils.equals(getString(cur, Events.ALL_DAY), "1");
+        boolean isRecurring = hasStringValue(cur, Events.RRULE)
+                              || hasStringValue(cur, Events.RDATE);
+        boolean isTransparent;
+        DtEnd dtEnd = null;
+
         if (allDay) {
-            // All day event, no need to provide an end date or duration
-            l.add(new DtStart(getDateTime(cur, Events.DTSTART, null, null)));
+            // All day event
+            isTransparent = true;
+            Date start = getDateTime(cur, Events.DTSTART, null, null);
+            l.add(new DtStart(start));
+            dtEnd = new DtEnd(utcDateFromMs(start.getTime() + 86400000));
+            l.add(dtEnd);
         } else {
             // Regular or zero-time event. Start date must be a date-time
             Date startDate = getDateTime(cur, Events.DTSTART, Events.EVENT_TIMEZONE, cal);
             l.add(new DtStart(startDate));
 
             // Use duration if we have one, otherwise end date
-            if (!TextUtils.isEmpty(getString(cur, Events.DURATION))) {
-                copyProperty(l, Property.DURATION, cur, Events.DURATION);
+            if (hasStringValue(cur, Events.DURATION)) {
+                // FIXME: Are any other values used for 0 durations?
+                isTransparent = getString(cur, Events.DURATION).equals("PT0S");
+                if (!isTransparent) {
+                    copyProperty(l, Property.DURATION, cur, Events.DURATION);
+                }
             } else {
                 String endTz = Events.EVENT_END_TIMEZONE;
                 if (endTz == null) {
                     endTz = Events.EVENT_TIMEZONE;
                 }
-                l.add(new DtEnd(getDateTime(cur, Events.DTEND, endTz, cal)));
+                Date end = getDateTime(cur, Events.DTEND, endTz, cal);
+                dtEnd = new DtEnd(end);
+                isTransparent = startDate.getTime() == end.getTime();
+                if (!isTransparent) {
+                    l.add(dtEnd);
+                }
             }
         }
 
-        // FIXME: copyProperty(l, Property.CLASS, cur, Events.ACCESS_LEVEL);
-        // FIXME: TRANSP
-        // FIXME: copyProperty(l, Property.AVAILABILITY , cur, Events.AVAILABILITY );
+        copyEnumProperty(l, Property.CLASS, cur, Events.ACCESS_LEVEL, classEnum);
+
+        int availability = hasValue(cur, Events.AVAILABILITY) ?
+                           cur.getInt(getColumnIndex(cur, Events.AVAILABILITY)) : -1;
+        if (availability > Events.AVAILABILITY_TENTATIVE) {
+            availability = -1; // Unknown/Invalid
+        }
+
+        if (isTransparent) {
+            // This event is ordinarily transparent. If availability shows that its
+            // not free, then mark it opaque.
+            if (availability >= 0 && availability != Events.AVAILABILITY_FREE) {
+                l.add(Transp.OPAQUE);
+            }
+        } else if (availability >= 0 && availability != Events.AVAILABILITY_BUSY) {
+            // This event is ordinarily busy but differs, so output a FREEBUSY
+            // period covering the time of the event
+            FreeBusy fb = new FreeBusy();
+            fb.getParameters().add(new FbType(availEnum.get(availability)));
+            DateTime start = dateTimeFromProperty((DtStart)l.getProperty(Property.DTSTART));
+
+            if (dtEnd != null) {
+                DateTime end = dateTimeFromProperty(dtEnd);
+                fb.getPeriods().add(new Period(start, end));
+            } else {
+                Duration d = (Duration)l.getProperty(Property.DURATION);
+                fb.getPeriods().add(new Period(start, d.getDuration()));
+            }
+        }
+
         copyProperty(l, Property.RRULE, cur, Events.RRULE);
         copyProperty(l, Property.RDATE, cur, Events.RDATE);
         copyProperty(l, Property.EXRULE, cur, Events.EXRULE);
         copyProperty(l, Property.EXDATE, cur, Events.EXDATE);
-        //copyProperty(l, Property.URL, cur, Events.CUSTOM_APP_URI);
+        if (TextUtils.isEmpty(getString(cur, Events.CUSTOM_APP_PACKAGE))) {
+            // Only copy URL if there is no app i.e. we probably imported it.
+            copyProperty(l, Property.URL, cur, Events.CUSTOM_APP_URI);
+        }
 
         // FIXME: Alarms
         return new VEvent(l);
@@ -230,17 +292,34 @@ public class SaveCalendar extends RunnableWithProgress {
         return i == -1 ? null : cur.getString(i);
     }
 
-    private Date dateFromMs(long ms) {
-        Date d = new Date();
-        d.setTime(ms);
+    private boolean hasValue(Cursor cur, String dbName) {
+        int i = getColumnIndex(cur, dbName);
+        return i != -1 && !cur.isNull(i);
+    }
+
+    private boolean hasStringValue(Cursor cur, String dbName) {
+        int i = getColumnIndex(cur, dbName);
+        return i != -1 && !TextUtils.isEmpty(cur.getString(i));
+    }
+
+    private Date utcDateFromMs(long ms) {
+        Date d = new Date(ms);
+        // FIXME: Does not being able to change the timezone here affect this?
         return d;
+    }
+
+    private DateTime dateTimeFromProperty(DateProperty d) {
+        if (d.getDate() instanceof DateTime) {
+            return (DateTime)(d.getDate());
+        }
+        return new DateTime(d.getDate());
     }
 
     private Date getDateTime(Cursor cur, String dbName, String dbTzName, Calendar cal) {
         int i = getColumnIndex(cur, dbName);
         if (i != -1 && !cur.isNull(i)) {
             if (cal == null) {
-                return dateFromMs(cur.getLong(i)); // Ignore timezone for date-only dates
+                return utcDateFromMs(cur.getLong(i)); // Ignore timezone for date-only dates
             }
 
             String tz = getString(cur, dbTzName);
@@ -269,6 +348,27 @@ public class SaveCalendar extends RunnableWithProgress {
                 p.setValue(value);
                 l.add(p);
                 return true;
+            }
+        } catch (IOException e) {
+        } catch (URISyntaxException e) {
+        } catch (ParseException e) {
+        }
+        return false;
+    }
+
+    private boolean copyEnumProperty(PropertyList l, String evName, Cursor cur, String dbName,
+            List<String> vals) {
+        // None of the exceptions caught below should be able to be thrown AFAICS.
+        try {
+            int i = getColumnIndex(cur, dbName);
+            if (i != -1 && !cur.isNull(i)) {
+                int value = (int)cur.getLong(i);
+                if (value >= 0 && value < vals.size() && vals.get(value) != null) {
+                    Property p = factory.createProperty(evName);
+                    p.setValue(vals.get(value));
+                    l.add(p);
+                    return true;
+                }
             }
         } catch (IOException e) {
         } catch (URISyntaxException e) {
