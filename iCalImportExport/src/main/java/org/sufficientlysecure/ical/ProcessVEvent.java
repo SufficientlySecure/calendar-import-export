@@ -30,11 +30,13 @@ import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.parameter.Related;
+import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.Property;
@@ -317,10 +319,11 @@ public class ProcessVEvent extends RunnableWithProgress {
                     availability = Events.AVAILABILITY_FREE;
                 }
             } else if (hasProperty(e, Property.FREEBUSY)) {
-                String fbType = e.getProperty(Property.FREEBUSY).getValue();
-                if (fbType.equals("FREE")) {
+                FreeBusy fb = (FreeBusy)e.getProperty(Property.FREEBUSY);
+                FbType fbType = (FbType)fb.getParameter(Parameter.FBTYPE);
+                if (fbType != null && fbType == FbType.FREE) {
                     availability = Events.AVAILABILITY_FREE;
-                } else if (fbType.equals("BUSY-TENTATIVE")) {
+                } else if (fbType != null && fbType == FbType.BUSY_TENTATIVE) {
                     availability = Events.AVAILABILITY_TENTATIVE;
                 }
             }
