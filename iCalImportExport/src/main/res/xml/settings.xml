@@ -89,7 +89,4 @@
                 android:summary="@string/activity_settings_relaxed_validation_desc"
                 android:defaultValue="true"/>
     </PreferenceCategory>
-<!--
-    </PreferenceScreen>
--->
 </PreferenceScreen>
