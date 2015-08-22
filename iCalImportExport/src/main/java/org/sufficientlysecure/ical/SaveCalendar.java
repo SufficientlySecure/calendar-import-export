@@ -72,7 +72,6 @@ import android.content.ContentResolver;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.os.Environment;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
