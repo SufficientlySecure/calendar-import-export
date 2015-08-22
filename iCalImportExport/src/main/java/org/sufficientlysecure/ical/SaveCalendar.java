@@ -32,12 +32,16 @@ import java.util.Set;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.parameter.FbType;
+import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.CalScale;
 import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
@@ -71,6 +75,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.os.Environment;
 import android.provider.CalendarContract.Events;
+import android.provider.CalendarContract.Reminders;
 import android.text.format.Time;
 import android.text.TextUtils;
 import android.util.Log;
@@ -161,7 +166,7 @@ public class SaveCalendar extends RunnableWithProgress {
         }
         cur.close();
 
-        for (VEvent v : events) {
+        for (VEvent v: events) {
             cal.getComponents().add(v);
         }
 
@@ -179,24 +184,23 @@ public class SaveCalendar extends RunnableWithProgress {
 
             DialogTools.info(activity, R.string.dialog_bug_title, "Error:\n" + e.getMessage());
         }
-
     }
 
     private VEvent convertFromDb(Cursor cur, MainActivity activity, Calendar cal, DtStamp timestamp)
             throws IOException {
         PropertyList l = new PropertyList();
 
-        String cursorContents = DatabaseUtils.dumpCurrentRowToString(cur);
-        Log.d(TAG, "cursor: " + cursorContents);
+        //String cursorContents = DatabaseUtils.dumpCurrentRowToString(cur);
+        //Log.d(TAG, "cursor: " + cursorContents);
 
         l.add(timestamp);
-        if (!copyProperty(l, Property.UID, cur, Events.UID_2445)) {
+        if (copyProperty(l, Property.UID, cur, Events.UID_2445) == null) {
             // Generate a UID. Not ideal, since its not reproducible
             l.add(new Uid(activity.generateUid()));
         }
 
-        copyProperty(l, Property.SUMMARY, cur, Events.TITLE);
-        copyProperty(l, Property.DESCRIPTION, cur, Events.DESCRIPTION);
+        String summary = copyProperty(l, Property.SUMMARY, cur, Events.TITLE);
+        String description = copyProperty(l, Property.DESCRIPTION, cur, Events.DESCRIPTION);
         copyProperty(l, Property.ORGANIZER, cur, Events.ORGANIZER);
         copyProperty(l, Property.LOCATION, cur, Events.EVENT_LOCATION);
         copyEnumProperty(l, Property.STATUS, cur, Events.STATUS, statusEnum);
@@ -242,8 +246,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
         copyEnumProperty(l, Property.CLASS, cur, Events.ACCESS_LEVEL, classEnum);
 
-        int availability = hasValue(cur, Events.AVAILABILITY) ?
-                           cur.getInt(getColumnIndex(cur, Events.AVAILABILITY)) : -1;
+        int availability = getInt(cur, Events.AVAILABILITY);
         if (availability > Events.AVAILABILITY_TENTATIVE) {
             availability = -1; // Unknown/Invalid
         }
@@ -279,8 +282,35 @@ public class SaveCalendar extends RunnableWithProgress {
             copyProperty(l, Property.URL, cur, Events.CUSTOM_APP_URI);
         }
 
-        // FIXME: Alarms
-        return new VEvent(l);
+        VEvent e = new VEvent(l);
+
+        if (getInt(cur, Events.HAS_ALARM) == 1) {
+            // Add alarms
+
+            String s = summary == null ? (description == null ? "" : description) : summary;
+            Description desc = new Description(s);
+
+            ContentResolver resolver = activity.getContentResolver();
+            int eventId = getInt(cur, Events._ID);
+            String[] cols = new String[] { Reminders.MINUTES, Reminders.METHOD };
+            Cursor alarmCur = Reminders.query(resolver, eventId, cols);
+            while (alarmCur.moveToNext()) {
+                int mins = getInt(alarmCur, Reminders.MINUTES);
+                if (mins == -1) {
+                    mins = 60; // FIXME: Get the real default
+                }
+                // FIXME: We should support other types if possible
+                int method = getInt(alarmCur, Reminders.METHOD);
+                if (method == Reminders.METHOD_DEFAULT || method == Reminders.METHOD_ALERT) {
+                    VAlarm alarm = new VAlarm(new Dur(0, 0, -mins, 0));
+                    alarm.getProperties().add(Action.DISPLAY);
+                    alarm.getProperties().add(desc);
+                    e.getAlarms().add(alarm);
+                }
+            }
+        }
+
+        return e;
     }
 
     private int getColumnIndex(Cursor cur, String dbName) {
@@ -290,6 +320,11 @@ public class SaveCalendar extends RunnableWithProgress {
     private String getString(Cursor cur, String dbName) {
         int i = getColumnIndex(cur, dbName);
         return i == -1 ? null : cur.getString(i);
+    }
+
+    private int getInt(Cursor cur, String dbName) {
+        int i = getColumnIndex(cur, dbName);
+        return i == -1 ? -1 : cur.getInt(i);
     }
 
     private boolean hasValue(Cursor cur, String dbName) {
@@ -339,7 +374,7 @@ public class SaveCalendar extends RunnableWithProgress {
         return null;
     }
 
-    private boolean copyProperty(PropertyList l, String evName, Cursor cur, String dbName) {
+    private String copyProperty(PropertyList l, String evName, Cursor cur, String dbName) {
         // None of the exceptions caught below should be able to be thrown AFAICS.
         try {
             String value = getString(cur, dbName);
@@ -347,17 +382,17 @@ public class SaveCalendar extends RunnableWithProgress {
                 Property p = factory.createProperty(evName);
                 p.setValue(value);
                 l.add(p);
-                return true;
+                return value;
             }
         } catch (IOException e) {
         } catch (URISyntaxException e) {
         } catch (ParseException e) {
         }
-        return false;
+        return null;
     }
 
     private boolean copyEnumProperty(PropertyList l, String evName, Cursor cur, String dbName,
-            List<String> vals) {
+                                     List<String> vals) {
         // None of the exceptions caught below should be able to be thrown AFAICS.
         try {
             int i = getColumnIndex(cur, dbName);
