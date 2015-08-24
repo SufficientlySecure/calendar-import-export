@@ -102,6 +102,23 @@ public class Controller implements OnClickListener {
         CompatibilityHints.setHintEnabled(key, prefs.getBoolean(key, true));
     }
 
+    private void searchFiles(File root, List<File> files, String... extension) {
+        if (root.isFile()) {
+            for (String string: extension) {
+                if (root.toString().endsWith(string)) {
+                    files.add(root);
+                }
+            }
+        } else {
+            File[] children = root.listFiles();
+            if (children != null) {
+                for (File file: children) {
+                    searchFiles(file, files, extension);
+                }
+            }
+        }
+    }
+
     @Override
     public void onClick(View v) {
         RunnableWithProgress task = null;
@@ -115,8 +132,9 @@ public class Controller implements OnClickListener {
                 public void run(ProgressDialog dialog) {
                     setMessage(R.string.progress_searching_ical_files);
 
-                    List<File> files = CalendarUtils.searchFiles(
-                        Environment.getExternalStorageDirectory(), "ics", "ical", "icalendar");
+                    File root = Environment.getExternalStorageDirectory();
+                    List<File> files = new ArrayList<File>();
+                    searchFiles(root, files, "ics", "ical", "icalendar");
                     List<BasicInputAdapter> urls = new ArrayList<BasicInputAdapter>(files.size());
 
                     for (File file: files) {
