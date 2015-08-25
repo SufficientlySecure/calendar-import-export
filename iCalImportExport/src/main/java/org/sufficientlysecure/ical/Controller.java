@@ -33,7 +33,6 @@ import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.SettingsActivity;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
-import org.sufficientlysecure.ical.util.CredentialInputAdapter;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -133,18 +132,7 @@ public class Controller implements OnClickListener {
                     File root = Environment.getExternalStorageDirectory();
                     List<File> files = new ArrayList<File>();
                     searchFiles(root, files, "ics", "ical", "icalendar");
-                    List<CredentialInputAdapter> urls;
-                    urls = new ArrayList<CredentialInputAdapter>(files.size());
-
-                    for (File file: files) {
-                        try {
-                            urls.add(new CredentialInputAdapter(file.toURI().toURL(), null, null));
-                        } catch (MalformedURLException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    // Collections.sort(urls, new );
-                    mActivity.setUrls(urls);
+                    mActivity.setFiles(files);
                 }
             };
         }
@@ -159,7 +147,7 @@ public class Controller implements OnClickListener {
                     }
                     try {
                         setMessage(R.string.progress_reading_ical);
-                        InputStream in = mActivity.getSelectedURL().getConnection().getInputStream();
+                        InputStream in = mActivity.getSelectedURL().getInputStream();
                         if (in != null) {
                             SharedPreferences prefs = mActivity.preferences;
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_UNFOLDING);
@@ -190,43 +178,37 @@ public class Controller implements OnClickListener {
                                                  R.string.dialog_enter_url_message,
                                                  prefs.getString(PREF_LAST_URL, ""), true, false);
 
-                    if (!TextUtils.isEmpty(url)) {
-                        try {
-                            String user = DialogTools.ask(mActivity,
-                                                          R.string.dialog_enter_username_title,
-                                                          R.string.dialog_enter_username_message,
-                                                          prefs.getString(PREF_LAST_USERNAME, ""),
-                                                          true, false);
-                            String pass = null;
-                            if (!TextUtils.isEmpty(user)) {
-                                pass = DialogTools.ask(mActivity,
-                                                       R.string.dialog_enter_password_title,
-                                                       R.string.dialog_enter_password_message,
-                                                       prefs.getString(PREF_LAST_PASSWORD, ""),
-                                                       true, true);
-                            }
-                            setMessage(R.string.progress_parsing_url);
-                            boolean save = prefs.getBoolean("setting_save_passwords", false);
+                    if (TextUtils.isEmpty(url)) {
+                        return;
+                    }
 
-                            Editor editor = prefs.edit();
-                            editor.putString(PREF_LAST_URL, url);
-                            editor.putString(PREF_LAST_USERNAME, user);
-                            editor.putString(PREF_LAST_PASSWORD, save ? pass : "");
-                            editor.commit();
+                    String username = DialogTools.ask(mActivity,
+                                                  R.string.dialog_enter_username_title,
+                                                  R.string.dialog_enter_username_message,
+                                                  prefs.getString(PREF_LAST_USERNAME, ""),
+                                                  true, false);
+                    String password = null;
+                    if (!TextUtils.isEmpty(username)) {
+                        password = DialogTools.ask(mActivity,
+                                               R.string.dialog_enter_password_title,
+                                               R.string.dialog_enter_password_message,
+                                               prefs.getString(PREF_LAST_PASSWORD, ""),
+                                               true, true);
+                    }
+                    setMessage(R.string.progress_parsing_url);
+                    boolean save = prefs.getBoolean("setting_save_passwords", false);
 
-                            CredentialInputAdapter c = null;
-                            if (!TextUtils.isEmpty(user) && pass != null) {
-                                c = new CredentialInputAdapter(new URL(url), user, pass);
-                            } else {
-                                c = new CredentialInputAdapter(new URL(url), null, null);
-                            }
-                            mActivity.setUrl(c);
-                        } catch (MalformedURLException exc) {
-                            Log.d(TAG, "Controller", exc);
+                    prefs.edit().putString(PREF_LAST_URL, url)
+                                .putString(PREF_LAST_USERNAME, username)
+                                .putString(PREF_LAST_PASSWORD, save ? password : "").commit();
 
-                            String msg = "URL was not parsable..." + exc.getMessage();
-                            DialogTools.info(mActivity, R.string.dialog_error_title, msg);
-                        }
+                    if (TextUtils.isEmpty(username)) {
+                        username = null;
+                        password = null;
+                    }
+                    if (!mActivity.setUrl(url, username, password)) {
+                        DialogTools.info(mActivity, R.string.dialog_error_title,
+                                         R.string.cannot_parse_url);
                     }
                 }
             };

@@ -2,6 +2,7 @@
 <resources>
 
     <string name="app_name">iCal Import/Export</string>
+    <string name="cannot_parse_url">Cannot parse URL</string>
     <string name="progress_reading_ical">Reading file, please wait.</string>
     <string name="progress_loading_builder">Creating the iCalendar builder.</string>
     <string name="progress_searching_ical_files">Searching for iCalendar files.</string>

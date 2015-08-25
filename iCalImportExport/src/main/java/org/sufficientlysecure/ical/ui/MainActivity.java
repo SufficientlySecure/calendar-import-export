@@ -18,8 +18,11 @@
 
 package org.sufficientlysecure.ical.ui;
 
+import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -172,11 +175,7 @@ public class MainActivity extends Activity {
 
         if (action.equals(Intent.ACTION_VIEW)) {
             // File intent
-            try {
-                setUrl(new CredentialInputAdapter(new URL(intent.getDataString()), null, null));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
+            setUrl(intent.getDataString(), null, null);
         }
     }
 
@@ -224,7 +223,7 @@ public class MainActivity extends Activity {
                       });
     }
 
-    public void setUrls(List<CredentialInputAdapter> urls) {
+    private void setUrls(List<CredentialInputAdapter> urls) {
         mUrls = urls;
         SpinnerTools.simpleSpinnerInUI(this, mFileSpinner, mUrls);
         runOnUiThread(new Runnable() {
@@ -235,8 +234,27 @@ public class MainActivity extends Activity {
                       });
     }
 
-    public void setUrl(CredentialInputAdapter urls) {
-        setUrls(Collections.singletonList(urls));
+    public void setFiles(List<File> files) {
+        List<CredentialInputAdapter> urls = new ArrayList<CredentialInputAdapter>(files.size());
+
+        for (File file: files) {
+            try {
+                urls.add(new CredentialInputAdapter(file.toURI().toURL(), null, null));
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+        }
+        setUrls(urls);
+    }
+
+    public boolean setUrl(String url, String username, String password) {
+        try {
+            CredentialInputAdapter c = new CredentialInputAdapter(new URL(url), username, password);
+            setUrls(Collections.singletonList(c));
+            return true;
+        } catch (MalformedURLException e) {
+            return false;
+        }
     }
 
     public void setCalendar(final Calendar calendar) {
@@ -285,9 +303,9 @@ public class MainActivity extends Activity {
         }
     }
 
-    public CredentialInputAdapter getSelectedURL() {
+    public URLConnection getSelectedURL() throws IOException {
         Object sel = mFileSpinner.getSelectedItem();
-        return sel == null ? null : (CredentialInputAdapter)sel;
+        return sel == null ? null : ((CredentialInputAdapter)sel).getConnection();
     }
 
     public String generateUid() {
