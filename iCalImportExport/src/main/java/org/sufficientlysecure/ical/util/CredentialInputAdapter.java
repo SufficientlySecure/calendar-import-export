@@ -22,24 +22,25 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import org.apache.commons.codec.binary.Base64;
-import org.sufficientlysecure.ical.ui.dialogs.Credentials;
 
 public class CredentialInputAdapter {
     private URL mUrl;
-    private Credentials mCredentials;
+    private String mUsername;
+    private String mPassword;
 
-    public CredentialInputAdapter(URL url, Credentials credentials) {
+    public CredentialInputAdapter(URL url, String username, String password) {
         mUrl = url;
-        mCredentials = credentials;
+        mUsername = username;
+        mPassword = password;
     }
 
     public URLConnection getConnection() throws IOException {
-        if (mCredentials == null) {
+        if (mUsername == null) {
             return mUrl.openConnection();
         }
 
         String protocol = mUrl.getProtocol();
-        String userPass = mCredentials.getUsername() + ":" + mCredentials.getPassword();
+        String userPass = mUsername + ":" + mPassword;
 
         if (protocol.equalsIgnoreCase("ftp") || protocol.equalsIgnoreCase("ftps")) {
             URL url = new URL(protocol + "://" + userPass + "@" + mUrl.toExternalForm().substring(6));

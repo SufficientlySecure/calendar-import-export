@@ -31,7 +31,6 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.SettingsActivity;
-import org.sufficientlysecure.ical.ui.dialogs.Credentials;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import org.sufficientlysecure.ical.util.CredentialInputAdapter;
@@ -139,7 +138,7 @@ public class Controller implements OnClickListener {
 
                     for (File file: files) {
                         try {
-                            urls.add(new CredentialInputAdapter(file.toURI().toURL(), null));
+                            urls.add(new CredentialInputAdapter(file.toURI().toURL(), null, null));
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
@@ -215,11 +214,13 @@ public class Controller implements OnClickListener {
                             editor.putString(PREF_LAST_PASSWORD, save ? pass : "");
                             editor.commit();
 
-                            Credentials creds = null;
+                            CredentialInputAdapter c = null;
                             if (!TextUtils.isEmpty(user) && pass != null) {
-                                creds = new Credentials(user, pass);
+                                c = new CredentialInputAdapter(new URL(url), user, pass);
+                            } else {
+                                c = new CredentialInputAdapter(new URL(url), null, null);
                             }
-                            activity.setUrl(new CredentialInputAdapter(new URL(url), creds));
+                            activity.setUrl(c);
                         } catch (MalformedURLException exc) {
                             Log.d(TAG, "Controller", exc);
 
