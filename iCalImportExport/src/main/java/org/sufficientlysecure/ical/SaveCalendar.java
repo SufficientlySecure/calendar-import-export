@@ -82,35 +82,35 @@ import android.util.Log;
 @SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
     private static final String TAG = SaveCalendar.class.getSimpleName();
-    private static final String PREF_FILE = "lastExportFile";
+    private static final String PREF_EXPORT_FILE = "lastExportFile";
 
-    private AndroidCalendar androidCalendar;
-    private PropertyFactoryImpl factory = PropertyFactoryImpl.getInstance();
-    private TimeZoneRegistry tzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
-    private Set<TimeZone> insertedTimeZones = new HashSet<TimeZone>();
+    private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELED");
+    private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
+    private static final List<String> AVAIL_ENUM = Arrays.asList(null, "FREE", "BUSY-TENTATIVE");
 
-    private final List<String> statusEnum = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELED");
-    private final List<String> classEnum = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
-    private final List<String> availEnum = Arrays.asList(null, "FREE", "BUSY-TENTATIVE");
+    private AndroidCalendar mAndroidCalendar;
+    private PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
+    private TimeZoneRegistry mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    private Set<TimeZone> mInsertedTimeZones = new HashSet<TimeZone>();
 
     public SaveCalendar(Activity activity) {
         super(activity);
-        androidCalendar = ((MainActivity)activity).getSelectedCalendar();
+        mAndroidCalendar = ((MainActivity)activity).getSelectedCalendar();
     }
 
     @Override
     public void run(ProgressDialog dialog) {
         MainActivity activity = (MainActivity)getActivity();
 
-        insertedTimeZones.clear();
+        mInsertedTimeZones.clear();
 
-        String file = DialogTools.ask(activity, R.string.dialog_choosefilename_title,
-                                      R.string.dialog_choosefilename_message,
-                                      activity.preferences.getString(PREF_FILE, ""), true, false);
+        String file = activity.preferences.getString(PREF_EXPORT_FILE, "");
+        file = DialogTools.ask(activity, R.string.dialog_choosefilename_title,
+                               R.string.dialog_choosefilename_message, file, true, false);
         if (TextUtils.isEmpty(file)) {
             return;
         }
-        activity.preferences.edit().putString(PREF_FILE, file).commit();
+        activity.preferences.edit().putString(PREF_EXPORT_FILE, file).commit();
         if (!file.endsWith(".ics")) {
             file += ".ics";
         }
@@ -122,7 +122,7 @@ public class SaveCalendar extends RunnableWithProgress {
         // query events
         ContentResolver resolver = activity.getContentResolver();
         String where = Events.CALENDAR_ID + "=?";
-        String[] args = new String[] { Integer.toString(androidCalendar.id) };
+        String[] args = new String[] { Integer.toString(mAndroidCalendar.mId) };
         Cursor cur = resolver.query(Events.CONTENT_URI, null, where, args, null);
         dialog.setMax(cur.getCount());
 
@@ -137,15 +137,15 @@ public class SaveCalendar extends RunnableWithProgress {
         } catch (NameNotFoundException e) {
             ver = "Unknown Build";
         }
-        String prodId = "-//" + androidCalendar.owner + "//iCal Import/Export " + ver + "//EN";
+        String prodId = "-//" + mAndroidCalendar.mOwner + "//iCal Import/Export " + ver + "//EN";
         cal.getProperties().add(new ProdId(prodId));
         cal.getProperties().add(Version.VERSION_2_0);
         cal.getProperties().add(CalScale.GREGORIAN);
-        if (androidCalendar.timezone != null) {
+        if (mAndroidCalendar.mTimezone != null) {
             // We don't write any events with floating times, but export this
             // anyway so the default timezone for new events is correct when
             // the file is imported into a system that supports it.
-            cal.getProperties().add(new XProperty("X-WR-TIMEZONE", androidCalendar.timezone));
+            cal.getProperties().add(new XProperty("X-WR-TIMEZONE", mAndroidCalendar.mTimezone));
         }
 
         DtStamp timestamp = new DtStamp(); // Same timestamp for all events
@@ -202,7 +202,7 @@ public class SaveCalendar extends RunnableWithProgress {
         String description = copyProperty(l, Property.DESCRIPTION, cur, Events.DESCRIPTION);
         copyProperty(l, Property.ORGANIZER, cur, Events.ORGANIZER);
         copyProperty(l, Property.LOCATION, cur, Events.EVENT_LOCATION);
-        copyEnumProperty(l, Property.STATUS, cur, Events.STATUS, statusEnum);
+        copyEnumProperty(l, Property.STATUS, cur, Events.STATUS, STATUS_ENUM);
 
         boolean allDay = TextUtils.equals(getString(cur, Events.ALL_DAY), "1");
         boolean isRecurring = hasStringValue(cur, Events.RRULE)
@@ -243,7 +243,7 @@ public class SaveCalendar extends RunnableWithProgress {
             }
         }
 
-        copyEnumProperty(l, Property.CLASS, cur, Events.ACCESS_LEVEL, classEnum);
+        copyEnumProperty(l, Property.CLASS, cur, Events.ACCESS_LEVEL, CLASS_ENUM);
 
         int availability = getInt(cur, Events.AVAILABILITY);
         if (availability > Events.AVAILABILITY_TENTATIVE) {
@@ -260,7 +260,7 @@ public class SaveCalendar extends RunnableWithProgress {
             // This event is ordinarily busy but differs, so output a FREEBUSY
             // period covering the time of the event
             FreeBusy fb = new FreeBusy();
-            fb.getParameters().add(new FbType(availEnum.get(availability)));
+            fb.getParameters().add(new FbType(AVAIL_ENUM.get(availability)));
             DateTime start = dateTimeFromProperty((DtStart)l.getProperty(Property.DTSTART));
 
             if (dtEnd != null) {
@@ -360,12 +360,12 @@ public class SaveCalendar extends RunnableWithProgress {
             DateTime dt = new DateTime(true); // UTC
             dt.setTime(cur.getLong(i));
             if (!TextUtils.isEmpty(tz) && !TextUtils.equals(tz, Time.TIMEZONE_UTC)) {
-                TimeZone t = tzRegistry.getTimeZone(tz);
+                TimeZone t = mTzRegistry.getTimeZone(tz);
                 dt.setTimeZone(t);
                 // Calendar doesn't prevent multiple additions of the same TZ, so check here.
-                if (!insertedTimeZones.contains(t)) {
+                if (!mInsertedTimeZones.contains(t)) {
                     cal.getComponents().add(t.getVTimeZone());
-                    insertedTimeZones.add(t);
+                    mInsertedTimeZones.add(t);
                 }
             }
             return dt;
@@ -378,7 +378,7 @@ public class SaveCalendar extends RunnableWithProgress {
         try {
             String value = getString(cur, dbName);
             if (value != null) {
-                Property p = factory.createProperty(evName);
+                Property p = mPropertyFactory.createProperty(evName);
                 p.setValue(value);
                 l.add(p);
                 return value;
@@ -398,7 +398,7 @@ public class SaveCalendar extends RunnableWithProgress {
             if (i != -1 && !cur.isNull(i)) {
                 int value = (int)cur.getLong(i);
                 if (value >= 0 && value < vals.size() && vals.get(value) != null) {
-                    Property p = factory.createProperty(evName);
+                    Property p = mPropertyFactory.createProperty(evName);
                     p.setValue(vals.get(value));
                     l.add(p);
                     return true;

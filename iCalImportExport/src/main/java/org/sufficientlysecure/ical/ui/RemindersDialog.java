@@ -40,25 +40,25 @@ public class RemindersDialog extends DialogPreference {
     private static final String PREF_KEY = "default_reminders";
 
     // Must match the list items in strings.xml
-    private static final int[] minutes = { 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440,
+    private static final int[] MINUTES = { 5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440,
                                            2880, 4320, 5760, 7200, 8640, 10080, 20160, 30240,
                                            40320 };
 
-    private LinearLayout reminderItemsHolder;
-    private LayoutInflater inflater;
-    private int newId;
+    private LinearLayout mReminderItemsHolder;
+    private LayoutInflater mInflater;
+    private int mNewId;
 
     public RemindersDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
-        inflater = ((Activity)context).getLayoutInflater();
-        newId = 1;
+        mInflater = ((Activity)context).getLayoutInflater();
+        mNewId = 1;
     }
 
     public static List<Integer> getSavedRemindersInMinutes() {
         List<Integer> result = new ArrayList<Integer>();
         for (String item: MainActivity.preferences.getString(PREF_KEY, "").split(",")) {
             if (item.length() > 0) {
-                result.add(minutes[Integer.parseInt(item)]);
+                result.add(MINUTES[Integer.parseInt(item)]);
             }
         }
         return result;
@@ -68,7 +68,7 @@ public class RemindersDialog extends DialogPreference {
     protected void onBindDialogView(View view) {
         super.onBindDialogView(view);
 
-        reminderItemsHolder = (LinearLayout)view.findViewById(R.id.reminder_holder);
+        mReminderItemsHolder = (LinearLayout)view.findViewById(R.id.reminder_holder);
 
         for (String item: MainActivity.preferences.getString(PREF_KEY, "").split(",")) {
             if (item.length() > 0) {
@@ -87,21 +87,21 @@ public class RemindersDialog extends DialogPreference {
 
     private void addReminder(int index) {
 
-        View newItem = inflater.inflate(R.layout.reminder, reminderItemsHolder, false);
-        final int id = newId++;
+        View newItem = mInflater.inflate(R.layout.reminder, mReminderItemsHolder, false);
+        final int id = mNewId++;
         newItem.setId(id);
         Spinner dropDown = (Spinner)newItem.findViewById(R.id.reminder_item);
         dropDown.setSelection(index);
 
         View.OnClickListener delClick = new View.OnClickListener() {
             public void onClick(View v) {
-                reminderItemsHolder.removeView(reminderItemsHolder.findViewById(id));
+                mReminderItemsHolder.removeView(mReminderItemsHolder.findViewById(id));
             }
         };
         Button delButton = (Button)newItem.findViewById(R.id.button_reminder_delete);
         delButton.setOnClickListener(delClick);
 
-        reminderItemsHolder.addView(newItem);
+        mReminderItemsHolder.addView(newItem);
     }
 
     @Override
@@ -113,9 +113,9 @@ public class RemindersDialog extends DialogPreference {
 
         // Save the (reordered and unique) chosen reminders to settings
         Set<Integer> vals = new HashSet<Integer>();
-        final int count = reminderItemsHolder.getChildCount();
+        final int count = mReminderItemsHolder.getChildCount();
         for (int i = 0; i < count; i++) {
-            View item = reminderItemsHolder.getChildAt(i);
+            View item = mReminderItemsHolder.getChildAt(i);
             Spinner dropDown = (Spinner)item.findViewById(R.id.reminder_item);
             vals.add(dropDown.getSelectedItemPosition());
         }

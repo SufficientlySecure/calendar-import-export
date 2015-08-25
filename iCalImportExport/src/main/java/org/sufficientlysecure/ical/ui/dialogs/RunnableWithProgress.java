@@ -21,35 +21,35 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 public abstract class RunnableWithProgress {
-    private Activity activity;
-    private ProgressDialog dialog;
+    private Activity mActivity;
+    private ProgressDialog mDialog;
 
     public RunnableWithProgress(Activity activity) {
-        this.activity = activity;
+        mActivity = activity;
     }
 
     public Activity getActivity() {
-        return this.activity;
+        return mActivity;
     }
 
     protected void setProgressDialog(ProgressDialog dialog) {
-        this.dialog = dialog;
+        mDialog = dialog;
     }
 
     public void setMessage(final int resource) {
-        activity.runOnUiThread(new Runnable() {
+        mActivity.runOnUiThread(new Runnable() {
                                    @Override
                                    public void run() {
-                                       dialog.setMessage(activity.getString(resource));
+                                       mDialog.setMessage(mActivity.getString(resource));
                                    }
                                });
     }
 
     public void incrementProgressBy(final int progress) {
-        activity.runOnUiThread(new Runnable() {
+        mActivity.runOnUiThread(new Runnable() {
                                    @Override
                                    public void run() {
-                                       dialog.incrementProgressBy(progress);
+                                       mDialog.incrementProgressBy(progress);
                                    }
                                });
     }

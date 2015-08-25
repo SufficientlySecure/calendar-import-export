@@ -31,15 +31,15 @@ import android.provider.CalendarContract.Events;
 
 @SuppressLint("NewApi")
 public class AndroidCalendar {
-    public int id;
-    public String name;
-    public String displayName;
-    public String accountName;
-    public String accountType;
-    public String owner;
-    public boolean isActive;
-    public String timezone;
-    public int numEntries;
+    public int mId;
+    public String mName;
+    public String mDisplayName;
+    public String mAccountName;
+    public String mAccountType;
+    public String mOwner;
+    public boolean mIsActive;
+    public String mTimezone;
+    public int mNumEntries;
 
     // Load all available calendars.
     // If an empty list is returned the caller probably needs to enable calendar
@@ -59,19 +59,19 @@ public class AndroidCalendar {
                 continue;
             }
             AndroidCalendar calendar = new AndroidCalendar();
-            calendar.id = getInt(src, Calendars._ID);
-            calendar.name = getString(src, Calendars.NAME);
-            calendar.displayName = getString(src, Calendars.CALENDAR_DISPLAY_NAME);
-            calendar.accountName = getString(src, Calendars.ACCOUNT_NAME);
-            calendar.accountType = getString(src, Calendars.ACCOUNT_TYPE);
-            calendar.owner = getString(src, Calendars.OWNER_ACCOUNT);
-            calendar.isActive = getInt(src, Calendars.VISIBLE) == 1;
-            calendar.timezone = getString(src, Calendars.CALENDAR_TIME_ZONE);
+            calendar.mId = getInt(src, Calendars._ID);
+            calendar.mName = getString(src, Calendars.NAME);
+            calendar.mDisplayName = getString(src, Calendars.CALENDAR_DISPLAY_NAME);
+            calendar.mAccountName = getString(src, Calendars.ACCOUNT_NAME);
+            calendar.mAccountType = getString(src, Calendars.ACCOUNT_TYPE);
+            calendar.mOwner = getString(src, Calendars.OWNER_ACCOUNT);
+            calendar.mIsActive = getInt(src, Calendars.VISIBLE) == 1;
+            calendar.mTimezone = getString(src, Calendars.CALENDAR_TIME_ZONE);
 
             final String idColQuery = Events.CALENDAR_ID + " = ?";
-            final String[] idColVal = new String[] { Integer.toString(calendar.id) };
+            final String[] idColVal = new String[] { Integer.toString(calendar.mId) };
             Cursor sizer = resolver.query(Events.CONTENT_URI, null, idColQuery, idColVal, null);
-            calendar.numEntries = sizer.getCount();
+            calendar.mNumEntries = sizer.getCount();
             sizer.close();
             calendars.add(calendar);
         }
@@ -91,10 +91,9 @@ public class AndroidCalendar {
     private static boolean haveProvider(ContentResolver resolver, Uri uri) {
         // Check an individual provider is installed
         ContentProviderClient provider = resolver.acquireContentProviderClient(uri);
-        if (provider == null) {
-            return false;
+        if (provider != null) {
+            provider.release();
         }
-        provider.release();
-        return true;
+        return provider != null;
     }
 }

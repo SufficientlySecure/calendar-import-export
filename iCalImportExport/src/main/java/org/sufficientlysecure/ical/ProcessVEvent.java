@@ -66,39 +66,39 @@ import android.util.Log;
 public class ProcessVEvent extends RunnableWithProgress {
     private static final String TAG = ProcessVEvent.class.getSimpleName();
 
-    private static final Duration oneDay = createDuration("P1D");
-    private static final Duration zeroSecs = createDuration("PT0S");
+    private static final Duration ONE_DAY = createDuration("P1D");
+    private static final Duration ZERO_SECONDS = createDuration("PT0S");
 
-    private Calendar iCalCalendar;
-    private AndroidCalendar androidCalendar;
-    private boolean isInserter;
+    private Calendar mICalCalendar;
+    private AndroidCalendar mAndroidCalendar;
+    private boolean mIsInserter;
 
     private final class Options {
-        public boolean checkForDuplicates;
-        public boolean useUIDs;
-        public boolean useReminders;
-        private List<Integer> defaultReminders;
+        public boolean mCheckForDuplicates;
+        public boolean mUseUIDs;
+        private boolean mUseReminders;
+        private List<Integer> mDefaultReminders;
 
         public Options(SharedPreferences prefs) {
-            checkForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
-            useUIDs = prefs.getBoolean("setting_import_uids", true);
-            useReminders = prefs.getBoolean("setting_import_reminders", false);
-            defaultReminders = RemindersDialog.getSavedRemindersInMinutes();
+            mCheckForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
+            mUseUIDs = prefs.getBoolean("setting_import_uids", true);
+            mUseReminders = prefs.getBoolean("setting_import_reminders", false);
+            mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes();
         }
 
         public List<Integer> getReminders(List<Integer> eventReminders) {
-            if (useReminders && eventReminders.size() > 0) {
+            if (mUseReminders && eventReminders.size() > 0) {
                 return eventReminders;
             }
-            return defaultReminders;
+            return mDefaultReminders;
         }
     }
 
     public ProcessVEvent(Activity activity, Calendar iCalCalendar, boolean isInserter) {
         super(activity);
-        this.iCalCalendar = iCalCalendar;
-        androidCalendar = ((MainActivity)activity).getSelectedCalendar();
-        this.isInserter = isInserter;
+        mICalCalendar = iCalCalendar;
+        mAndroidCalendar = ((MainActivity)activity).getSelectedCalendar();
+        mIsInserter = isInserter;
     }
 
     @Override
@@ -110,7 +110,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             List<Integer> reminders = new ArrayList<Integer>();
 
             setMessage(R.string.progress_processing_entries);
-            ComponentList vevents = iCalCalendar.getComponents(VEvent.VEVENT);
+            ComponentList vevents = mICalCalendar.getComponents(VEvent.VEVENT);
 
             dialog.setMax(vevents.size());
             ContentResolver resolver = activity.getContentResolver();
@@ -133,9 +133,9 @@ public class ProcessVEvent extends RunnableWithProgress {
                     continue;
                 }
 
-                ContentValues c = convertToDB(e, options, reminders, androidCalendar.id);
+                ContentValues c = convertToDB(e, options, reminders, mAndroidCalendar.mId);
 
-                if (!isInserter) {
+                if (!mIsInserter) {
                     Cursor cur = query(resolver, options, c);
                     if (cur != null) {
                         while (cur.moveToNext()) {
@@ -181,16 +181,16 @@ public class ProcessVEvent extends RunnableWithProgress {
                 }
             }
 
-            androidCalendar.numEntries += numIns;
-            androidCalendar.numEntries -= numDel;
-            activity.updateNumEntries(androidCalendar);
+            mAndroidCalendar.mNumEntries += numIns;
+            mAndroidCalendar.mNumEntries -= numDel;
+            activity.updateNumEntries(mAndroidCalendar);
 
             Resources res = activity.getResources();
-            int n = isInserter ? numIns : numDel;
+            int n = mIsInserter ? numIns : numDel;
             String msg = res.getQuantityString(R.plurals.dialog_entries_processed, n, n) + "\n";
-            if (isInserter) {
+            if (mIsInserter) {
                 msg += "\n";
-                if (options.checkForDuplicates) {
+                if (options.mCheckForDuplicates) {
                     msg += res.getQuantityString(R.plurals.dialog_found_duplicates, numDups, numDups);
                 } else {
                     msg += res.getString(R.string.dialog_did_not_check_dupes);
@@ -228,7 +228,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             // Add a duration of 1 day and remove the end date. If the event is non-recurring then
             // we will convert the duration to an end date below, which fixes all-day cases where
             // the end date is set to the same day at 23:59:59, rolls over because of a TZ, etc.
-            e.getProperties().add(oneDay);
+            e.getProperties().add(ONE_DAY);
             allDay = true;
             //  If an event is marked as all day it must be in the UTC timezone.
             e.getStartDate().setUtc(true);
@@ -239,7 +239,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             // No end date or duration given.
             // Since we added a duration above when the start date is a DATE:
             // - The start date is a DATETIME, the event lasts no time at all (RFC 2445).
-            e.getProperties().add(zeroSecs);
+            e.getProperties().add(ZERO_SECONDS);
             // Zero time events are always free (RFC 2445), so override/set TRANSP accordingly.
             removeProperty(e, Property.TRANSP);
             e.getProperties().add(Transp.TRANSPARENT);
@@ -436,7 +436,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private boolean dbHasDuplicate(ContentResolver resolver, Options options, ContentValues c) {
-        if (!options.checkForDuplicates) {
+        if (!options.mCheckForDuplicates) {
             return false;
         }
         Cursor cur = query(resolver, options, c);
@@ -452,7 +452,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         final String[] eventsId = new String[] { Events._ID };
 
-        if (options.useUIDs && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
+        if (options.mUseUIDs && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
             String where = Events.UID_2445 + "=?";
             String[] args = new String[] { c.getAsString(Events.UID_2445) };
             return resolver.query(Events.CONTENT_URI, eventsId, where, args, null);
