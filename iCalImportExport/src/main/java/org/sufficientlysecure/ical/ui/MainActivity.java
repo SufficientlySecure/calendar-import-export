@@ -270,8 +270,8 @@ public class MainActivity extends Activity {
 
                               Resources res = getResources();
                               final int n = calendar.getComponents(VEvent.VEVENT).size();
-                              mInsertButton.setText(get(res, R.plurals.dialog_entries_insert, n));
-                              mDeleteButton.setText(get(res, R.plurals.dialog_entries_delete, n));
+                              mInsertButton.setText(get(res, R.plurals.insert_n_entries, n));
+                              mDeleteButton.setText(get(res, R.plurals.delete_n_entries, n));
                               mInsertDeleteLayout.setVisibility(View.VISIBLE);
                           }
                           private String get(Resources res, int id, int n) {
@@ -334,7 +334,7 @@ public class MainActivity extends Activity {
         switch (item.getItemId()) {
 
         case R.id.help:
-            DialogTools.info(this, R.string.menu_help, Html.fromHtml(getString(R.string.help)));
+            DialogTools.info(this, R.string.help, Html.fromHtml(getString(R.string.help_html)));
             break;
 
         case R.id.settings:
@@ -356,7 +356,7 @@ public class MainActivity extends Activity {
     private void showLegalNotices() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         TextView text = new TextView(this);
-        text.setText(Html.fromHtml(getString(R.string.legal_notices)));
+        text.setText(Html.fromHtml(getString(R.string.legal_notices_html)));
         text.setMovementMethod(LinkMovementMethod.getInstance());
         builder.setView(text);
         AlertDialog dialog = builder.create();

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="activity_settings_general">General</string>
+    <string name="activity_settings_save_passwords">Save passwords</string>
+    <string name="activity_settings_save_passwords_desc">Store user entered passwords in insecure local storage</string>
+    <string name="activity_settings_import">Import</string>
+    <string name="activity_settings_ignore_duplicates">Ignore duplicates</string>
+    <string name="activity_settings_ignore_duplicates_desc">Ignore entries that are already in the destination calendar</string>
+    <string name="activity_settings_import_uids">Keep UIDs</string>
+    <string name="activity_settings_import_uids_desc">Use any existing unique identifiers to identify and find duplicate events</string>
+    <string name="activity_settings_compatibility">Compatibility</string>
+    <string name="activity_settings_relaxed_unfolding">Allow different line endings</string>
+    <string name="activity_settings_relaxed_unfolding_desc">Support various line wrapping schemes used by different products</string>
+    <string name="activity_settings_relaxed_parsing">Permissive parsing</string>
+    <string name="activity_settings_relaxed_parsing_desc">Support various incorrect but common iCalendar file quirks</string>
+    <string name="activity_settings_outlook_compatible">Microsoft compatible</string>
+    <string name="activity_settings_outlook_compatible_desc">Support calendars exported by Microsoft&#174; Outlook&#174; and Microsoft&#174; Exchange&#8482;</string>
+    <string name="activity_settings_notes_compatible">Notes compatible</string>
+    <string name="activity_settings_notes_compatible_desc">Support calendars exported by IBM&#174; Notes&#174; (Formerly Lotus Notes&#174;)</string>
+    <string name="activity_settings_vcard_compatible">vCard compatible</string>
+    <string name="activity_settings_vcard_compatible_desc">Support events in vCard format</string>
+    <string name="activity_settings_reminders">Reminders</string>
+    <string name="activity_settings_reminder_delete">Delete</string>
+    <string name="activity_settings_import_reminders">Import reminders</string>
+    <string name="activity_settings_import_reminders_desc">Use reminders from the imported file instead of default reminders when present</string>
+    <string name="activity_settings_edit_reminders">Default reminders</string>
+    <string name="activity_settings_add_reminder">Add Reminder</string>
+    <string name="activity_settings_edit_reminders_desc">Choose the reminders to apply to imported events</string>
+    <string name="activity_settings_export">Export</string>
+    <string name="activity_settings_relaxed_validation">Permissive export</string>
+    <string name="activity_settings_relaxed_validation_desc">Skip extensive validation of the output file when exporting calendars</string>
+
+</resources>

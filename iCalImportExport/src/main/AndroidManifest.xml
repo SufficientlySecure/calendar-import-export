@@ -41,7 +41,7 @@
 
         <activity
             android:name=".ui.SettingsActivity"
-            android:label="@string/menu_settings" >
+            android:label="@string/settings" >
         </activity>
 
     </application>

@@ -81,9 +81,9 @@ public class Controller implements OnClickListener {
                     }
                 };
                 AlertDialog d = new AlertDialog.Builder(mActivity)
-                                .setMessage(R.string.dialog_exiting)
+                                .setMessage(R.string.no_calendars_found)
                                 .setIcon(R.drawable.icon)
-                                .setTitle(R.string.dialog_information_title)
+                                .setTitle(R.string.information)
                                 .setCancelable(false)
                                 .setPositiveButton(android.R.string.ok, buttonTask).create();
                 d.show();
@@ -124,7 +124,7 @@ public class Controller implements OnClickListener {
             task = new RunnableWithProgress(mActivity) {
                 @Override
                 public void run(ProgressDialog dialog) {
-                    setMessage(R.string.progress_searching_ical_files);
+                    setMessage(R.string.searching_for_files);
 
                     File root = Environment.getExternalStorageDirectory();
                     List<File> files = new ArrayList<File>();
@@ -138,11 +138,11 @@ public class Controller implements OnClickListener {
                 @Override
                 public void run(ProgressDialog dialog) {
                     if (mCalendarBuilder == null) {
-                        setMessage(R.string.progress_loading_builder);
+                        setMessage(R.string.performing_first_time_setup);
                         mCalendarBuilder = new CalendarBuilder();
                     }
                     try {
-                        setMessage(R.string.progress_reading_ical);
+                        setMessage(R.string.reading_file_please_wait);
                         InputStream in = mActivity.getSelectedURL().getInputStream();
                         if (in != null) {
                             SharedPreferences prefs = mActivity.preferences;
@@ -156,9 +156,9 @@ public class Controller implements OnClickListener {
                         }
                         mActivity.setCalendar(mCalendar);
                     } catch (Exception exc) {
-                        String msg = mActivity.getString(R.string.dialog_error_unparseable)
+                        String msg = mActivity.getString(R.string.could_not_parse_file)
                                      + exc.getMessage();
-                        DialogTools.info(mActivity, R.string.dialog_error_title, msg);
+                        DialogTools.info(mActivity, R.string.error, msg);
                         Log.d(TAG, "Error", exc);
                     }
                 }
@@ -191,7 +191,7 @@ public class Controller implements OnClickListener {
                                                prefs.getString(PREF_LAST_PASSWORD, ""),
                                                true, true);
                     }
-                    setMessage(R.string.progress_parsing_url);
+                    setMessage(R.string.parsing_url);
                     boolean save = prefs.getBoolean("setting_save_passwords", false);
 
                     prefs.edit().putString(PREF_LAST_URL, url)
@@ -203,8 +203,7 @@ public class Controller implements OnClickListener {
                         password = null;
                     }
                     if (!mActivity.setUrl(url, username, password)) {
-                        DialogTools.info(mActivity, R.string.dialog_error_title,
-                                         R.string.cannot_parse_url);
+                        DialogTools.info(mActivity, R.string.error, R.string.cannot_parse_url);
                     }
                 }
             };

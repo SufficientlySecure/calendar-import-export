@@ -109,7 +109,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
             List<Integer> reminders = new ArrayList<Integer>();
 
-            setMessage(R.string.progress_processing_entries);
+            setMessage(R.string.processing_entries);
             ComponentList vevents = mICalCalendar.getComponents(VEvent.VEVENT);
 
             dialog.setMax(vevents.size());
@@ -187,13 +187,13 @@ public class ProcessVEvent extends RunnableWithProgress {
 
             Resources res = activity.getResources();
             int n = mIsInserter ? numIns : numDel;
-            String msg = res.getQuantityString(R.plurals.dialog_entries_processed, n, n) + "\n";
+            String msg = res.getQuantityString(R.plurals.processed_n_entries, n, n) + "\n";
             if (mIsInserter) {
                 msg += "\n";
                 if (options.mCheckForDuplicates) {
-                    msg += res.getQuantityString(R.plurals.dialog_found_duplicates, numDups, numDups);
+                    msg += res.getQuantityString(R.plurals.found_n_duplicates, numDups, numDups);
                 } else {
-                    msg += res.getString(R.string.dialog_did_not_check_dupes);
+                    msg += res.getString(R.string.did_not_check_for_dupes);
                 }
             }
 
@@ -210,7 +210,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             } catch (Exception ignored) {
 
             }
-            DialogTools.info(getActivity(), R.string.dialog_bug_title, R.string.dialog_bug);
+            DialogTools.info(getActivity(), R.string.error, R.string.dialog_bug);
         }
     }
 

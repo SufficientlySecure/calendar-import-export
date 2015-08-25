@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             style="@android:style/TextAppearance.Medium"
-            android:prompt="@string/spinner_choose_calendar" />
+            android:prompt="@string/select_a_calendar" />
 
         <View
             android:layout_width="match_parent"
@@ -54,7 +54,7 @@
                     style="@android:style/TextAppearance.Small"
                     android:textStyle="italic"
                     android:textColor="#FF888888"
-                    android:text="@string/cal_account_name" />
+                    android:text="@string/account_name" />
 
                 <TextView
                     android:id="@+id/TextCalAccountName"
@@ -68,7 +68,7 @@
                     style="@android:style/TextAppearance.Small"
                     android:textStyle="italic"
                     android:textColor="#FF888888"
-                    android:text="@string/cal_name" />
+                    android:text="@string/name" />
 
                 <TextView
                     android:id="@+id/TextCalName"
@@ -82,7 +82,7 @@
                     style="@android:style/TextAppearance.Small"
                     android:textStyle="italic"
                     android:textColor="#FF888888"
-                    android:text="@string/cal_owner" />
+                    android:text="@string/owner" />
 
                 <TextView
                     android:id="@+id/TextCalOwner"
@@ -96,7 +96,7 @@
                     style="@android:style/TextAppearance.Small"
                     android:textStyle="italic"
                     android:textColor="#FF888888"
-                    android:text="@string/cal_state" />
+                    android:text="@string/state" />
 
                 <TextView
                     android:id="@+id/TextCalState"
@@ -117,7 +117,7 @@
                         style="@android:style/TextAppearance.Small"
                         android:textStyle="italic"
                         android:textColor="#FF888888"
-                        android:text="@string/cal_account_type" />
+                        android:text="@string/account_type" />
 
                     <TextView
                         android:id="@+id/TextCalAccountType"
@@ -131,7 +131,7 @@
                         style="@android:style/TextAppearance.Small"
                         android:textStyle="italic"
                         android:textColor="#FF888888"
-                        android:text="@string/cal_id" />
+                        android:text="@string/id" />
 
                     <TextView
                         android:id="@+id/TextCalId"
@@ -145,7 +145,7 @@
                         style="@android:style/TextAppearance.Small"
                         android:textStyle="italic"
                         android:textColor="#FF888888"
-                        android:text="@string/cal_timezone" />
+                        android:text="@string/timezone" />
 
                     <TextView
                         android:id="@+id/TextCalTimezone"
@@ -159,7 +159,7 @@
                         style="@android:style/TextAppearance.Small"
                         android:textStyle="italic"
                         android:textColor="#FF888888"
-                        android:text="@string/cal_events" />
+                        android:text="@string/events" />
 
                     <TextView
                         android:id="@+id/TextCalSize"
@@ -190,19 +190,19 @@
             android:id="@+id/SaveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_export" />
+            android:text="@string/export" />
 
         <Button
             android:id="@+id/SearchButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_import_file" />
+            android:text="@string/import_file" />
 
         <Button
             android:id="@+id/SetUrlButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_import_network" />
+            android:text="@string/import_network" />
 
         <Spinner
             android:id="@+id/SpinnerFile"
@@ -214,7 +214,7 @@
             android:id="@+id/LoadButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/button_load_calendar"
+            android:text="@string/load_calendar"
             android:visibility="gone" />
 
         <LinearLayout
@@ -229,14 +229,14 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/button_insert_entries" />
+                android:text="@string/insert_entries" />
 
             <Button
                 android:id="@+id/DeleteButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:text="@string/button_delete_entries" />
+                android:text="@string/delete_entries" />
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

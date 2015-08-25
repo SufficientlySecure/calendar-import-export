@@ -128,7 +128,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
         String output = Environment.getExternalStorageDirectory() + File.separator + file;
         int i = 0;
-        setMessage(R.string.progress_loading_calendarentries);
+        setMessage(R.string.loading_calendar_entries);
 
         // query events
         ContentResolver resolver = activity.getContentResolver();
@@ -183,18 +183,17 @@ public class SaveCalendar extends RunnableWithProgress {
         }
 
         try {
-            setMessage(R.string.progress_writing_calendar_to_file);
+            setMessage(R.string.writing_calendar_to_file);
             new CalendarOutputter().output(cal, new FileOutputStream(output));
 
             Resources res = activity.getResources();
-            String msg = res.getQuantityString(R.plurals.dialog_sucessfully_written_calendar,
-                                               i, i, file);
+            String msg = res.getQuantityString(R.plurals.wrote_n_events_to, i, i, file);
             activity.showToast(msg);
 
         } catch (Exception e) {
             Log.e(TAG, "SaveCalendar", e);
 
-            DialogTools.info(activity, R.string.dialog_bug_title, "Error:\n" + e.getMessage());
+            DialogTools.info(activity, R.string.error, "Error:\n" + e.getMessage());
         }
     }
 

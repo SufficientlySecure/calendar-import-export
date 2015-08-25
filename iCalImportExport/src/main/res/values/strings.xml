@@ -1,104 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <string name="account_name">Account Name</string>
+    <string name="account_type">Account Type</string>
+    <string name="actions">ACTIONS</string>
+    <string name="active">Active</string>
     <string name="app_name">iCal Import/Export</string>
+    <string name="calendar_selection">CALENDAR SELECTION</string>
     <string name="cannot_parse_url">Cannot parse URL</string>
-    <string name="progress_reading_ical">Reading file, please wait.</string>
-    <string name="progress_loading_builder">Creating the iCalendar builder.</string>
-    <string name="progress_searching_ical_files">Searching for iCalendar files.</string>
-    <string name="progress_loading_calendarentries">Loading calendar entries.</string>
-    <string name="progress_writing_calendar_to_file">Writing calendar to file.</string>
-    <string name="progress_processing_entries">Processing entries.</string>
-    <string name="progress_parsing_url">Parsing URL&#8230;</string>
-    <string name="button_import_file">Import File</string>
-    <string name="button_import_network">Import URL</string>
-    <string name="button_delete_entries">Delete entries</string>
-    <string name="button_insert_entries">Insert entries</string>
-    <string name="button_load_calendar">Load</string>
-    <string name="button_export">Export</string>
-    <string name="spinner_choose_calendar">Select a calendar</string>
-    <string name="dialog_enter_url_title">Enter Calendar URL</string>
-    <string name="dialog_enter_url_message">Please enter the URL of the calendar to load.</string>
-    <string name="dialog_enter_username_title">Enter Login Details</string>
-    <string name="dialog_enter_username_message">Username:</string>
-    <string name="dialog_enter_password_title">Enter Login Details</string>
-    <string name="dialog_enter_password_message">Password:</string>
-    <string name="dialog_choosefilename_title">Choose filename</string>
+    <string name="could_not_parse_file">Could not parse file\n\n</string>
+    <string name="delete_entries">Delete entries</string>
+    <string name="dialog_bug">I am sorry for you inconvenience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
     <string name="dialog_choosefilename_message">Please enter the filename to save to.</string>
-    <plurals name="dialog_sucessfully_written_calendar">
-         <item quantity="one">Wrote %1$d event to %2$s</item>
-         <item quantity="other">Wrote %1$d events to %2$s</item>
-    </plurals>
-    <string name="dialog_information_title">Information</string>
-    <plurals name="dialog_entries_processed">
-         <item quantity="one">Processed %d calendar entry.</item>
-         <item quantity="other">Processed %d calendar entries.</item>
-    </plurals>
-    <plurals name="dialog_entries_insert">
-         <item quantity="one">Insert %d entry</item>
-         <item quantity="other">Insert %d entries</item>
-    </plurals>
-    <plurals name="dialog_entries_delete">
+    <string name="dialog_choosefilename_title">Choose filename</string>
+    <string name="dialog_enter_password_message">Password:</string>
+    <string name="dialog_enter_password_title">Enter Login Details</string>
+    <string name="dialog_enter_url_message">Please enter the URL of the calendar to load.</string>
+    <string name="dialog_enter_url_title">Enter Calendar URL</string>
+    <string name="dialog_enter_username_message">Username:</string>
+    <string name="dialog_enter_username_title">Enter Login Details</string>
+    <string name="did_not_check_for_dupes">Did not check for duplicates.</string>
+    <string name="error">Error</string>
+    <string name="events">Events</string>
+    <string name="export">Export</string>
+    <string name="help">Help</string>
+    <string name="id">id</string>
+    <string name="import_file">Import File</string>
+    <string name="import_network">Import URL</string>
+    <string name="inactive">Inactive</string>
+    <string name="information">Information</string>
+    <string name="insert_entries">Insert entries</string>
+    <string name="legal_notices">Legal Notices</string>
+    <string name="load_calendar">Load</string>
+    <string name="loading_calendar_entries">Loading calendar entries&#8230;</string>
+    <string name="name">Name</string>
+    <string name="no_calendars_found">No calendars found.\n\nYou must create a calendar to import to/export from. You can install \"Offline Calendar\" to create one.\n\nIf you are using Cyanogenmod: Make sure that Privacy Guard is disabled for this application to  allow calendar read/write.\n\nIf you are using Android 4.3 App Ops: Make sure that you allow calendar read/write access for this application.</string>
+    <string name="not_applicable">N/A</string>
+    <string name="owner">Owner</string>
+    <string name="parsing_url">Parsing URL&#8230;</string>
+    <string name="performing_first_time_setup">Performing first time setup&#8230;</string>
+    <string name="processing_entries">Processing entries&#8230;</string>
+    <string name="reading_file_please_wait">Reading file, please wait&#8230;</string>
+    <string name="searching_for_files">Searching for iCalendar files&#8230;</string>
+    <string name="select_a_calendar">Select a calendar</string>
+    <string name="settings">Settings</string>
+    <string name="state">State</string>
+    <string name="timezone">Timezone</string>
+    <string name="writing_calendar_to_file">Writing calendar to file&#8230;</string>
+
+    <plurals name="delete_n_entries">
          <item quantity="one">Delete %d entry</item>
          <item quantity="other">Delete %d entries</item>
     </plurals>
-    <string name="dialog_exiting">No calendars found.\n\nYou must create a calendar to import to/export from. You can install \"Offline Calendar\" to create one.\n\nIf you are using Cyanogenmod: Make sure that Privacy Guard is disabled for this application to  allow calendar read/write.\n\nIf you are using Android 4.3 App Ops: Make sure that you allow calendar read/write access for this application.</string>
-    <string name="dialog_error_title">Error</string>
-    <string name="dialog_error_unparseable">iCal file could not be parsed\n\n</string>
-    <plurals name="dialog_found_duplicates">
+    <plurals name="found_n_duplicates">
          <item quantity="one">Found %d duplicate entry.</item>
          <item quantity="other">Found %d duplicate entries.</item>
     </plurals>
-    <string name="dialog_did_not_check_dupes">Did not check for duplicate entries.</string>
-    <string name="dialog_bug_title">Error</string>
-    <string name="dialog_bug">I am sorry for you inconvinience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
-    <string name="menu_help">Help</string>
-    <string name="menu_settings">Settings</string>
-    <string name="menu_legal_notices">Legal Notices</string>
-
-    <string name="activity_settings_general">General</string>
-    <string name="activity_settings_save_passwords">Save passwords</string>
-    <string name="activity_settings_save_passwords_desc">Store user entered passwords in insecure local storage</string>
-    <string name="activity_settings_import">Import</string>
-    <string name="activity_settings_ignore_duplicates">Ignore duplicates</string>
-    <string name="activity_settings_ignore_duplicates_desc">Ignore entries that are already in the destination calendar</string>
-    <string name="activity_settings_import_uids">Keep UIDs</string>
-    <string name="activity_settings_import_uids_desc">Use any existing unique identifiers to identify and find duplicate events</string>
-    <string name="activity_settings_compatibility">Compatibility</string>
-    <string name="activity_settings_relaxed_unfolding">Allow different line endings</string>
-    <string name="activity_settings_relaxed_unfolding_desc">Support various line wrapping schemes used by different products</string>
-    <string name="activity_settings_relaxed_parsing">Permissive parsing</string>
-    <string name="activity_settings_relaxed_parsing_desc">Support various incorrect but common iCalendar file quirks</string>
-    <string name="activity_settings_outlook_compatible">Microsoft compatible</string>
-    <string name="activity_settings_outlook_compatible_desc">Support calendars exported by Microsoft&#174; Outlook&#174; and Microsoft&#174; Exchange&#8482;</string>
-    <string name="activity_settings_notes_compatible">Notes compatible</string>
-    <string name="activity_settings_notes_compatible_desc">Support calendars exported by IBM&#174; Notes&#174; (Formerly Lotus Notes&#174;)</string>
-    <string name="activity_settings_vcard_compatible">vCard compatible</string>
-    <string name="activity_settings_vcard_compatible_desc">Support events in vCard format</string>
-    <string name="activity_settings_reminders">Reminders</string>
-    <string name="activity_settings_reminder_delete">Delete</string>
-    <string name="activity_settings_import_reminders">Import reminders</string>
-    <string name="activity_settings_import_reminders_desc">Use reminders from the imported file instead of default reminders when present</string>
-    <string name="activity_settings_edit_reminders">Default reminders</string>
-    <string name="activity_settings_add_reminder">Add Reminder</string>
-    <string name="activity_settings_edit_reminders_desc">Choose the reminders to apply to imported events</string>
-    <string name="activity_settings_export">Export</string>
-    <string name="activity_settings_relaxed_validation">Permissive export</string>
-    <string name="activity_settings_relaxed_validation_desc">Skip extensive validation of the output file when exporting calendars</string>
-
-    <string name="cal_account_name">Account Name</string>
-    <string name="cal_account_type">Account Type</string>
-    <string name="cal_id">id</string>
-    <string name="cal_owner">Owner</string>
-    <string name="cal_timezone">Timezone</string>
-    <string name="cal_state">State</string>
-    <string name="cal_events">Events</string>
-    <string name="cal_name">Name</string>
-    <string name="active">Active</string>
-    <string name="inactive">Inactive</string>
-    <string name="not_applicable">N/A</string>
-    <string name="calendar_selection">CALENDAR SELECTION</string>
-    <string name="actions">ACTIONS</string>
+    <plurals name="insert_n_entries">
+         <item quantity="one">Insert %d entry</item>
+         <item quantity="other">Insert %d entries</item>
+    </plurals>
+    <plurals name="processed_n_entries">
+         <item quantity="one">Processed %d entry.</item>
+         <item quantity="other">Processed %d entries.</item>
+    </plurals>
+    <plurals name="wrote_n_events_to">
+         <item quantity="one">Wrote %1$d event to %2$s</item>
+         <item quantity="other">Wrote %1$d events to %2$s</item>
+    </plurals>
 
     <!-- Must match the minutes array in RemindersDialog.java -->
     <string-array name="reminder_time_values">
