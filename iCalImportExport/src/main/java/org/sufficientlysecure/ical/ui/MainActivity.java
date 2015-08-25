@@ -31,12 +31,13 @@ import java.util.UUID;
 import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 
+import org.apache.commons.codec.binary.Base64;
+
 import org.sufficientlysecure.ical.AndroidCalendar;
 import org.sufficientlysecure.ical.Controller;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.SpinnerTools;
-import org.sufficientlysecure.ical.util.CredentialInputAdapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -88,7 +89,7 @@ public class MainActivity extends Activity {
     private TextView mTextCalSize;
 
     // Values
-    private List<CredentialInputAdapter> mUrls;
+    private List<CalendarSource> mSources;
     private List<AndroidCalendar> mCalendars;
     private LinearLayout mInsertDeleteLayout;
 
@@ -99,7 +100,7 @@ public class MainActivity extends Activity {
         setContentView(R.layout.main);
 
         mController = new Controller(this);
-        this.preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         // Retrieve views
         mCalendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);
@@ -217,40 +218,39 @@ public class MainActivity extends Activity {
         runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
-                              List<AndroidCalendar> l = MainActivity.this.mCalendars;
-                              mExportButton.setVisibility(l == null ? View.GONE : View.VISIBLE);
+                              mExportButton.setVisibility(mCalendars == null ? View.GONE : View.VISIBLE);
                           }
                       });
     }
 
-    private void setUrls(List<CredentialInputAdapter> urls) {
-        mUrls = urls;
-        SpinnerTools.simpleSpinnerInUI(this, mFileSpinner, mUrls);
+    private void setSources(List<CalendarSource> sources) {
+        mSources = sources;
+        SpinnerTools.simpleSpinnerInUI(this, mFileSpinner, mSources);
         runOnUiThread(new Runnable() {
                           @Override
                           public void run() {
-                              mLoadButton.setVisibility(MainActivity.this.mUrls == null ? View.GONE : View.VISIBLE);
+                              mLoadButton.setVisibility(mSources == null ? View.GONE : View.VISIBLE);
                           }
                       });
     }
 
     public void setFiles(List<File> files) {
-        List<CredentialInputAdapter> urls = new ArrayList<CredentialInputAdapter>(files.size());
+        List<CalendarSource> sources = new ArrayList<CalendarSource>(files.size());
 
         for (File file: files) {
             try {
-                urls.add(new CredentialInputAdapter(file.toURI().toURL(), null, null));
+                sources.add(new CalendarSource(file.toURI().toURL(), null, null));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
         }
-        setUrls(urls);
+        setSources(sources);
     }
 
     public boolean setUrl(String url, String username, String password) {
         try {
-            CredentialInputAdapter c = new CredentialInputAdapter(new URL(url), username, password);
-            setUrls(Collections.singletonList(c));
+            CalendarSource source = new CalendarSource(new URL(url), username, password);
+            setSources(Collections.singletonList(source));
             return true;
         } catch (MalformedURLException e) {
             return false;
@@ -305,7 +305,7 @@ public class MainActivity extends Activity {
 
     public URLConnection getSelectedURL() throws IOException {
         Object sel = mFileSpinner.getSelectedItem();
-        return sel == null ? null : ((CredentialInputAdapter)sel).getConnection();
+        return sel == null ? null : ((CalendarSource)sel).getConnection();
     }
 
     public String generateUid() {
@@ -366,5 +366,43 @@ public class MainActivity extends Activity {
         builder.setView(text);
         AlertDialog dialog = builder.create();
         dialog.show();
+    }
+
+    private class CalendarSource {
+        private URL mUrl;
+        private String mUsername;
+        private String mPassword;
+
+        public CalendarSource(URL url, String username, String password) {
+            mUrl = url;
+            mUsername = username;
+            mPassword = password;
+        }
+
+        public URLConnection getConnection() throws IOException {
+            if (mUsername != null) {
+                final String SEP = "://";
+                String protocol = mUrl.getProtocol();
+                String userPass = mUsername + ":" + mPassword;
+
+                if (protocol.equalsIgnoreCase("ftp") || protocol.equalsIgnoreCase("ftps")) {
+                    String end = mUrl.toExternalForm().substring(protocol.length() + SEP.length());
+                    return new URL(protocol + SEP + userPass + "@" + end).openConnection();
+                }
+
+                if (protocol.equalsIgnoreCase("http") || protocol.equalsIgnoreCase("https")) {
+                    String encoded = new String(new Base64().encode(userPass.getBytes()));
+                    URLConnection connection = mUrl.openConnection();
+                    connection.setRequestProperty("Authorization", "Basic " + encoded);
+                    return connection;
+                }
+            }
+            return mUrl.openConnection();
+        }
+
+        @Override
+        public String toString() {
+            return mUrl.toString();
+        }
     }
 }
