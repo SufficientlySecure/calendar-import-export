@@ -32,6 +32,7 @@ import android.provider.CalendarContract.Events;
 @SuppressLint("NewApi")
 public class AndroidCalendar {
     public int mId;
+    public String mIdStr;
     public String mName;
     public String mDisplayName;
     public String mAccountName;
@@ -40,6 +41,11 @@ public class AndroidCalendar {
     public boolean mIsActive;
     public String mTimezone;
     public int mNumEntries;
+
+    private static final String[] CAL_COLS = new String[] {
+        Calendars._ID, Calendars.DELETED, Calendars.NAME, Calendars.CALENDAR_DISPLAY_NAME,
+        Calendars.ACCOUNT_NAME, Calendars.ACCOUNT_TYPE, Calendars.OWNER_ACCOUNT,
+        Calendars.VISIBLE, Calendars.CALENDAR_TIME_ZONE };
 
     // Load all available calendars.
     // If an empty list is returned the caller probably needs to enable calendar
@@ -51,7 +57,7 @@ public class AndroidCalendar {
             return new ArrayList<AndroidCalendar>();
         }
 
-        Cursor src = resolver.query(Calendars.CONTENT_URI, null, null, null, null);
+        Cursor src = resolver.query(Calendars.CONTENT_URI, CAL_COLS, null, null, null);
         List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(src.getCount());
 
         while (src.moveToNext()) {
@@ -60,6 +66,7 @@ public class AndroidCalendar {
             }
             AndroidCalendar calendar = new AndroidCalendar();
             calendar.mId = getInt(src, Calendars._ID);
+            calendar.mIdStr = getString(src, Calendars._ID);
             calendar.mName = getString(src, Calendars.NAME);
             calendar.mDisplayName = getString(src, Calendars.CALENDAR_DISPLAY_NAME);
             calendar.mAccountName = getString(src, Calendars.ACCOUNT_NAME);
@@ -68,9 +75,10 @@ public class AndroidCalendar {
             calendar.mIsActive = getInt(src, Calendars.VISIBLE) == 1;
             calendar.mTimezone = getString(src, Calendars.CALENDAR_TIME_ZONE);
 
-            final String idColQuery = Events.CALENDAR_ID + " = ?";
-            final String[] idColVal = new String[] { Integer.toString(calendar.mId) };
-            Cursor sizer = resolver.query(Events.CONTENT_URI, null, idColQuery, idColVal, null);
+            final String[] cols = new String[] { Events._ID };
+            final String where = Events.CALENDAR_ID + "=?";
+            final String[] args = new String[] { calendar.mIdStr };
+            Cursor sizer = resolver.query(Events.CONTENT_URI, cols, where, args, null);
             calendar.mNumEntries = sizer.getCount();
             sizer.close();
             calendars.add(calendar);
@@ -99,6 +107,6 @@ public class AndroidCalendar {
 
     @Override
     public String toString() {
-        return mDisplayName + " (" + mId + ")";
+        return mDisplayName + " (" + mIdStr + ")";
     }
 }

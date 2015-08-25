@@ -450,12 +450,12 @@ public class ProcessVEvent extends RunnableWithProgress {
 
     private Cursor query(ContentResolver resolver, Options options, ContentValues c) {
 
-        final String[] eventsId = new String[] { Events._ID };
+        final String[] cols = new String[] { Events._ID };
 
         if (options.mUseUIDs && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
             String where = Events.UID_2445 + "=?";
             String[] args = new String[] { c.getAsString(Events.UID_2445) };
-            return resolver.query(Events.CONTENT_URI, eventsId, where, args, null);
+            return resolver.query(Events.CONTENT_URI, cols, where, args, null);
         }
 
         // Without UIDs, the best we can do is check the start date and title within
@@ -483,6 +483,6 @@ public class ProcessVEvent extends RunnableWithProgress {
         String where = b.toString();
         String[] args = argsList.toArray(new String[argsList.size()]);
 
-        return resolver.query(Events.CONTENT_URI, eventsId, where, args, null);
+        return resolver.query(Events.CONTENT_URI, cols, where, args, null);
     }
 }

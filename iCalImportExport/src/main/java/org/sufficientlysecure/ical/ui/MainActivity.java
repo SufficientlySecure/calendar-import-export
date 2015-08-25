@@ -114,7 +114,7 @@ public class MainActivity extends Activity {
                 mTextCalAccountType.setText(calendar.mAccountType);
                 mTextCalOwner.setText(calendar.mOwner);
                 mTextCalState.setText(calendar.mIsActive ? R.string.active : R.string.inactive);
-                mTextCalId.setText(Integer.toString(calendar.mId));
+                mTextCalId.setText(calendar.mIdStr);
                 if (calendar.mTimezone == null) {
                     mTextCalTimezone.setText(R.string.not_applicable);
                 } else {
@@ -364,6 +364,8 @@ public class MainActivity extends Activity {
     }
 
     private class CalendarSource {
+        private static final String HTTP_SEP = "://";
+
         private URL mUrl;
         private String mUsername;
         private String mPassword;
@@ -376,13 +378,13 @@ public class MainActivity extends Activity {
 
         public URLConnection getConnection() throws IOException {
             if (mUsername != null) {
-                final String SEP = "://";
                 String protocol = mUrl.getProtocol();
                 String userPass = mUsername + ":" + mPassword;
 
                 if (protocol.equalsIgnoreCase("ftp") || protocol.equalsIgnoreCase("ftps")) {
-                    String end = mUrl.toExternalForm().substring(protocol.length() + SEP.length());
-                    return new URL(protocol + SEP + userPass + "@" + end).openConnection();
+                    String external = mUrl.toExternalForm();
+                    String end = external.substring(protocol.length() + HTTP_SEP.length());
+                    return new URL(protocol + HTTP_SEP + userPass + "@" + end).openConnection();
                 }
 
                 if (protocol.equalsIgnoreCase("http") || protocol.equalsIgnoreCase("https")) {

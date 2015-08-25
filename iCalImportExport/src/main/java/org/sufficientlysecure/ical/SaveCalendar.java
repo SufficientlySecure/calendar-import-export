@@ -84,14 +84,25 @@ public class SaveCalendar extends RunnableWithProgress {
     private static final String TAG = SaveCalendar.class.getSimpleName();
     private static final String PREF_EXPORT_FILE = "lastExportFile";
 
-    private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELED");
-    private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
-    private static final List<String> AVAIL_ENUM = Arrays.asList(null, "FREE", "BUSY-TENTATIVE");
-
     private AndroidCalendar mAndroidCalendar;
     private PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
     private TimeZoneRegistry mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
     private Set<TimeZone> mInsertedTimeZones = new HashSet<TimeZone>();
+
+    private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELED");
+    private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
+    private static final List<String> AVAIL_ENUM = Arrays.asList(null, "FREE", "BUSY-TENTATIVE");
+
+    private static final String[] EVENT_COLS = new String[] {
+        Events._ID, Events.ORIGINAL_ID, Events.UID_2445, Events.TITLE, Events.DESCRIPTION,
+        Events.ORGANIZER, Events.EVENT_LOCATION, Events.STATUS, Events.ALL_DAY, Events.RDATE,
+        Events.RRULE, Events.DTSTART, Events.EVENT_TIMEZONE, Events.DURATION, Events.DTEND,
+        Events.EVENT_END_TIMEZONE, Events.ACCESS_LEVEL, Events.AVAILABILITY, Events.EXDATE,
+        Events.EXRULE, Events.CUSTOM_APP_PACKAGE, Events.CUSTOM_APP_URI, Events.HAS_ALARM };
+
+    private static final String[] REMINDER_COLS = new String[] {
+        Reminders.MINUTES, Reminders.METHOD
+    };
 
     public SaveCalendar(Activity activity) {
         super(activity);
@@ -122,8 +133,8 @@ public class SaveCalendar extends RunnableWithProgress {
         // query events
         ContentResolver resolver = activity.getContentResolver();
         String where = Events.CALENDAR_ID + "=?";
-        String[] args = new String[] { Integer.toString(mAndroidCalendar.mId) };
-        Cursor cur = resolver.query(Events.CONTENT_URI, null, where, args, null);
+        String[] args = new String[] { mAndroidCalendar.mIdStr };
+        Cursor cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, null);
         dialog.setMax(cur.getCount());
 
         String key = "ical4j.validation.relaxed";
@@ -298,8 +309,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
             ContentResolver resolver = activity.getContentResolver();
             int eventId = getInt(cur, Events._ID);
-            String[] cols = new String[] { Reminders.MINUTES, Reminders.METHOD };
-            Cursor alarmCur = Reminders.query(resolver, eventId, cols);
+            Cursor alarmCur = Reminders.query(resolver, eventId, REMINDER_COLS);
             while (alarmCur.moveToNext()) {
                 int mins = getInt(alarmCur, Reminders.MINUTES);
                 if (mins == -1) {
