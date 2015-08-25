@@ -229,11 +229,7 @@ public class MainActivity extends Activity {
 
     public void setCalendars(List<AndroidCalendar> calendars) {
         mCalendars = calendars;
-        List<String> calendarStrings = new ArrayList<String>();
-        for (AndroidCalendar cal : mCalendars) {
-            calendarStrings.add(cal.mDisplayName + " (" + cal.mId + ")");
-        }
-        setupSpinner(mCalendarSpinner, calendarStrings, mExportButton);
+        setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
     }
 
     private void setSources(List<CalendarSource> sources) {
@@ -286,15 +282,7 @@ public class MainActivity extends Activity {
     }
 
     public AndroidCalendar getSelectedCalendar() {
-        if (mCalendarSpinner.getSelectedItem() != null && mCalendars != null) {
-            String calendarName = mCalendarSpinner.getSelectedItem().toString();
-            for (AndroidCalendar cal : mCalendars) {
-                if ((cal.mDisplayName + " (" + cal.mId + ")").equals(calendarName)) {
-                    return cal;
-                }
-            }
-        }
-        return null;
+        return (AndroidCalendar)mCalendarSpinner.getSelectedItem();
     }
 
     public void selectCalendar(long id) {

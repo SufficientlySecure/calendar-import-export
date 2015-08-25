@@ -96,4 +96,9 @@ public class AndroidCalendar {
         }
         return provider != null;
     }
+
+    @Override
+    public String toString() {
+        return mDisplayName + " (" + mId + ")";
+    }
 }
