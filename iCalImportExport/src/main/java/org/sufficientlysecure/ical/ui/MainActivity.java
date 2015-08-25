@@ -49,7 +49,6 @@ import android.preference.PreferenceManager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -286,12 +285,13 @@ public class MainActivity extends Activity {
     }
 
     public void selectCalendar(long id) {
-        for (final AndroidCalendar cal: mCalendars) {
-            if (cal.mId == id) {
+        for (int i = 0; i < mCalendars.size(); i++) {
+            if (mCalendars.get(i).mId == id) {
+                final int index = i;
                 runOnUiThread(new Runnable() {
                                   @Override
                                   public void run() {
-                                      mCalendarSpinner.setSelection(mCalendars.indexOf(cal));
+                                      mCalendarSpinner.setSelection(index);
                                   }
                               });
                 return;
@@ -300,8 +300,8 @@ public class MainActivity extends Activity {
     }
 
     public URLConnection getSelectedURL() throws IOException {
-        Object sel = mFileSpinner.getSelectedItem();
-        return sel == null ? null : ((CalendarSource)sel).getConnection();
+        CalendarSource sel = (CalendarSource)mFileSpinner.getSelectedItem();
+        return sel == null ? null : sel.getConnection();
     }
 
     public String generateUid() {
@@ -325,8 +325,7 @@ public class MainActivity extends Activity {
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
+        getMenuInflater().inflate(R.menu.menu, menu);
         return true;
     }
 
