@@ -157,8 +157,10 @@ public class SaveCalendar extends RunnableWithProgress {
             try {
                 incrementProgressBy(1);
                 VEvent e = convertFromDb(cur, activity, cal, timestamp);
-                events.add(e);
-                Log.d(TAG, "Adding event: " + e.toString());
+                if (e != null) {
+                    events.add(e);
+                    Log.d(TAG, "Adding event: " + e.toString());
+                }
                 i++;
             } catch (IOException e) {
             }
@@ -187,11 +189,16 @@ public class SaveCalendar extends RunnableWithProgress {
 
     private VEvent convertFromDb(Cursor cur, MainActivity activity, Calendar cal, DtStamp timestamp)
             throws IOException {
-        PropertyList l = new PropertyList();
-
         //String cursorContents = DatabaseUtils.dumpCurrentRowToString(cur);
         //Log.d(TAG, "cursor: " + cursorContents);
 
+        if (hasStringValue(cur, Events.ORIGINAL_ID)) {
+            // FIXME: Support these edited instances
+            Log.d(TAG, "Ignoring edited instance of a recurring event");
+            return null;
+        }
+
+        PropertyList l = new PropertyList();
         l.add(timestamp);
         if (copyProperty(l, Property.UID, cur, Events.UID_2445) == null) {
             // Generate a UID. Not ideal, since its not reproducible
