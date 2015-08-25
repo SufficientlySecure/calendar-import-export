@@ -139,7 +139,7 @@ public class Controller implements OnClickListener {
 
                     for (File file: files) {
                         try {
-                            urls.add(new CredentialInputAdapter(file.toURI().toURL()));
+                            urls.add(new CredentialInputAdapter(file.toURI().toURL(), null));
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }

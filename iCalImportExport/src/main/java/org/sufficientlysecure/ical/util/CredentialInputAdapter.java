@@ -28,11 +28,6 @@ public class CredentialInputAdapter {
     private URL mUrl;
     private Credentials mCredentials;
 
-    public CredentialInputAdapter(URL url) {
-        mUrl = url;
-        mCredentials = null;
-    }
-
     public CredentialInputAdapter(URL url, Credentials credentials) {
         mUrl = url;
         mCredentials = credentials;

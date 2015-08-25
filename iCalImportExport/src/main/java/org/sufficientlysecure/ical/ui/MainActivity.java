@@ -174,7 +174,7 @@ public class MainActivity extends Activity {
         if (action.equals(Intent.ACTION_VIEW)) {
             // File intent
             try {
-                setUrl(new CredentialInputAdapter(new URL(intent.getDataString())));
+                setUrl(new CredentialInputAdapter(new URL(intent.getDataString()), null));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
