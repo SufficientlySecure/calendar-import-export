@@ -37,10 +37,10 @@ import org.sufficientlysecure.ical.AndroidCalendar;
 import org.sufficientlysecure.ical.Controller;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
-import org.sufficientlysecure.ical.ui.dialogs.SpinnerTools;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.content.SharedPreferences;
@@ -53,6 +53,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
@@ -207,31 +208,37 @@ public class MainActivity extends Activity {
         return b;
     }
 
+    private <E> void setupSpinner(final Spinner spinner, final List<E> list, final Button b) {
+        final int id = android.R.layout.simple_spinner_item;
+        final int dropId = android.R.layout.simple_spinner_dropdown_item;
+        final Context ctx = (Context) this;
+
+        runOnUiThread(new Runnable() {
+                          @Override
+                          public void run() {
+                              ArrayAdapter<E> adaptor = new ArrayAdapter<E>(ctx, id, list);
+                              adaptor.setDropDownViewResource(dropId);
+                              spinner.setAdapter(adaptor);
+                              if (list.size() != 0) {
+                                  spinner.setVisibility(View.VISIBLE);
+                              }
+                              b.setVisibility(View.VISIBLE);
+                          }
+                      });
+    }
+
     public void setCalendars(List<AndroidCalendar> calendars) {
         mCalendars = calendars;
         List<String> calendarStrings = new ArrayList<String>();
         for (AndroidCalendar cal : mCalendars) {
             calendarStrings.add(cal.mDisplayName + " (" + cal.mId + ")");
         }
-        SpinnerTools.simpleSpinnerInUI(this, mCalendarSpinner, calendarStrings);
-
-        runOnUiThread(new Runnable() {
-                          @Override
-                          public void run() {
-                              mExportButton.setVisibility(mCalendars == null ? View.GONE : View.VISIBLE);
-                          }
-                      });
+        setupSpinner(mCalendarSpinner, calendarStrings, mExportButton);
     }
 
     private void setSources(List<CalendarSource> sources) {
         mSources = sources;
-        SpinnerTools.simpleSpinnerInUI(this, mFileSpinner, mSources);
-        runOnUiThread(new Runnable() {
-                          @Override
-                          public void run() {
-                              mLoadButton.setVisibility(mSources == null ? View.GONE : View.VISIBLE);
-                          }
-                      });
+        setupSpinner(mFileSpinner, mSources, mLoadButton);
     }
 
     public void setFiles(List<File> files) {
