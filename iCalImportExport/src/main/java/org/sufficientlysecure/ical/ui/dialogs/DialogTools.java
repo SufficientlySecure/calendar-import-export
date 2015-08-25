@@ -59,7 +59,7 @@ public final class DialogTools {
                                 .setPositiveButton(android.R.string.ok, okTask)
                                 .setTitle(activity.getString(title)).create();
                 d.show();
-                TextView message = (TextView)d.findViewById(android.R.id.message);
+                TextView message = (TextView) d.findViewById(android.R.id.message);
                 message.setMovementMethod(LinkMovementMethod.getInstance());
             }
         };
@@ -132,7 +132,7 @@ public final class DialogTools {
                 };
 
                 DialogInterface.OnClickListener noTask;
-                noTask= new DialogInterface.OnClickListener() {
+                noTask = new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface iface, int w) {
                         result[0] = "";

@@ -149,14 +149,14 @@ public class MainActivity extends Activity {
         mInsertDeleteLayout = (LinearLayout) findViewById(R.id.InsertDeleteLayout);
         setupButton(R.id.SetUrlButton);
 
-        mTextCalName = (TextView)findViewById(R.id.TextCalName);
-        mTextCalAccountName = (TextView)findViewById(R.id.TextCalAccountName);
-        mTextCalAccountType = (TextView)findViewById(R.id.TextCalAccountType);
-        mTextCalOwner = (TextView)findViewById(R.id.TextCalOwner);
-        mTextCalState = (TextView)findViewById(R.id.TextCalState);
-        mTextCalId = (TextView)findViewById(R.id.TextCalId);
-        mTextCalTimezone = (TextView)findViewById(R.id.TextCalTimezone);
-        mTextCalSize = (TextView)findViewById(R.id.TextCalSize);
+        mTextCalName = (TextView) findViewById(R.id.TextCalName);
+        mTextCalAccountName = (TextView) findViewById(R.id.TextCalAccountName);
+        mTextCalAccountType = (TextView) findViewById(R.id.TextCalAccountType);
+        mTextCalOwner = (TextView) findViewById(R.id.TextCalOwner);
+        mTextCalState = (TextView) findViewById(R.id.TextCalState);
+        mTextCalId = (TextView) findViewById(R.id.TextCalId);
+        mTextCalTimezone = (TextView) findViewById(R.id.TextCalTimezone);
+        mTextCalSize = (TextView) findViewById(R.id.TextCalSize);
 
         Intent intent = getIntent();
         if (intent == null) {
@@ -202,7 +202,7 @@ public class MainActivity extends Activity {
     }
 
     private Button setupButton(int resourceId) {
-        Button b = (Button)findViewById(resourceId);
+        Button b = (Button) findViewById(resourceId);
         b.setOnClickListener(mController);
         return b;
     }
@@ -281,7 +281,7 @@ public class MainActivity extends Activity {
     }
 
     public AndroidCalendar getSelectedCalendar() {
-        return (AndroidCalendar)mCalendarSpinner.getSelectedItem();
+        return (AndroidCalendar) mCalendarSpinner.getSelectedItem();
     }
 
     public void selectCalendar(long id) {
@@ -300,7 +300,7 @@ public class MainActivity extends Activity {
     }
 
     public URLConnection getSelectedURL() throws IOException {
-        CalendarSource sel = (CalendarSource)mFileSpinner.getSelectedItem();
+        CalendarSource sel = (CalendarSource) mFileSpinner.getSelectedItem();
         return sel == null ? null : sel.getConnection();
     }
 

@@ -106,12 +106,12 @@ public class SaveCalendar extends RunnableWithProgress {
 
     public SaveCalendar(Activity activity) {
         super(activity);
-        mAndroidCalendar = ((MainActivity)activity).getSelectedCalendar();
+        mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
     }
 
     @Override
     public void run(ProgressDialog dialog) {
-        MainActivity activity = (MainActivity)getActivity();
+        MainActivity activity = (MainActivity) getActivity();
 
         mInsertedTimeZones.clear();
 
@@ -279,13 +279,13 @@ public class SaveCalendar extends RunnableWithProgress {
             // period covering the time of the event
             FreeBusy fb = new FreeBusy();
             fb.getParameters().add(new FbType(AVAIL_ENUM.get(availability)));
-            DateTime start = dateTimeFromProperty((DtStart)l.getProperty(Property.DTSTART));
+            DateTime start = dateTimeFromProperty((DtStart) l.getProperty(Property.DTSTART));
 
             if (dtEnd != null) {
                 DateTime end = dateTimeFromProperty(dtEnd);
                 fb.getPeriods().add(new Period(start, end));
             } else {
-                Duration d = (Duration)l.getProperty(Property.DURATION);
+                Duration d = (Duration) l.getProperty(Property.DURATION);
                 fb.getPeriods().add(new Period(start, d.getDuration()));
             }
         }
@@ -361,7 +361,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
     private DateTime dateTimeFromProperty(DateProperty d) {
         if (d.getDate() instanceof DateTime) {
-            return (DateTime)(d.getDate());
+            return (DateTime) (d.getDate());
         }
         return new DateTime(d.getDate());
     }
@@ -413,7 +413,7 @@ public class SaveCalendar extends RunnableWithProgress {
         try {
             int i = getColumnIndex(cur, dbName);
             if (i != -1 && !cur.isNull(i)) {
-                int value = (int)cur.getLong(i);
+                int value = (int) cur.getLong(i);
                 if (value >= 0 && value < vals.size() && vals.get(value) != null) {
                     Property p = mPropertyFactory.createProperty(evName);
                     p.setValue(vals.get(value));

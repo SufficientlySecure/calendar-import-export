@@ -132,8 +132,7 @@ public class Controller implements OnClickListener {
                     mActivity.setFiles(files);
                 }
             };
-        }
-        else if (v.getId() == R.id.LoadButton) {
+        } else if (v.getId() == R.id.LoadButton) {
 
             task = new RunnableWithProgress(mActivity) {
                 @Override

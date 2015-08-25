@@ -97,14 +97,14 @@ public class ProcessVEvent extends RunnableWithProgress {
     public ProcessVEvent(Activity activity, Calendar iCalCalendar, boolean isInserter) {
         super(activity);
         mICalCalendar = iCalCalendar;
-        mAndroidCalendar = ((MainActivity)activity).getSelectedCalendar();
+        mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
         mIsInserter = isInserter;
     }
 
     @Override
     public void run(ProgressDialog dialog) {
         try {
-            MainActivity activity = (MainActivity)getActivity();
+            MainActivity activity = (MainActivity) getActivity();
             Options options = new Options(activity.preferences);
 
             List<Integer> reminders = new ArrayList<Integer>();
@@ -124,7 +124,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             for (Object ve: vevents) {
                 incrementProgressBy(1);
 
-                VEvent e = (VEvent)ve;
+                VEvent e = (VEvent) ve;
                 Log.d(TAG, "source event: " + e.toString());
 
                 if (e.getRecurrenceId() != null) {
@@ -319,8 +319,8 @@ public class ProcessVEvent extends RunnableWithProgress {
                     availability = Events.AVAILABILITY_FREE;
                 }
             } else if (hasProperty(e, Property.FREEBUSY)) {
-                FreeBusy fb = (FreeBusy)e.getProperty(Property.FREEBUSY);
-                FbType fbType = (FbType)fb.getParameter(Parameter.FBTYPE);
+                FreeBusy fb = (FreeBusy) e.getProperty(Property.FREEBUSY);
+                FbType fbType = (FbType) fb.getParameter(Parameter.FBTYPE);
                 if (fbType != null && fbType == FbType.FREE) {
                     availability = Events.AVAILABILITY_FREE;
                 } else if (fbType != null && fbType == FbType.BUSY_TENTATIVE) {
@@ -342,7 +342,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
 
         for (Object alarm: e.getAlarms()) {
-            VAlarm a = (VAlarm)alarm;
+            VAlarm a = (VAlarm) alarm;
 
             if (a.getAction() != Action.AUDIO && a.getAction() != Action.DISPLAY) {
                 continue; // Ignore email and procedure alarms
@@ -355,7 +355,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             if (t.getDateTime() != null) {
                 alarmMs = t.getDateTime().getTime(); // Absolute
             } else if (t.getDuration() != null && t.getDuration().isNegative()) {
-                Related rel = (Related)t.getParameter(Parameter.RELATED);
+                Related rel = (Related) t.getParameter(Parameter.RELATED);
                 if (rel != null && rel == Related.END) {
                     startMs = e.getEndDate().getDate().getTime();
                 }
@@ -363,8 +363,8 @@ public class ProcessVEvent extends RunnableWithProgress {
             } else {
                 continue; // FIXME: Log this unsupported alarm
             }
-            int reminder = (int)((startMs - alarmMs) / 1000 / 60);
-            if (reminder >=0 && !reminders.contains(reminder)) {
+            int reminder = (int) ((startMs - alarmMs) / 1000 / 60);
+            if (reminder >= 0 && !reminders.contains(reminder)) {
                 reminders.add(reminder);
             }
         }
