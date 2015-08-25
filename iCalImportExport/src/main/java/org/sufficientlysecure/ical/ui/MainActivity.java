@@ -286,7 +286,7 @@ public class MainActivity extends Activity {
     }
 
     public void selectCalendar(long id) {
-        for (final AndroidCalendar cal : mCalendars) {
+        for (final AndroidCalendar cal: mCalendars) {
             if (cal.mId == id) {
                 runOnUiThread(new Runnable() {
                                   @Override
@@ -294,6 +294,7 @@ public class MainActivity extends Activity {
                                       mCalendarSpinner.setSelection(mCalendars.indexOf(cal));
                                   }
                               });
+                return;
             }
         }
     }
