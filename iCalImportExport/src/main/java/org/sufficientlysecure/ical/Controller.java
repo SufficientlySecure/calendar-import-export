@@ -34,7 +34,6 @@ import org.sufficientlysecure.ical.ui.SettingsActivity;
 import org.sufficientlysecure.ical.ui.dialogs.Credentials;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
-import org.sufficientlysecure.ical.util.BasicInputAdapter;
 import org.sufficientlysecure.ical.util.CredentialInputAdapter;
 
 import android.annotation.SuppressLint;
@@ -135,11 +134,12 @@ public class Controller implements OnClickListener {
                     File root = Environment.getExternalStorageDirectory();
                     List<File> files = new ArrayList<File>();
                     searchFiles(root, files, "ics", "ical", "icalendar");
-                    List<BasicInputAdapter> urls = new ArrayList<BasicInputAdapter>(files.size());
+                    List<CredentialInputAdapter> urls;
+                    urls = new ArrayList<CredentialInputAdapter>(files.size());
 
                     for (File file: files) {
                         try {
-                            urls.add(new BasicInputAdapter(file.toURI().toURL()));
+                            urls.add(new CredentialInputAdapter(file.toURI().toURL()));
                         } catch (MalformedURLException e) {
                             e.printStackTrace();
                         }
@@ -215,12 +215,11 @@ public class Controller implements OnClickListener {
                             editor.putString(PREF_LAST_PASSWORD, save ? pass : "");
                             editor.commit();
 
+                            Credentials creds = null;
                             if (!TextUtils.isEmpty(user) && pass != null) {
-                                Credentials creds = new Credentials(user, pass);
-                                activity.setUrl(new CredentialInputAdapter(new URL(url), creds));
-                            } else {
-                                activity.setUrl(new BasicInputAdapter(new URL(url)));
+                                creds = new Credentials(user, pass);
                             }
+                            activity.setUrl(new CredentialInputAdapter(new URL(url), creds));
                         } catch (MalformedURLException exc) {
                             Log.d(TAG, "Controller", exc);
 

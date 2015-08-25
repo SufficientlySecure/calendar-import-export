@@ -24,33 +24,45 @@ import java.net.URLConnection;
 import org.apache.commons.codec.binary.Base64;
 import org.sufficientlysecure.ical.ui.dialogs.Credentials;
 
+public class CredentialInputAdapter {
+    private URL mUrl;
+    private Credentials mCredentials;
 
-public class CredentialInputAdapter extends BasicInputAdapter {
-    private Credentials credentials;
-
-    public CredentialInputAdapter(URL url, Credentials credentials) {
-        super(url);
-        this.credentials = credentials;
+    public CredentialInputAdapter(URL url) {
+        mUrl = url;
+        mCredentials = null;
     }
 
-    @Override
+    public CredentialInputAdapter(URL url, Credentials credentials) {
+        mUrl = url;
+        mCredentials = credentials;
+    }
+
     public URLConnection getConnection() throws IOException {
-        URL url = getURL();
-        String protocol = url.getProtocol();
-        String userPass = credentials.getUsername() + ":" + credentials.getPassword();
+        if (mCredentials == null) {
+            return mUrl.openConnection();
+        }
+
+        String protocol = mUrl.getProtocol();
+        String userPass = mCredentials.getUsername() + ":" + mCredentials.getPassword();
 
         if (protocol.equalsIgnoreCase("ftp") || protocol.equalsIgnoreCase("ftps")) {
-            URL u = new URL(protocol + "://" + userPass + "@" + url.toExternalForm().substring(6));
-            return u.openConnection();
+            URL url = new URL(protocol + "://" + userPass + "@" + mUrl.toExternalForm().substring(6));
+            return url.openConnection();
         }
 
         if (protocol.equalsIgnoreCase("http") || protocol.equalsIgnoreCase("https")) {
             String encoded = new String(new Base64().encode(userPass.getBytes()));
-            URLConnection connection = url.openConnection();
+            URLConnection connection = mUrl.openConnection();
             connection.setRequestProperty("Authorization", "Basic " + encoded);
             return connection;
         }
-        return super.getConnection();
+
+        return mUrl.openConnection();
     }
 
+    @Override
+    public String toString() {
+        return mUrl.toString();
+    }
 }

@@ -33,7 +33,7 @@ import org.sufficientlysecure.ical.Controller;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.SpinnerTools;
-import org.sufficientlysecure.ical.util.BasicInputAdapter;
+import org.sufficientlysecure.ical.util.CredentialInputAdapter;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -86,7 +86,7 @@ public class MainActivity extends Activity {
     /*
      * Values
      */
-    private List<BasicInputAdapter> urls;
+    private List<CredentialInputAdapter> urls;
     private List<AndroidCalendar> calendars;
     private LinearLayout insertDeleteLayout;
 
@@ -174,7 +174,7 @@ public class MainActivity extends Activity {
         if (action.equals(Intent.ACTION_VIEW)) {
             // File intent
             try {
-                setUrl(new BasicInputAdapter(new URL(intent.getDataString())));
+                setUrl(new CredentialInputAdapter(new URL(intent.getDataString())));
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -225,7 +225,7 @@ public class MainActivity extends Activity {
                       });
     }
 
-    public void setUrls(List<BasicInputAdapter> urls) {
+    public void setUrls(List<CredentialInputAdapter> urls) {
         this.urls = urls;
         SpinnerTools.simpleSpinnerInUI(this, fileSpinner, urls);
         runOnUiThread(new Runnable() {
@@ -236,7 +236,7 @@ public class MainActivity extends Activity {
                       });
     }
 
-    public void setUrl(BasicInputAdapter urls) {
+    public void setUrl(CredentialInputAdapter urls) {
         setUrls(Collections.singletonList(urls));
     }
 
@@ -286,9 +286,9 @@ public class MainActivity extends Activity {
         }
     }
 
-    public BasicInputAdapter getSelectedURL() {
+    public CredentialInputAdapter getSelectedURL() {
         Object sel = fileSpinner.getSelectedItem();
-        return sel == null ? null : (BasicInputAdapter)sel;
+        return sel == null ? null : (CredentialInputAdapter)sel;
     }
 
     public String generateUid() {
