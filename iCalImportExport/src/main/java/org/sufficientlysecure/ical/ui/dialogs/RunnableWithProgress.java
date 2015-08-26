@@ -47,7 +47,7 @@ public abstract class RunnableWithProgress {
         new Thread(new Runnable() {
                        @Override
                        public void run() {
-                           this.run();
+                           RunnableWithProgress.this.run();
                            mProgress.cancel();
                        }
                    }).start();
