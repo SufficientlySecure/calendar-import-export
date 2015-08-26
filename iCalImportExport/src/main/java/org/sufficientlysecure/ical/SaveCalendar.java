@@ -104,13 +104,13 @@ public class SaveCalendar extends RunnableWithProgress {
         Reminders.MINUTES, Reminders.METHOD
     };
 
-    public SaveCalendar(Activity activity, ProgressDialog progress) {
-        super(activity, progress);
+    public SaveCalendar(Activity activity) {
+        super(activity, ProgressDialog.STYLE_HORIZONTAL);
         mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
     }
 
     @Override
-    public void run() {
+    protected void run() {
         MainActivity activity = (MainActivity) getActivity();
 
         mInsertedTimeZones.clear();

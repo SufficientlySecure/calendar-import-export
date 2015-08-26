@@ -22,8 +22,6 @@ import org.sufficientlysecure.ical.R;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.text.method.LinkMovementMethod;
 import android.text.method.PasswordTransformationMethod;

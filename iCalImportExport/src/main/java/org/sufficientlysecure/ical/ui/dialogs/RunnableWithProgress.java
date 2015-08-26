@@ -24,36 +24,60 @@ public abstract class RunnableWithProgress {
     private Activity mActivity;
     private ProgressDialog mProgress;
 
-    public RunnableWithProgress(Activity activity, ProgressDialog progress) {
+    public RunnableWithProgress(Activity activity) {
         mActivity = activity;
-        mProgress = progress;
+        init(ProgressDialog.STYLE_SPINNER);
     }
 
-    public Activity getActivity() {
+    public RunnableWithProgress(Activity activity, int style) {
+        mActivity = activity;
+        init(style);
+    }
+
+    private void init(int style) {
+        mProgress = new ProgressDialog(mActivity);
+        mProgress.setProgressStyle(style);
+        mProgress.setCancelable(false);
+        mProgress.setMessage("");
+        mProgress.setTitle("");
+        mProgress.show();
+    }
+
+    public void start() {
+        new Thread(new Runnable() {
+                       @Override
+                       public void run() {
+                           this.run();
+                           mProgress.cancel();
+                       }
+                   }).start();
+    }
+
+    protected Activity getActivity() {
         return mActivity;
     }
 
-    public void setMax(int max) {
+    protected void setMax(int max) {
         mProgress.setMax(max);
     }
 
-    public void setMessage(final int resource) {
+    protected void setMessage(final int resource) {
         mActivity.runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       mProgress.setMessage(mActivity.getString(resource));
-                                   }
-                               });
+                                    @Override
+                                    public void run() {
+                                        mProgress.setMessage(mActivity.getString(resource));
+                                    }
+                                });
     }
 
-    public void incrementProgressBy(final int progress) {
+    protected void incrementProgressBy(final int progress) {
         mActivity.runOnUiThread(new Runnable() {
-                                   @Override
-                                   public void run() {
-                                       mProgress.incrementProgressBy(progress);
-                                   }
-                               });
+                                    @Override
+                                    public void run() {
+                                        mProgress.incrementProgressBy(progress);
+                                    }
+                                });
     }
 
-    public abstract void run();
+    protected abstract void run();
 }

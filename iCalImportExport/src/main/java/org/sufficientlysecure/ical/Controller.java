@@ -34,7 +34,6 @@ import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Environment;
@@ -115,14 +114,12 @@ public class Controller implements OnClickListener {
 
     @Override
     public void onClick(View v) {
-        final ProgressDialog progress = new ProgressDialog(mActivity);
         RunnableWithProgress task = null;
-        int style = ProgressDialog.STYLE_SPINNER;
 
         // Handling search for file event
         if (v.getId() == R.id.SearchButton) {
 
-            task = new RunnableWithProgress(mActivity, progress) {
+            task = new RunnableWithProgress(mActivity) {
                 @Override
                 public void run() {
                     setMessage(R.string.searching_for_files);
@@ -135,7 +132,7 @@ public class Controller implements OnClickListener {
             };
         } else if (v.getId() == R.id.LoadButton) {
 
-            task = new RunnableWithProgress(mActivity, progress) {
+            task = new RunnableWithProgress(mActivity) {
                 @Override
                 public void run() {
                     if (mCalendarBuilder == null) {
@@ -166,7 +163,7 @@ public class Controller implements OnClickListener {
             };
         } else if (v.getId() == R.id.SetUrlButton) {
 
-            task = new RunnableWithProgress(mActivity, progress) {
+            task = new RunnableWithProgress(mActivity) {
                 @Override
                 public void run() {
                     // FIXME: This should really be a dialog or something
@@ -209,29 +206,15 @@ public class Controller implements OnClickListener {
 
         } else if (v.getId() == R.id.SaveButton) {
 
-            task = new SaveCalendar(mActivity, progress);
-            style = ProgressDialog.STYLE_HORIZONTAL;
+            task = new SaveCalendar(mActivity);
 
         } else if (v.getId() == R.id.InsertButton || v.getId() == R.id.DeleteButton) {
 
-            task = new ProcessVEvent(mActivity, progress, mCalendar, v.getId() == R.id.InsertButton);
-            style = ProgressDialog.STYLE_HORIZONTAL;
+            task = new ProcessVEvent(mActivity, mCalendar, v.getId() == R.id.InsertButton);
         }
 
         if (task != null) {
-            final RunnableWithProgress runnable = task;
-            progress.setProgressStyle(style);
-            progress.setCancelable(false);
-            progress.setMessage("");
-            progress.setTitle("");
-            progress.show();
-            new Thread(new Runnable() {
-                           @Override
-                           public void run() {
-                               runnable.run();
-                               progress.cancel();
-                           }
-                       }).start();
+            task.start();
         }
     }
 }

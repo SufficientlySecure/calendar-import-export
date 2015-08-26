@@ -94,16 +94,15 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
     }
 
-    public ProcessVEvent(Activity activity, ProgressDialog progress,
-                         Calendar iCalCalendar, boolean isInserter) {
-        super(activity, progress);
+    public ProcessVEvent(Activity activity, Calendar iCalCalendar, boolean isInserter) {
+        super(activity, ProgressDialog.STYLE_HORIZONTAL);
         mICalCalendar = iCalCalendar;
         mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
         mIsInserter = isInserter;
     }
 
     @Override
-    public void run() {
+    protected void run() {
         try {
             MainActivity activity = (MainActivity) getActivity();
             Options options = new Options(activity.preferences);
