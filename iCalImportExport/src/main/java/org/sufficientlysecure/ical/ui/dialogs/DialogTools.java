@@ -66,25 +66,6 @@ public final class DialogTools {
         activity.runOnUiThread(task);
     }
 
-    public static void progress(final Context context, final RunnableWithProgress runnable,
-                                final boolean isCancelable, final int style) {
-        final ProgressDialog dialog = new ProgressDialog(context);
-        dialog.setProgressStyle(style);
-        dialog.setCancelable(isCancelable);
-        dialog.setMessage("");
-        dialog.setTitle("");
-        dialog.show();
-
-        new Thread(new Runnable() {
-                       @Override
-                       public void run() {
-                           runnable.setProgressDialog(dialog);
-                           runnable.run(dialog);
-                           dialog.cancel();
-                       }
-                   }).start();
-    }
-
     public static String ask(final Activity activity, final int titleResource,
                              final int messageResource, final String input,
                              final boolean cancelable, final boolean password) {

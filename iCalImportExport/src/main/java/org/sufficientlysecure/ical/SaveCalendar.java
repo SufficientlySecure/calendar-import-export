@@ -104,13 +104,13 @@ public class SaveCalendar extends RunnableWithProgress {
         Reminders.MINUTES, Reminders.METHOD
     };
 
-    public SaveCalendar(Activity activity) {
-        super(activity);
+    public SaveCalendar(Activity activity, ProgressDialog progress) {
+        super(activity, progress);
         mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
     }
 
     @Override
-    public void run(ProgressDialog dialog) {
+    public void run() {
         MainActivity activity = (MainActivity) getActivity();
 
         mInsertedTimeZones.clear();
@@ -135,7 +135,7 @@ public class SaveCalendar extends RunnableWithProgress {
         String where = Events.CALENDAR_ID + "=?";
         String[] args = new String[] { mAndroidCalendar.mIdStr };
         Cursor cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, null);
-        dialog.setMax(cur.getCount());
+        setMax(cur.getCount());
 
         String key = "ical4j.validation.relaxed";
         CompatibilityHints.setHintEnabled(key, activity.preferences.getBoolean(key, true));

@@ -115,15 +115,16 @@ public class Controller implements OnClickListener {
 
     @Override
     public void onClick(View v) {
+        final ProgressDialog progress = new ProgressDialog(mActivity);
         RunnableWithProgress task = null;
         int style = ProgressDialog.STYLE_SPINNER;
 
         // Handling search for file event
         if (v.getId() == R.id.SearchButton) {
 
-            task = new RunnableWithProgress(mActivity) {
+            task = new RunnableWithProgress(mActivity, progress) {
                 @Override
-                public void run(ProgressDialog dialog) {
+                public void run() {
                     setMessage(R.string.searching_for_files);
 
                     File root = Environment.getExternalStorageDirectory();
@@ -134,9 +135,9 @@ public class Controller implements OnClickListener {
             };
         } else if (v.getId() == R.id.LoadButton) {
 
-            task = new RunnableWithProgress(mActivity) {
+            task = new RunnableWithProgress(mActivity, progress) {
                 @Override
-                public void run(ProgressDialog dialog) {
+                public void run() {
                     if (mCalendarBuilder == null) {
                         setMessage(R.string.performing_first_time_setup);
                         mCalendarBuilder = new CalendarBuilder();
@@ -165,9 +166,9 @@ public class Controller implements OnClickListener {
             };
         } else if (v.getId() == R.id.SetUrlButton) {
 
-            task = new RunnableWithProgress(mActivity) {
+            task = new RunnableWithProgress(mActivity, progress) {
                 @Override
-                public void run(ProgressDialog dialog) {
+                public void run() {
                     // FIXME: This should really be a dialog or something
                     SharedPreferences prefs = mActivity.preferences;
                     String url = DialogTools.ask(mActivity, R.string.enter_url,
@@ -208,17 +209,29 @@ public class Controller implements OnClickListener {
 
         } else if (v.getId() == R.id.SaveButton) {
 
-            task = new SaveCalendar(mActivity);
+            task = new SaveCalendar(mActivity, progress);
             style = ProgressDialog.STYLE_HORIZONTAL;
 
         } else if (v.getId() == R.id.InsertButton || v.getId() == R.id.DeleteButton) {
 
-            task = new ProcessVEvent(mActivity, mCalendar, v.getId() == R.id.InsertButton);
+            task = new ProcessVEvent(mActivity, progress, mCalendar, v.getId() == R.id.InsertButton);
             style = ProgressDialog.STYLE_HORIZONTAL;
         }
 
         if (task != null) {
-            DialogTools.progress(mActivity, task, false, style);
+            final RunnableWithProgress runnable = task;
+            progress.setProgressStyle(style);
+            progress.setCancelable(false);
+            progress.setMessage("");
+            progress.setTitle("");
+            progress.show();
+            new Thread(new Runnable() {
+                           @Override
+                           public void run() {
+                               runnable.run();
+                               progress.cancel();
+                           }
+                       }).start();
         }
     }
 }

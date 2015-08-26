@@ -22,25 +22,26 @@ import android.app.ProgressDialog;
 
 public abstract class RunnableWithProgress {
     private Activity mActivity;
-    private ProgressDialog mDialog;
+    private ProgressDialog mProgress;
 
-    public RunnableWithProgress(Activity activity) {
+    public RunnableWithProgress(Activity activity, ProgressDialog progress) {
         mActivity = activity;
+        mProgress = progress;
     }
 
     public Activity getActivity() {
         return mActivity;
     }
 
-    protected void setProgressDialog(ProgressDialog dialog) {
-        mDialog = dialog;
+    public void setMax(int max) {
+        mProgress.setMax(max);
     }
 
     public void setMessage(final int resource) {
         mActivity.runOnUiThread(new Runnable() {
                                    @Override
                                    public void run() {
-                                       mDialog.setMessage(mActivity.getString(resource));
+                                       mProgress.setMessage(mActivity.getString(resource));
                                    }
                                });
     }
@@ -49,10 +50,10 @@ public abstract class RunnableWithProgress {
         mActivity.runOnUiThread(new Runnable() {
                                    @Override
                                    public void run() {
-                                       mDialog.incrementProgressBy(progress);
+                                       mProgress.incrementProgressBy(progress);
                                    }
                                });
     }
 
-    public abstract void run(ProgressDialog dialog);
+    public abstract void run();
 }

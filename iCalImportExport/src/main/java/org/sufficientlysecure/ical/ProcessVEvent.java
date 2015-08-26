@@ -94,15 +94,16 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
     }
 
-    public ProcessVEvent(Activity activity, Calendar iCalCalendar, boolean isInserter) {
-        super(activity);
+    public ProcessVEvent(Activity activity, ProgressDialog progress,
+                         Calendar iCalCalendar, boolean isInserter) {
+        super(activity, progress);
         mICalCalendar = iCalCalendar;
         mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
         mIsInserter = isInserter;
     }
 
     @Override
-    public void run(ProgressDialog dialog) {
+    public void run() {
         try {
             MainActivity activity = (MainActivity) getActivity();
             Options options = new Options(activity.preferences);
@@ -112,7 +113,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             setMessage(R.string.processing_entries);
             ComponentList vevents = mICalCalendar.getComponents(VEvent.VEVENT);
 
-            dialog.setMax(vevents.size());
+            setMax(vevents.size());
             ContentResolver resolver = activity.getContentResolver();
             int numDel = 0;
             int numIns = 0;
