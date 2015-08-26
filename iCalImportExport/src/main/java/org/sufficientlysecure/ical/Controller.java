@@ -170,24 +170,22 @@ public class Controller implements OnClickListener {
                 public void run(ProgressDialog dialog) {
                     // FIXME: This should really be a dialog or something
                     SharedPreferences prefs = mActivity.preferences;
-                    String url = DialogTools.ask(mActivity, R.string.dialog_enter_url_title,
-                                                 R.string.dialog_enter_url_message,
+                    String url = DialogTools.ask(mActivity, R.string.enter_url,
+                                                 R.string.calendar_url,
                                                  prefs.getString(PREF_LAST_URL, ""), true, false);
 
                     if (TextUtils.isEmpty(url)) {
                         return;
                     }
 
-                    String username = DialogTools.ask(mActivity,
-                                                  R.string.dialog_enter_username_title,
-                                                  R.string.dialog_enter_username_message,
+                    String username = DialogTools.ask(mActivity, R.string.enter_login_details,
+                                                  R.string.username,
                                                   prefs.getString(PREF_LAST_USERNAME, ""),
                                                   true, false);
                     String password = null;
                     if (!TextUtils.isEmpty(username)) {
-                        password = DialogTools.ask(mActivity,
-                                               R.string.dialog_enter_password_title,
-                                               R.string.dialog_enter_password_message,
+                        password = DialogTools.ask(mActivity, R.string.enter_login_details,
+                                               R.string.password,
                                                prefs.getString(PREF_LAST_PASSWORD, ""),
                                                true, true);
                     }

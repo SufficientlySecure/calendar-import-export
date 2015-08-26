@@ -116,8 +116,8 @@ public class SaveCalendar extends RunnableWithProgress {
         mInsertedTimeZones.clear();
 
         String file = activity.preferences.getString(PREF_EXPORT_FILE, "");
-        file = DialogTools.ask(activity, R.string.dialog_choosefilename_title,
-                               R.string.dialog_choosefilename_message, file, true, false);
+        file = DialogTools.ask(activity, R.string.enter_filename, R.string.please_enter_filename,
+                               file, true, false);
         if (TextUtils.isEmpty(file)) {
             return;
         }

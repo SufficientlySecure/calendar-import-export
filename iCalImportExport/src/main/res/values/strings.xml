@@ -7,19 +7,15 @@
     <string name="active">Active</string>
     <string name="app_name">iCal Import/Export</string>
     <string name="calendar_selection">CALENDAR SELECTION</string>
+    <string name="calendar_url">Calendar URL:</string>
     <string name="cannot_parse_url">Cannot parse URL</string>
     <string name="could_not_parse_file">Could not parse file\n\n</string>
     <string name="delete_entries">Delete entries</string>
     <string name="dialog_bug">I am sorry for you inconvenience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
-    <string name="dialog_choosefilename_message">Please enter the filename to save to.</string>
-    <string name="dialog_choosefilename_title">Choose filename</string>
-    <string name="dialog_enter_password_message">Password:</string>
-    <string name="dialog_enter_password_title">Enter Login Details</string>
-    <string name="dialog_enter_url_message">Please enter the URL of the calendar to load.</string>
-    <string name="dialog_enter_url_title">Enter Calendar URL</string>
-    <string name="dialog_enter_username_message">Username:</string>
-    <string name="dialog_enter_username_title">Enter Login Details</string>
     <string name="did_not_check_for_dupes">Did not check for duplicates.</string>
+    <string name="enter_filename">Enter filename</string>
+    <string name="enter_login_details">Enter Login Details</string>
+    <string name="enter_url">Enter URL</string>
     <string name="error">Error</string>
     <string name="events">Events</string>
     <string name="export">Export</string>
@@ -38,7 +34,9 @@
     <string name="not_applicable">N/A</string>
     <string name="owner">Owner</string>
     <string name="parsing_url">Parsing URL&#8230;</string>
+    <string name="password">Password:</string>
     <string name="performing_first_time_setup">Performing first time setup&#8230;</string>
+    <string name="please_enter_filename">Please enter the filename to save to.</string>
     <string name="processing_entries">Processing entries&#8230;</string>
     <string name="reading_file_please_wait">Reading file, please wait&#8230;</string>
     <string name="searching_for_files">Searching for iCalendar files&#8230;</string>
@@ -46,6 +44,7 @@
     <string name="settings">Settings</string>
     <string name="state">State</string>
     <string name="timezone">Timezone</string>
+    <string name="username">Username:</string>
     <string name="writing_calendar_to_file">Writing calendar to file&#8230;</string>
 
     <plurals name="delete_n_entries">
