@@ -1,0 +1,43 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <EditText
+        android:id="@+id/TextCalendarUrl"
+        android:inputType="textUri"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/calendar_url" />
+
+    <TextView
+        android:id="@+id/TextViewUrlError"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        style="@android:style/TextAppearance.Medium"
+        android:textStyle="bold"
+        android:textColor="#FFFF0000"
+        android:text="@string/space" />
+
+    <CheckBox
+        android:id="@+id/CheckboxLoginRequired"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/login_required" />
+
+    <EditText
+        android:id="@+id/TextUsername"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/username" />
+
+    <EditText
+        android:id="@+id/TextPassword"
+        android:inputType="textPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif"
+        android:hint="@string/password"/>
+</LinearLayout>

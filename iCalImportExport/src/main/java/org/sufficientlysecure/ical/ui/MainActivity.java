@@ -38,7 +38,6 @@ import org.sufficientlysecure.ical.Controller;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -46,6 +45,7 @@ import android.content.res.Resources;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
@@ -59,7 +59,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.TextView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 

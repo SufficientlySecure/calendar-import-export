@@ -28,7 +28,7 @@ import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.sufficientlysecure.ical.ui.MainActivity;
-import org.sufficientlysecure.ical.ui.SettingsActivity;
+import org.sufficientlysecure.ical.ui.UrlDialog;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
@@ -37,7 +37,6 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,9 +44,6 @@ import android.view.View.OnClickListener;
 @SuppressLint("NewApi")
 public class Controller implements OnClickListener {
     private static final String TAG = Controller.class.getName();
-    private static final String PREF_LAST_URL = "lastUrl";
-    private static final String PREF_LAST_USERNAME = "lastUrlUsername";
-    private static final String PREF_LAST_PASSWORD = SettingsActivity.PREF_LAST_URL_PASSWORD;
 
     private MainActivity mActivity;
     private CalendarBuilder mCalendarBuilder;
@@ -163,46 +159,7 @@ public class Controller implements OnClickListener {
             };
         } else if (v.getId() == R.id.SetUrlButton) {
 
-            task = new RunnableWithProgress(mActivity) {
-                @Override
-                public void run() {
-                    // FIXME: This should really be a dialog or something
-                    SharedPreferences prefs = mActivity.preferences;
-                    String url = DialogTools.ask(mActivity, R.string.enter_url,
-                                                 R.string.calendar_url,
-                                                 prefs.getString(PREF_LAST_URL, ""), true, false);
-
-                    if (TextUtils.isEmpty(url)) {
-                        return;
-                    }
-
-                    String username = DialogTools.ask(mActivity, R.string.enter_login_details,
-                                                  R.string.username,
-                                                  prefs.getString(PREF_LAST_USERNAME, ""),
-                                                  true, false);
-                    String password = null;
-                    if (!TextUtils.isEmpty(username)) {
-                        password = DialogTools.ask(mActivity, R.string.enter_login_details,
-                                               R.string.password,
-                                               prefs.getString(PREF_LAST_PASSWORD, ""),
-                                               true, true);
-                    }
-                    setMessage(R.string.parsing_url);
-                    boolean save = prefs.getBoolean("setting_save_passwords", false);
-
-                    prefs.edit().putString(PREF_LAST_URL, url)
-                                .putString(PREF_LAST_USERNAME, username)
-                                .putString(PREF_LAST_PASSWORD, save ? password : "").commit();
-
-                    if (TextUtils.isEmpty(username)) {
-                        username = null;
-                        password = null;
-                    }
-                    if (!mActivity.setUrl(url, username, password)) {
-                        DialogTools.info(mActivity, R.string.error, R.string.cannot_parse_url);
-                    }
-                }
-            };
+            UrlDialog.show(mActivity);
 
         } else if (v.getId() == R.id.SaveButton) {
 
