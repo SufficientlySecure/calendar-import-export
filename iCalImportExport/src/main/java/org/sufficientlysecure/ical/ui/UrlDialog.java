@@ -25,6 +25,7 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -50,6 +51,7 @@ public class UrlDialog extends DialogFragment {
     }
 
     @Override
+    @NonNull
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         mActivity = (MainActivity) getActivity();
@@ -72,9 +74,9 @@ public class UrlDialog extends DialogFragment {
         mTextUsername = (EditText) view.findViewById(R.id.TextUsername);
         mTextPassword = (EditText) view.findViewById(R.id.TextPassword);
 
-        mTextCalendarUrl.setText(mActivity.preferences.getString(PREF_LAST_URL, ""));
-        mTextUsername.setText(mActivity.preferences.getString(PREF_LAST_USERNAME, ""));
-        mTextPassword.setText(mActivity.preferences.getString(PREF_LAST_PASSWORD, ""));
+        mTextCalendarUrl.setText(MainActivity.preferences.getString(PREF_LAST_URL, ""));
+        mTextUsername.setText(MainActivity.preferences.getString(PREF_LAST_USERNAME, ""));
+        mTextPassword.setText(MainActivity.preferences.getString(PREF_LAST_PASSWORD, ""));
 
         mCheckboxLoginRequired.setChecked(mTextUsername.getText().length() != 0);
         mTextCalendarUrl.selectAll();
@@ -132,11 +134,11 @@ public class UrlDialog extends DialogFragment {
                     return;
                 }
 
-                SharedPreferences.Editor e = mActivity.preferences.edit();
+                SharedPreferences.Editor e = MainActivity.preferences.edit();
                 e.putString(PREF_LAST_URL, url);
                 if (loginRequired) {
                     e.putString(PREF_LAST_USERNAME, username);
-                    if (mActivity.preferences.getBoolean("setting_save_passwords", false)) {
+                    if (MainActivity.preferences.getBoolean("setting_save_passwords", false)) {
                         e.putString(PREF_LAST_PASSWORD, password);
                     }
                 }

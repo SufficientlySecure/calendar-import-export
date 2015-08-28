@@ -89,7 +89,6 @@ public class MainActivity extends FragmentActivity {
     private TextView mTextCalSize;
 
     // Values
-    private List<CalendarSource> mSources;
     private List<AndroidCalendar> mCalendars;
     private LinearLayout mInsertDeleteLayout;
 
@@ -232,8 +231,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void setSources(List<CalendarSource> sources) {
-        mSources = sources;
-        setupSpinner(mFileSpinner, mSources, mLoadButton);
+        setupSpinner(mFileSpinner, sources, mLoadButton);
     }
 
     public void setFiles(List<File> files) {

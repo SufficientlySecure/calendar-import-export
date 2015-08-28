@@ -105,7 +105,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     protected void run() {
         try {
             MainActivity activity = (MainActivity) getActivity();
-            Options options = new Options(activity.preferences);
+            Options options = new Options(MainActivity.preferences);
 
             List<Integer> reminders = new ArrayList<Integer>();
 

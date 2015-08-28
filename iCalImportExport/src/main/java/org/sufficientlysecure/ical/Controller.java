@@ -139,7 +139,7 @@ public class Controller implements OnClickListener {
                         setMessage(R.string.reading_file_please_wait);
                         InputStream in = mActivity.getSelectedURL().getInputStream();
                         if (in != null) {
-                            SharedPreferences prefs = mActivity.preferences;
+                            SharedPreferences prefs = MainActivity.preferences;
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_UNFOLDING);
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_PARSING);
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_VALIDATION);

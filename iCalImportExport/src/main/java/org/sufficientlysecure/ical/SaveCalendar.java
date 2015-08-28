@@ -115,13 +115,13 @@ public class SaveCalendar extends RunnableWithProgress {
 
         mInsertedTimeZones.clear();
 
-        String file = activity.preferences.getString(PREF_EXPORT_FILE, "");
+        String file = MainActivity.preferences.getString(PREF_EXPORT_FILE, "");
         file = DialogTools.ask(activity, R.string.enter_filename, R.string.please_enter_filename,
                                file, true, false);
         if (TextUtils.isEmpty(file)) {
             return;
         }
-        activity.preferences.edit().putString(PREF_EXPORT_FILE, file).commit();
+        MainActivity.preferences.edit().putString(PREF_EXPORT_FILE, file).commit();
         if (!file.endsWith(".ics")) {
             file += ".ics";
         }
@@ -138,7 +138,7 @@ public class SaveCalendar extends RunnableWithProgress {
         setMax(cur.getCount());
 
         String key = "ical4j.validation.relaxed";
-        CompatibilityHints.setHintEnabled(key, activity.preferences.getBoolean(key, true));
+        CompatibilityHints.setHintEnabled(key, MainActivity.preferences.getBoolean(key, true));
 
         Calendar cal = new Calendar();
         String name = activity.getPackageName();
@@ -222,8 +222,6 @@ public class SaveCalendar extends RunnableWithProgress {
         copyEnumProperty(l, Property.STATUS, cur, Events.STATUS, STATUS_ENUM);
 
         boolean allDay = TextUtils.equals(getString(cur, Events.ALL_DAY), "1");
-        boolean isRecurring = hasStringValue(cur, Events.RRULE)
-                              || hasStringValue(cur, Events.RDATE);
         boolean isTransparent;
         DtEnd dtEnd = null;
 
@@ -340,11 +338,6 @@ public class SaveCalendar extends RunnableWithProgress {
     private int getInt(Cursor cur, String dbName) {
         int i = getColumnIndex(cur, dbName);
         return i == -1 ? -1 : cur.getInt(i);
-    }
-
-    private boolean hasValue(Cursor cur, String dbName) {
-        int i = getColumnIndex(cur, dbName);
-        return i != -1 && !cur.isNull(i);
     }
 
     private boolean hasStringValue(Cursor cur, String dbName) {

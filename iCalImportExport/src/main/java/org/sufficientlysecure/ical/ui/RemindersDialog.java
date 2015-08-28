@@ -28,6 +28,7 @@ import java.util.Set;
 import android.app.Activity;
 import android.content.Context;
 import android.preference.DialogPreference;
+import android.support.annotation.NonNull;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +67,7 @@ public class RemindersDialog extends DialogPreference {
     }
 
     @Override
-    protected void onBindDialogView(View view) {
+    protected void onBindDialogView(@NonNull View view) {
         super.onBindDialogView(view);
 
         mReminderItemsHolder = (LinearLayout) view.findViewById(R.id.reminder_holder);
