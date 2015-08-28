@@ -8,9 +8,6 @@
 -dontwarn net.fortuna.ical4j.model.ContentBuilder
 -dontwarn net.fortuna.ical4j.model.**Factory
 
-# We use our own CalendarContract with extra backwards compatibility support
--dontnote android.provider.CalendarContract**
-
 # Dont rename stuff, we want stack traces to make sense in bug reports
 -keepnames interface ** { *; }
 -keepnames class ** { *; }

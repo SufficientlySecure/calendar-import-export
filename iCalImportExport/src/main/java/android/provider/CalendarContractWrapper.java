@@ -90,9 +90,9 @@ import android.util.Log;
  *
  */
 @TargetApi(Build.VERSION_CODES.JELLY_BEAN_MR1)
-public final class CalendarContract {
+public final class CalendarContractWrapper {
     private static final String TAG = "Calendar";
-    
+
     /**
      * True if we have to use the legacy API found on 2.x and 3.x
      */
@@ -202,7 +202,7 @@ public final class CalendarContract {
     /**
      * This utility class cannot be instantiated
      */
-    private CalendarContract() {}
+    private CalendarContractWrapper() {}
 
     /**
      * Generic columns for use by sync adapters. The specific functions of these
@@ -2070,7 +2070,7 @@ public final class CalendarContract {
      * </ul>
      */
     public static final class Reminders implements BaseColumns, RemindersColumns, EventsColumns {
-        private static final String REMINDERS_WHERE = CalendarContract.Reminders.EVENT_ID + "=?";
+        private static final String REMINDERS_WHERE = CalendarContractWrapper.Reminders.EVENT_ID + "=?";
         @SuppressWarnings("hiding")
         public static final Uri CONTENT_URI = Uri.parse("content://" + AUTHORITY + "/reminders");
 
@@ -2367,7 +2367,7 @@ public final class CalendarContract {
             }
 
             Intent intent = new Intent(ACTION_EVENT_REMINDER);
-            intent.setData(ContentUris.withAppendedId(CalendarContract.CONTENT_URI, alarmTime));
+            intent.setData(ContentUris.withAppendedId(CalendarContractWrapper.CONTENT_URI, alarmTime));
             intent.putExtra(ALARM_TIME, alarmTime);
             PendingIntent pi = PendingIntent.getBroadcast(context, 0, intent, 0);
             manager.set(AlarmManager.RTC_WAKEUP, alarmTime, pi);
@@ -2544,7 +2544,7 @@ public final class CalendarContract {
          * The content:// style URI for this table
          */
         public static final Uri CONTENT_URI =
-                Uri.withAppendedPath(CalendarContract.CONTENT_URI, CONTENT_DIRECTORY);
+                Uri.withAppendedPath(CalendarContractWrapper.CONTENT_URI, CONTENT_DIRECTORY);
     }
 
     /**

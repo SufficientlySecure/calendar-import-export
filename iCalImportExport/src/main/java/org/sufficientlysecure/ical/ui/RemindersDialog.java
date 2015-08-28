@@ -114,15 +114,15 @@ public class RemindersDialog extends DialogPreference {
         }
 
         // Save the (reordered and unique) chosen reminders to settings
-        Set<Integer> vals = new HashSet<Integer>();
+        Set<Integer> values = new HashSet<Integer>();
         final int count = mReminderItemsHolder.getChildCount();
         for (int i = 0; i < count; i++) {
             View item = mReminderItemsHolder.getChildAt(i);
             Spinner dropDown = (Spinner) item.findViewById(R.id.reminder_item);
-            vals.add(dropDown.getSelectedItemPosition());
+            values.add(dropDown.getSelectedItemPosition());
         }
 
-        List<Integer> sorted = new ArrayList<Integer>(vals);
+        List<Integer> sorted = new ArrayList<Integer>(values);
         Collections.sort(sorted);
 
         StringBuilder b = new StringBuilder();

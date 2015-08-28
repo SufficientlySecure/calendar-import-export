@@ -209,7 +209,7 @@ public class MainActivity extends FragmentActivity {
     private <E> void setupSpinner(final Spinner spinner, final List<E> list, final Button b) {
         final int id = android.R.layout.simple_spinner_item;
         final int dropId = android.R.layout.simple_spinner_dropdown_item;
-        final Context ctx = (Context) this;
+        final Context ctx = this;
 
         runOnUiThread(new Runnable() {
                           @Override

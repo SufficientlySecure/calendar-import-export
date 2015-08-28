@@ -73,8 +73,8 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.os.Environment;
-import android.provider.CalendarContract.Events;
-import android.provider.CalendarContract.Reminders;
+import android.provider.CalendarContractWrapper.Events;
+import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.TextUtils;
@@ -347,9 +347,8 @@ public class SaveCalendar extends RunnableWithProgress {
     }
 
     private Date utcDateFromMs(long ms) {
-        Date d = new Date(ms);
         // FIXME: Does not being able to change the timezone here affect this?
-        return d;
+        return new Date(ms);
     }
 
     private DateTime dateTimeFromProperty(DateProperty d) {

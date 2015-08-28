@@ -56,8 +56,8 @@ import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
-import android.provider.CalendarContract.Events;
-import android.provider.CalendarContract.Reminders;
+import android.provider.CalendarContractWrapper.Events;
+import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.TextUtils;
@@ -111,9 +111,9 @@ public class ProcessVEvent extends RunnableWithProgress {
             List<Integer> reminders = new ArrayList<Integer>();
 
             setMessage(R.string.processing_entries);
-            ComponentList vevents = mICalCalendar.getComponents(VEvent.VEVENT);
+            ComponentList events = mICalCalendar.getComponents(VEvent.VEVENT);
 
-            setMax(vevents.size());
+            setMax(events.size());
             ContentResolver resolver = activity.getContentResolver();
             int numDel = 0;
             int numIns = 0;
@@ -122,7 +122,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             ContentValues alarm = new ContentValues();
             alarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
 
-            for (Object ve: vevents) {
+            for (Object ve: events) {
                 incrementProgressBy(1);
 
                 VEvent e = (VEvent) ve;

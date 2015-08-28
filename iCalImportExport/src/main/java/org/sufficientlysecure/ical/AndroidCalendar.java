@@ -26,8 +26,8 @@ import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.database.Cursor;
 import android.net.Uri;
-import android.provider.CalendarContract.Calendars;
-import android.provider.CalendarContract.Events;
+import android.provider.CalendarContractWrapper.Calendars;
+import android.provider.CalendarContractWrapper.Events;
 
 @SuppressLint("NewApi")
 public class AndroidCalendar {

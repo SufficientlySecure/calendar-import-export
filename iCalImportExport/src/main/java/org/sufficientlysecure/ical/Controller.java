@@ -55,11 +55,11 @@ public class Controller implements OnClickListener {
     }
 
     public void init(long calendarId) {
-        List<AndroidCalendar> cals = AndroidCalendar.loadAll(mActivity.getContentResolver());
-        if (cals.isEmpty()) {
+        List<AndroidCalendar> calendars = AndroidCalendar.loadAll(mActivity.getContentResolver());
+        if (calendars.isEmpty()) {
             noCalendarFinish();
         }
-        mActivity.setCalendars(cals);
+        mActivity.setCalendars(calendars);
         mActivity.selectCalendar(calendarId);
     }
 
