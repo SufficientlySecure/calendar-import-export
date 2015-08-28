@@ -58,6 +58,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
+import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.TextUtils;
 import android.util.Log;
@@ -363,7 +364,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             } else {
                 continue; // FIXME: Log this unsupported alarm
             }
-            int reminder = (int) ((startMs - alarmMs) / 1000 / 60);
+            int reminder = (int) ((startMs - alarmMs) / DateUtils.MINUTE_IN_MILLIS);
             if (reminder >= 0 && !reminders.contains(reminder)) {
                 reminders.add(reminder);
             }
@@ -384,12 +385,13 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private static long durationToMs(Dur d) {
-        long sec = d.getSeconds();
-        sec += d.getMinutes() * (60);
-        sec += d.getHours() * (60 * 60);
-        sec += d.getDays() * (60 * 60 * 24);
-        sec += d.getWeeks() * (60 * 60 * 24 * 7);
-        return sec * 1000;
+        long ms = 0;
+        ms += d.getSeconds() * DateUtils.SECOND_IN_MILLIS;
+        ms += d.getMinutes() * DateUtils.MINUTE_IN_MILLIS;
+        ms += d.getHours()   * DateUtils.HOUR_IN_MILLIS;
+        ms += d.getDays()    * DateUtils.DAY_IN_MILLIS;
+        ms += d.getWeeks()   * DateUtils.WEEK_IN_MILLIS;
+        return ms;
     }
 
     private boolean hasProperty(VEvent e, String name) {

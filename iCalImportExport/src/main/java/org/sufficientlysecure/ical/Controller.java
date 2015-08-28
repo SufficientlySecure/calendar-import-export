@@ -20,6 +20,7 @@ package org.sufficientlysecure.ical;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -137,7 +138,8 @@ public class Controller implements OnClickListener {
                     }
                     try {
                         setMessage(R.string.reading_file_please_wait);
-                        InputStream in = mActivity.getSelectedURL().getInputStream();
+                        URLConnection c = mActivity.getSelectedURL();
+                        InputStream in = c == null ? null : c.getInputStream();
                         if (in != null) {
                             SharedPreferences prefs = MainActivity.preferences;
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_UNFOLDING);

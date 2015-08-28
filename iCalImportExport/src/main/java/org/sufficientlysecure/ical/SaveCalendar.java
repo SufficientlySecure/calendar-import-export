@@ -75,6 +75,7 @@ import android.database.Cursor;
 import android.os.Environment;
 import android.provider.CalendarContract.Events;
 import android.provider.CalendarContract.Reminders;
+import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.TextUtils;
 import android.util.Log;
@@ -230,7 +231,7 @@ public class SaveCalendar extends RunnableWithProgress {
             isTransparent = true;
             Date start = getDateTime(cur, Events.DTSTART, null, null);
             l.add(new DtStart(start));
-            dtEnd = new DtEnd(utcDateFromMs(start.getTime() + 86400000));
+            dtEnd = new DtEnd(utcDateFromMs(start.getTime() + DateUtils.DAY_IN_MILLIS));
             l.add(dtEnd);
         } else {
             // Regular or zero-time event. Start date must be a date-time

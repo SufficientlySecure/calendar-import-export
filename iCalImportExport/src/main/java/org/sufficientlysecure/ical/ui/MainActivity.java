@@ -386,7 +386,7 @@ public class MainActivity extends FragmentActivity {
                 }
 
                 if (protocol.equalsIgnoreCase("http") || protocol.equalsIgnoreCase("https")) {
-                    String encoded = new String(new Base64().encode(userPass.getBytes()));
+                    String encoded = new String(new Base64().encode(userPass.getBytes("UTF-8")));
                     URLConnection connection = mUrl.openConnection();
                     connection.setRequestProperty("Authorization", "Basic " + encoded);
                     return connection;
