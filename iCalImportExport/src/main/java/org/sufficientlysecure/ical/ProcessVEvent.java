@@ -75,13 +75,13 @@ public class ProcessVEvent extends RunnableWithProgress {
 
     private final class Options {
         public boolean mCheckForDuplicates;
-        public boolean mUseUIDs;
+        public boolean mUseUids;
         private boolean mUseReminders;
         private List<Integer> mDefaultReminders;
 
         public Options(SharedPreferences prefs) {
             mCheckForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
-            mUseUIDs = prefs.getBoolean("setting_import_uids", true);
+            mUseUids = prefs.getBoolean("setting_import_uids", true);
             mUseReminders = prefs.getBoolean("setting_import_reminders", false);
             mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes();
         }
@@ -452,7 +452,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         final String[] cols = new String[] { Events._ID };
 
-        if (options.mUseUIDs && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
+        if (options.mUseUids && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
             String where = Events.UID_2445 + "=?";
             String[] args = new String[] { c.getAsString(Events.UID_2445) };
             return resolver.query(Events.CONTENT_URI, cols, where, args, null);
