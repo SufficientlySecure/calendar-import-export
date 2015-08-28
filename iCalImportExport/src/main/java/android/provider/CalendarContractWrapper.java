@@ -48,7 +48,7 @@ import android.util.Log;
  * </p>
  * <h3>Overview</h3>
  * <p>
- * CalendarContract defines the data model of calendar and event related
+ * CalendarContractWrapper defines the data model of calendar and event related
  * information. This data is stored in a number of tables:
  * </p>
  * <ul>
@@ -94,10 +94,13 @@ public final class CalendarContractWrapper {
     private static final String TAG = "Calendar";
 
     /**
-     * True if we have to use the legacy API found on 2.x and 3.x
+     * Constants for the various SDK versions we attempt to support before.
      */
-    public static final boolean legacyApi = android.os.Build.VERSION.SDK_INT<14;
-
+    public static final boolean legacyApi = android.os.Build.VERSION.SDK_INT < 14;
+    public static final boolean pre15Api = android.os.Build.VERSION.SDK_INT < 15;
+    public static final boolean pre16Api = android.os.Build.VERSION.SDK_INT < 16;
+    public static final boolean pre17Api = android.os.Build.VERSION.SDK_INT < 17;
+    public static final boolean pre18Api = android.os.Build.VERSION.SDK_INT < 18;
 
     /**
      * Broadcast Action: This is the intent that gets fired when an alarm
@@ -314,6 +317,12 @@ public final class CalendarContractWrapper {
         public static final String DIRTY = legacyApi? "_sync_dirty" : "dirty";
 
         /**
+         * Used in conjunction with {@link #DIRTY} to indicate what packages wrote local changes.
+         * <P>Type: TEXT</P>
+         */
+        public static final String MUTATORS = pre18Api ? null : "mutators";
+
+        /**
          * Whether the row has been deleted but not synced to the server. A
          * deleted row should be ignored.
          * <P>
@@ -357,7 +366,7 @@ public final class CalendarContractWrapper {
          * Type: TEXT
          * </P>
          */
-        public static final String CALENDAR_COLOR_KEY = legacyApi? null : "calendar_color_index";
+        public static final String CALENDAR_COLOR_KEY = pre15Api? null : "calendar_color_index";
 
         /**
          * The display name of the calendar. Column name.
@@ -464,7 +473,7 @@ public final class CalendarContractWrapper {
          * changing the availability is not supported.
          *
          */
-        public static final String ALLOWED_AVAILABILITY = legacyApi? null : "allowedAvailability";
+        public static final String ALLOWED_AVAILABILITY = pre15Api? null : "allowedAvailability";
 
         /**
          * A comma separated list of attendee types supported for this calendar
@@ -476,6 +485,13 @@ public final class CalendarContractWrapper {
          *
          */
         public static final String ALLOWED_ATTENDEE_TYPES = legacyApi? null : "allowedAttendeeTypes";
+
+        /**
+         * Is this the primary calendar for this account. If this column is not explicitly set, the
+         * provider will return 1 if {@link Calendars#ACCOUNT_NAME} is equal to
+         * {@link Calendars#OWNER_ACCOUNT}.
+         */
+        public static final String IS_PRIMARY = pre17Api ? null : "isPrimary";
     }
 
     /**
@@ -649,6 +665,7 @@ public final class CalendarContractWrapper {
      * <li>{@link #CALENDAR_COLOR}</li>
      * <li>{@link #_SYNC_ID}</li>
      * <li>{@link #DIRTY}</li>
+     * <li>{@link #MUTATORS}</li>
      * <li>{@link #OWNER_ACCOUNT}</li>
      * <li>{@link #MAX_REMINDERS}</li>
      * <li>{@link #ALLOWED_REMINDERS}</li>
@@ -716,6 +733,7 @@ public final class CalendarContractWrapper {
             ACCOUNT_TYPE,
             _SYNC_ID,
             DIRTY,
+            MUTATORS,
             OWNER_ACCOUNT,
             MAX_REMINDERS,
             ALLOWED_REMINDERS,
@@ -810,7 +828,7 @@ public final class CalendarContractWrapper {
          * This is required only if {@link #ATTENDEE_ID_NAMESPACE} is present. Column name.
          * <P>Type: STRING</P>
          */
-        public static final String ATTENDEE_IDENTITY = legacyApi? null : "attendeeIdentity";
+        public static final String ATTENDEE_IDENTITY = pre16Api? null : "attendeeIdentity";
 
         /**
          * The identity name space of the attendee as referenced in
@@ -818,7 +836,7 @@ public final class CalendarContractWrapper {
          * This is required only if {@link #ATTENDEE_IDENTITY} is present. Column name.
          * <P>Type: STRING</P>
          */
-        public static final String ATTENDEE_ID_NAMESPACE = legacyApi? null : "attendeeIdNamespace";
+        public static final String ATTENDEE_ID_NAMESPACE = pre16Api? null : "attendeeIdNamespace";
     }
 
     /**
@@ -918,7 +936,7 @@ public final class CalendarContractWrapper {
          * Type: TEXT
          * </P>
          */
-        public static final String EVENT_COLOR_KEY = legacyApi? null : "eventColor_index";
+        public static final String EVENT_COLOR_KEY = pre15Api? null : "eventColor_index";
 
         /**
          * This will be {@link #EVENT_COLOR} if it is not null; otherwise, this will be
@@ -929,7 +947,7 @@ public final class CalendarContractWrapper {
          *     Type: INTEGER
          *</P>
          */
-        public static final String DISPLAY_COLOR = legacyApi? null : "displayColor";
+        public static final String DISPLAY_COLOR = pre16Api? null : "displayColor";
 
         /**
          * The event status. Column name.
@@ -1214,6 +1232,14 @@ public final class CalendarContractWrapper {
          */
         public static final String ORGANIZER = "organizer";
 
+         /**
+         * Are we the organizer of this event. If this column is not explicitly set, the provider
+         * will return 1 if {@link #ORGANIZER} is equal to {@link Calendars#OWNER_ACCOUNT}.
+         * Column name.
+         * <P>Type: STRING</P>
+         */
+        public static final String IS_ORGANIZER = pre17Api? null : "isOrganizer";
+
         /**
          * Whether the user can invite others to the event. The
          * GUESTS_CAN_INVITE_OTHERS is a setting that applies to an arbitrary
@@ -1231,20 +1257,20 @@ public final class CalendarContractWrapper {
          * Column name.
          * <P> Type: TEXT </P>
          */
-        public static final String CUSTOM_APP_PACKAGE = legacyApi? null : "customAppPackage";
+        public static final String CUSTOM_APP_PACKAGE = pre16Api? null : "customAppPackage";
 
         /**
          * The URI used by the custom app for the event. Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String CUSTOM_APP_URI = legacyApi? null : "customAppUri";
+        public static final String CUSTOM_APP_URI = pre16Api? null : "customAppUri";
 
         /**
          * The UID for events added from the RFC 2445 iCalendar format.
          * Column name.
          * <P>Type: TEXT</P>
          */
-        public static final String UID_2445 = legacyApi? null : "uid2445";
+        public static final String UID_2445 = pre17Api? null : "uid2445";
     }
 
     /**
@@ -1586,10 +1612,12 @@ public final class CalendarContractWrapper {
      * <li>{@link #GUESTS_CAN_SEE_GUESTS}</li>
      * <li>{@link #CUSTOM_APP_PACKAGE}</li>
      * <li>{@link #CUSTOM_APP_URI}</li>
+     * <li>{@link #UID_2445}</li>
      * </ul>
      * The following Events columns are writable only by a sync adapter
      * <ul>
      * <li>{@link #DIRTY}</li>
+     * <li>{@link #MUTATORS}</li>
      * <li>{@link #_SYNC_ID}</li>
      * <li>{@link #SYNC_DATA1}</li>
      * <li>{@link #SYNC_DATA2}</li>
@@ -1679,6 +1707,7 @@ public final class CalendarContractWrapper {
         public static final String[] SYNC_WRITABLE_COLUMNS = new String[] {
             _SYNC_ID,
             DIRTY,
+            MUTATORS,
             SYNC_DATA1,
             SYNC_DATA2,
             SYNC_DATA3,
