@@ -113,16 +113,17 @@ public class SaveCalendar extends RunnableWithProgress {
     @Override
     protected void run() {
         MainActivity activity = (MainActivity) getActivity();
+        Settings settings = activity.getSettings();
 
         mInsertedTimeZones.clear();
 
-        String file = MainActivity.preferences.getString(PREF_EXPORT_FILE, "");
+        String file = settings.getString(PREF_EXPORT_FILE);
         file = DialogTools.ask(activity, R.string.enter_filename, R.string.please_enter_filename,
                                file, true, false);
         if (TextUtils.isEmpty(file)) {
             return;
         }
-        MainActivity.preferences.edit().putString(PREF_EXPORT_FILE, file).commit();
+        settings.putString(PREF_EXPORT_FILE, file);
         if (!file.endsWith(".ics")) {
             file += ".ics";
         }
@@ -138,8 +139,8 @@ public class SaveCalendar extends RunnableWithProgress {
         Cursor cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, null);
         setMax(cur.getCount());
 
-        String key = "ical4j.validation.relaxed";
-        CompatibilityHints.setHintEnabled(key, MainActivity.preferences.getBoolean(key, true));
+        boolean relaxed = settings.getIcal4jValidationRelaxed();
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, relaxed);
 
         Calendar cal = new Calendar();
         String name = activity.getPackageName();

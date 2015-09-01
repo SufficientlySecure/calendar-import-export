@@ -18,6 +18,7 @@
 package org.sufficientlysecure.ical.ui;
 
 import org.sufficientlysecure.ical.R;
+import org.sufficientlysecure.ical.Settings;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -74,9 +75,10 @@ public class UrlDialog extends DialogFragment {
         mTextUsername = (EditText) view.findViewById(R.id.TextUsername);
         mTextPassword = (EditText) view.findViewById(R.id.TextPassword);
 
-        mTextCalendarUrl.setText(MainActivity.preferences.getString(PREF_LAST_URL, ""));
-        mTextUsername.setText(MainActivity.preferences.getString(PREF_LAST_USERNAME, ""));
-        mTextPassword.setText(MainActivity.preferences.getString(PREF_LAST_PASSWORD, ""));
+        Settings settings = mActivity.getSettings();
+        mTextCalendarUrl.setText(settings.getString(PREF_LAST_URL));
+        mTextUsername.setText(settings.getString(PREF_LAST_USERNAME));
+        mTextPassword.setText(settings.getString(PREF_LAST_PASSWORD));
 
         mCheckboxLoginRequired.setChecked(mTextUsername.getText().length() != 0);
         mTextCalendarUrl.selectAll();
@@ -134,11 +136,12 @@ public class UrlDialog extends DialogFragment {
                     return;
                 }
 
-                SharedPreferences.Editor e = MainActivity.preferences.edit();
+                Settings settings = mActivity.getSettings();
+                SharedPreferences.Editor e = settings.getPreferences().edit();
                 e.putString(PREF_LAST_URL, url);
                 if (loginRequired) {
                     e.putString(PREF_LAST_USERNAME, username);
-                    if (MainActivity.preferences.getBoolean("setting_save_passwords", false)) {
+                    if (settings.getSavePasswords()) {
                         e.putString(PREF_LAST_PASSWORD, password);
                     }
                 }

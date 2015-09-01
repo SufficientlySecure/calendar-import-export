@@ -141,7 +141,7 @@ public class Controller implements OnClickListener {
                         URLConnection c = mActivity.getSelectedURL();
                         InputStream in = c == null ? null : c.getInputStream();
                         if (in != null) {
-                            SharedPreferences prefs = MainActivity.preferences;
+                            SharedPreferences prefs = mActivity.getSettings().getPreferences();
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_UNFOLDING);
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_PARSING);
                             setHint(prefs, CompatibilityHints.KEY_RELAXED_VALIDATION);

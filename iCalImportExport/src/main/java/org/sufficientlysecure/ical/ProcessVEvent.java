@@ -52,7 +52,6 @@ import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.res.Resources;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
@@ -80,11 +79,11 @@ public class ProcessVEvent extends RunnableWithProgress {
         private boolean mUseReminders;
         private List<Integer> mDefaultReminders;
 
-        public Options(SharedPreferences prefs) {
-            mCheckForDuplicates = prefs.getBoolean("setting_import_no_dupes", true);
-            mUseUids = prefs.getBoolean("setting_import_uids", true);
-            mUseReminders = prefs.getBoolean("setting_import_reminders", false);
-            mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes();
+        public Options(Settings settings) {
+            mCheckForDuplicates = settings.getIgnoreDuplicates();
+            mUseUids = settings.getKeepUids();
+            mUseReminders = settings.getImportReminders();
+            mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes(settings);
         }
 
         public List<Integer> getReminders(List<Integer> eventReminders) {
@@ -106,7 +105,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     protected void run() {
         try {
             MainActivity activity = (MainActivity) getActivity();
-            Options options = new Options(MainActivity.preferences);
+            Options options = new Options(activity.getSettings());
 
             List<Integer> reminders = new ArrayList<Integer>();
 

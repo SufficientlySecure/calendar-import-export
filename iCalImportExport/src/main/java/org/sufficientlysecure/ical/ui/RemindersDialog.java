@@ -18,6 +18,7 @@
 package org.sufficientlysecure.ical.ui;
 
 import org.sufficientlysecure.ical.R;
+import org.sufficientlysecure.ical.Settings;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +26,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import android.app.Activity;
 import android.content.Context;
 import android.preference.DialogPreference;
 import android.support.annotation.NonNull;
@@ -48,17 +48,20 @@ public class RemindersDialog extends DialogPreference {
 
     private LinearLayout mReminderItemsHolder;
     private LayoutInflater mInflater;
+    private Settings mSettings;
     private int mNewId;
 
     public RemindersDialog(Context context, AttributeSet attrs) {
         super(context, attrs);
-        mInflater = ((Activity) context).getLayoutInflater();
+        MainActivity activity = (MainActivity) context;
+        mInflater = activity.getLayoutInflater();
+        mSettings = activity.getSettings();
         mNewId = 1;
     }
 
-    public static List<Integer> getSavedRemindersInMinutes() {
+    public static List<Integer> getSavedRemindersInMinutes(Settings settings) {
         List<Integer> result = new ArrayList<Integer>();
-        for (String item: MainActivity.preferences.getString(PREF_KEY, "").split(",")) {
+        for (String item: settings.getString(PREF_KEY).split(",")) {
             if (item.length() > 0) {
                 result.add(MINUTES[Integer.parseInt(item)]);
             }
@@ -72,7 +75,7 @@ public class RemindersDialog extends DialogPreference {
 
         mReminderItemsHolder = (LinearLayout) view.findViewById(R.id.reminder_holder);
 
-        for (String item: MainActivity.preferences.getString(PREF_KEY, "").split(",")) {
+        for (String item: mSettings.getString(PREF_KEY).split(",")) {
             if (item.length() > 0) {
                 addReminder(Integer.parseInt(item));
             }
@@ -133,6 +136,6 @@ public class RemindersDialog extends DialogPreference {
             b.append(v);
         }
 
-        MainActivity.preferences.edit().putString(PREF_KEY, b.toString()).commit();
+        mSettings.putString(PREF_KEY, b.toString());
     }
 }

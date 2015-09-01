@@ -190,7 +190,7 @@
             android:id="@+id/SaveButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/export" />
+            android:text="@string/_export_" />
 
         <Button
             android:id="@+id/SearchButton"

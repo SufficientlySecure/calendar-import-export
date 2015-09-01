@@ -35,6 +35,7 @@ import org.apache.commons.codec.binary.Base64;
 
 import org.sufficientlysecure.ical.AndroidCalendar;
 import org.sufficientlysecure.ical.Controller;
+import org.sufficientlysecure.ical.Settings;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 
@@ -42,7 +43,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
@@ -63,8 +63,7 @@ public class MainActivity extends FragmentActivity {
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 
-    // FIXME: These should be abstracted into a preferences class
-    public static SharedPreferences preferences;
+    private Settings mSettings;
 
     // UID generation
     private long mUidMs = 0;
@@ -99,7 +98,7 @@ public class MainActivity extends FragmentActivity {
         setContentView(R.layout.main);
 
         mController = new Controller(this);
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mSettings = new Settings(PreferenceManager.getDefaultSharedPreferences(this));
 
         // Retrieve views
         mCalendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);
@@ -177,6 +176,10 @@ public class MainActivity extends FragmentActivity {
             // File intent
             setUrl(intent.getDataString(), null, null);
         }
+    }
+
+    public Settings getSettings() {
+        return mSettings;
     }
 
     public void showToast(final String msg) {
@@ -305,10 +308,10 @@ public class MainActivity extends FragmentActivity {
     public String generateUid() {
         // Generated UIDs take the form <ms>-<uuid>@sufficientlysecure.org.
         if (mUidTail == null) {
-            String uidPid = preferences.getString("uidPid", null);
+            String uidPid = mSettings.getPreferences().getString("uidPid", null);
             if (uidPid == null) {
                 uidPid = UUID.randomUUID().toString().replace("-", "");
-                preferences.edit().putString("uidPid", uidPid).commit();
+                mSettings.getPreferences().edit().putString("uidPid", uidPid).commit();
             }
             mUidTail = uidPid + "@sufficientlysecure.org";
         }

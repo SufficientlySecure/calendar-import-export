@@ -19,39 +19,20 @@ package org.sufficientlysecure.ical.ui;
 
 import android.content.SharedPreferences;
 
-
-public class SettingsActivity extends android.preference.PreferenceActivity
-                              implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsActivity extends SettingsActivityBase {
 
     public static final String PREF_LAST_URL_PASSWORD = "lastUrlPassword";
 
     @Override
-    protected void onCreate(android.os.Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        addPreferencesFromResource(org.sufficientlysecure.ical.R.xml.settings);
-    }
-
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+        super.onSharedPreferenceChanged(prefs, key);
         if (key.equals("setting_save_passwords")) {
             // Blank any stored password when this setting is changed
-            MainActivity.preferences.edit().putString(PREF_LAST_URL_PASSWORD, "").commit();
+            getPreferences().edit().putString(PREF_LAST_URL_PASSWORD, "").commit();
         }
     }
 
-    private SharedPreferences getPreferences() {
-        return getPreferenceScreen().getSharedPreferences();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        getPreferences().registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        getPreferences().unregisterOnSharedPreferenceChangeListener(this);
+    public SettingsActivity() {
+        super();
     }
 }
