@@ -18,9 +18,10 @@ Store user entered passwords in insecure local storage.
 
 When you enter a password for importing from a URL, this setting controls
 whether the password will be saved so that you can avoid re-typing it
-when you next choose import a URL again. Please note that the password is
-_not_ encrypted and so on a compromised or rooted device the password
-could be stolen. *Enable with care*.
+when you next choose to import a URL again.
+
+WARNING: The password is _not_ encrypted and so on a compromised or rooted
+device the password could be stolen. *Enable only with care*.
 
 === Import
 
@@ -40,6 +41,11 @@ Use any existing unique identifiers to identify and find duplicate events.
 
 :defaultValue: true
 
+Enabling this setting means that if you import the same event multiple
+times, it will be correctly identified as a duplicate even if it has been
+renamed, moved in time or otherwise edited. When this option is not enabled
+duplicates are detected using a heuristic which can fail.
+
 === Reminders
 
 These settings allow you to change the reminders that will be created
@@ -47,9 +53,18 @@ for events that have been imported.
 
 ==== Import reminders (Y/N)
 
-Use reminders from the imported file instead of default reminders when present.
+Use reminders from the imported file instead of default reminders when
+present.
 
 :defaultValue: true
+
+When this setting is false, and when no reminder is associated with an
+event, the default reminders specified below will be used instead. If
+You do not want any reminders to be created at all, set this to false
+and remove any reminders from the default reminders.
+
+NOTE: Not all types of reminders are supported. Only supported types
+will be imported.
 
 ==== Default reminders
 
@@ -58,10 +73,14 @@ Choose the reminders to apply to imported events.
 :type: org.sufficientlysecure.ical.ui.RemindersDialog
 :dialogLayout: @layout/reminders
 
+This dialog allows a selection of reminders to be created for each
+event. These default reminders will only be used when "Import Reminders"
+is false or if no reminder is associated with an event.
+
 === Compatibility
 
 These settings concern the parsing of iCalendar files. You may wish to change
-these if your file is not parsed correctly or gives errors when parsed.
+these if your file is not parsed correctly or gives errors when importing.
 
 ==== Allow different line endings (Y/N)
 
@@ -70,6 +89,9 @@ Support various line wrapping schemes used by different products.
 :defaultValue: true
 :key: ical4j.unfolding.relaxed
 
+This setting should always be enabled unless you wish to test whether
+a given iCalendar file adheres to the iCalendar specification.
+
 ==== Permissive parsing (Y/N)
 
 Support various incorrect but common iCalendar file quirks.
@@ -77,12 +99,19 @@ Support various incorrect but common iCalendar file quirks.
 :defaultValue: true
 :key: ical4j.parsing.relaxed
 
+You should typically leave this setting enabled since the most common
+sources of iCalendar files usually require it.
+
 ==== Microsoft compatible (Y/N)
 
 Support calendars exported by Microsoft&#174; Outlook&#174; and Microsoft&#174; Exchange&#8482;.
 
 :defaultValue: true
 :key: ical4j.compatibility.outlook
+
+Although this setting should allow Microsoft calendars to be read, it is
+possible if not likely that some advanced or bespoke features may not be
+imported.
 
 ==== Notes compatible (Y/N)
 
@@ -108,6 +137,11 @@ Skip extensive validation of the output file when exporting calendars.
 
 :defaultValue: true
 :key: ical4j.validation.relaxed
+
+This setting does not disable all validation. The iCal4j library used
+for writing calendars will reject gratuitous errors such as missing
+mandatory elements. These can occur when the Android calendar being exported
+is corrupt, for example.
 
 ///////////////////////////////////////////
 The following keys are used internally only
