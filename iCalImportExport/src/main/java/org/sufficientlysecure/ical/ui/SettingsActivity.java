@@ -25,9 +25,10 @@ public class SettingsActivity extends SettingsActivityBase {
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         super.onSharedPreferenceChanged(prefs, key);
-        if (key.equals("setting_save_passwords")) {
+
+        if (key.equals(Settings.PREF_SAVE_PASSWORDS)) {
             // Blank any stored password when this setting is changed
-            getPreferences().edit().putString(Settings.PREF_LASTURLPASSWORD, "").commit();
+            new Settings(prefs).putString(Settings.PREF_LASTURLPASSWORD, "");
         }
     }
 

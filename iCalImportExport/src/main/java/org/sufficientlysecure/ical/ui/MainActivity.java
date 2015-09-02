@@ -308,10 +308,10 @@ public class MainActivity extends FragmentActivity {
     public String generateUid() {
         // Generated UIDs take the form <ms>-<uuid>@sufficientlysecure.org.
         if (mUidTail == null) {
-            String uidPid = mSettings.getPreferences().getString("uidPid", null);
-            if (uidPid == null) {
+            String uidPid = mSettings.getString(Settings.PREF_UIDPID);
+            if (uidPid.length() == 0) {
                 uidPid = UUID.randomUUID().toString().replace("-", "");
-                mSettings.getPreferences().edit().putString("uidPid", uidPid).commit();
+                mSettings.putString(Settings.PREF_UIDPID, uidPid);
             }
             mUidTail = uidPid + "@sufficientlysecure.org";
         }

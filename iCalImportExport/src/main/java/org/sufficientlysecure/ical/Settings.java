@@ -20,6 +20,7 @@ public class Settings {
     public static final String PREF_LASTURLPASSWORD = "lastUrlPassword";
     public static final String PREF_LASTURLUSERNAME = "lastUrlUsername";
     public static final String PREF_SAVE_PASSWORDS = "save_passwords";
+    public static final String PREF_UIDPID = "uidPid";
     private SharedPreferences mPreferences;
 
     public Settings(SharedPreferences preferences) {

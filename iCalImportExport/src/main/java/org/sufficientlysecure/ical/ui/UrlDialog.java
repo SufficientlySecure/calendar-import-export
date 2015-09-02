@@ -24,7 +24,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.DialogFragment;
@@ -134,15 +133,13 @@ public class UrlDialog extends DialogFragment {
                 }
 
                 Settings settings = mActivity.getSettings();
-                SharedPreferences.Editor e = settings.getPreferences().edit();
-                e.putString(Settings.PREF_LASTURL, url);
+                settings.putString(Settings.PREF_LASTURL, url);
                 if (loginRequired) {
-                    e.putString(Settings.PREF_LASTURLUSERNAME, username);
+                    settings.putString(Settings.PREF_LASTURLUSERNAME, username);
                     if (settings.getSavePasswords()) {
-                        e.putString(Settings.PREF_LASTURLPASSWORD, password);
+                        settings.putString(Settings.PREF_LASTURLPASSWORD, password);
                     }
                 }
-                e.commit();
                 dialog.dismiss();
             }
         };

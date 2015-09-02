@@ -145,6 +145,7 @@ is corrupt, for example.
 
 ///////////////////////////////////////////
 The following keys are used internally only
+:key: uidPid
 :key: lastExportFile
 :key: lastUrl
 :key: lastUrlUsername
