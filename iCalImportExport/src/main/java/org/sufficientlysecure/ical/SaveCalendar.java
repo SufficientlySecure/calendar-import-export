@@ -83,7 +83,6 @@ import android.util.Log;
 @SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
     private static final String TAG = SaveCalendar.class.getSimpleName();
-    private static final String PREF_EXPORT_FILE = "lastExportFile";
 
     private AndroidCalendar mAndroidCalendar;
     private PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
@@ -117,13 +116,13 @@ public class SaveCalendar extends RunnableWithProgress {
 
         mInsertedTimeZones.clear();
 
-        String file = settings.getString(PREF_EXPORT_FILE);
+        String file = settings.getString(Settings.PREF_LASTEXPORTFILE);
         file = DialogTools.ask(activity, R.string.enter_filename, R.string.please_enter_filename,
                                file, true, false);
         if (TextUtils.isEmpty(file)) {
             return;
         }
-        settings.putString(PREF_EXPORT_FILE, file);
+        settings.putString(Settings.PREF_LASTEXPORTFILE, file);
         if (!file.endsWith(".ics")) {
             file += ".ics";
         }

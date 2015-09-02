@@ -18,8 +18,7 @@ public class SettingsActivityBase extends android.preference.PreferenceActivity
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
-    }
+    public void onSharedPreferenceChanged(SharedPreferences p, String k) { }
 
     protected SharedPreferences getPreferences() {
         return getPreferenceScreen().getSharedPreferences();
@@ -30,7 +29,6 @@ public class SettingsActivityBase extends android.preference.PreferenceActivity
         super.onResume();
         getPreferences().registerOnSharedPreferenceChangeListener(this);
     }
-
     @Override
     protected void onPause() {
         super.onPause();

@@ -38,8 +38,6 @@ import android.widget.Spinner;
 
 public class RemindersDialog extends DialogPreference {
 
-    private static final String PREF_KEY = "default_reminders";
-
     // Must match the list items in strings.xml
     private static final int[] MINUTES = {
         5, 10, 15, 30, 45, 60, 120, 240, 480, 720, 1440, 2880, 4320, 5760,
@@ -61,7 +59,7 @@ public class RemindersDialog extends DialogPreference {
 
     public static List<Integer> getSavedRemindersInMinutes(Settings settings) {
         List<Integer> result = new ArrayList<Integer>();
-        for (String item: settings.getString(PREF_KEY).split(",")) {
+        for (String item: settings.getString(Settings.PREF_DEFAULT_REMINDERS).split(",")) {
             if (item.length() > 0) {
                 result.add(MINUTES[Integer.parseInt(item)]);
             }
@@ -75,7 +73,7 @@ public class RemindersDialog extends DialogPreference {
 
         mReminderItemsHolder = (LinearLayout) view.findViewById(R.id.reminder_holder);
 
-        for (String item: mSettings.getString(PREF_KEY).split(",")) {
+        for (String item: mSettings.getString(Settings.PREF_DEFAULT_REMINDERS).split(",")) {
             if (item.length() > 0) {
                 addReminder(Integer.parseInt(item));
             }
@@ -136,6 +134,6 @@ public class RemindersDialog extends DialogPreference {
             b.append(v);
         }
 
-        mSettings.putString(PREF_KEY, b.toString());
+        mSettings.putString(Settings.PREF_DEFAULT_REMINDERS, b.toString());
     }
 }

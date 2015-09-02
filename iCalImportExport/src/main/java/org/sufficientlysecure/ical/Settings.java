@@ -5,6 +5,21 @@ package org.sufficientlysecure.ical;
 import android.content.SharedPreferences;
 
 public class Settings {
+    public static final String PREF_DEFAULT_REMINDERS = "default_reminders";
+    public static final String PREF_ICAL4J_COMPATIBILITY_NOTES = "ical4j.compatibility.notes";
+    public static final String PREF_ICAL4J_COMPATIBILITY_OUTLOOK = "ical4j.compatibility.outlook";
+    public static final String PREF_ICAL4J_COMPATIBILITY_VCARD = "ical4j.compatibility.vcard";
+    public static final String PREF_ICAL4J_PARSING_RELAXED = "ical4j.parsing.relaxed";
+    public static final String PREF_ICAL4J_UNFOLDING_RELAXED = "ical4j.unfolding.relaxed";
+    public static final String PREF_ICAL4J_VALIDATION_RELAXED = "ical4j.validation.relaxed";
+    public static final String PREF_IGNORE_DUPLICATES = "ignore_duplicates";
+    public static final String PREF_IMPORT_REMINDERS = "import_reminders";
+    public static final String PREF_KEEP_UIDS = "keep_uids";
+    public static final String PREF_LASTEXPORTFILE = "lastExportFile";
+    public static final String PREF_LASTURL = "lastUrl";
+    public static final String PREF_LASTURLPASSWORD = "lastUrlPassword";
+    public static final String PREF_LASTURLUSERNAME = "lastUrlUsername";
+    public static final String PREF_SAVE_PASSWORDS = "save_passwords";
     private SharedPreferences mPreferences;
 
     public Settings(SharedPreferences preferences) {
@@ -15,100 +30,104 @@ public class Settings {
         return mPreferences;
     }
 
-    public boolean getBoolean(String key) {
-        return mPreferences.getBoolean(key, false);
+    public boolean getBoolean(String key, boolean def) {
+        return mPreferences.getBoolean(key, def);
     }
+
+    public boolean getBoolean(String key) { return getBoolean(key, false); }
 
     public void putBoolean(String key, boolean value) {
         mPreferences.edit().putBoolean(key, value).commit();
     }
 
-    public String getString(String key) {
-        return mPreferences.getString(key, "");
+    public String getString(String key, String def) {
+        return mPreferences.getString(key, def);
     }
+
+    public String getString(String key) { return getString(key, ""); }
 
     public void putString(String key, String value) {
         mPreferences.edit().putString(key, value).commit();
     }
 
     public boolean getSavePasswords() {
-        return mPreferences.getBoolean("save_passwords", false);
+        return getBoolean("save_passwords", false);
     }
 
     public void setSavePasswords(boolean value) {
-        mPreferences.edit().putBoolean("save_passwords", value).commit();
+        putBoolean("save_passwords", value);
     }
 
     public boolean getIgnoreDuplicates() {
-        return mPreferences.getBoolean("ignore_duplicates", true);
+        return getBoolean("ignore_duplicates", true);
     }
 
     public void setIgnoreDuplicates(boolean value) {
-        mPreferences.edit().putBoolean("ignore_duplicates", value).commit();
+        putBoolean("ignore_duplicates", value);
     }
 
     public boolean getKeepUids() {
-        return mPreferences.getBoolean("keep_uids", true);
+        return getBoolean("keep_uids", true);
     }
 
     public void setKeepUids(boolean value) {
-        mPreferences.edit().putBoolean("keep_uids", value).commit();
+        putBoolean("keep_uids", value);
     }
 
     public boolean getImportReminders() {
-        return mPreferences.getBoolean("import_reminders", true);
+        return getBoolean("import_reminders", true);
     }
 
     public void setImportReminders(boolean value) {
-        mPreferences.edit().putBoolean("import_reminders", value).commit();
+        putBoolean("import_reminders", value);
     }
 
     public boolean getIcal4jUnfoldingRelaxed() {
-        return mPreferences.getBoolean("ical4j.unfolding.relaxed", true);
+        return getBoolean("ical4j.unfolding.relaxed", true);
     }
 
     public void setIcal4jUnfoldingRelaxed(boolean value) {
-        mPreferences.edit().putBoolean("ical4j.unfolding.relaxed", value).commit();
+        putBoolean("ical4j.unfolding.relaxed", value);
     }
 
     public boolean getIcal4jParsingRelaxed() {
-        return mPreferences.getBoolean("ical4j.parsing.relaxed", true);
+        return getBoolean("ical4j.parsing.relaxed", true);
     }
 
     public void setIcal4jParsingRelaxed(boolean value) {
-        mPreferences.edit().putBoolean("ical4j.parsing.relaxed", value).commit();
+        putBoolean("ical4j.parsing.relaxed", value);
     }
 
     public boolean getIcal4jCompatibilityOutlook() {
-        return mPreferences.getBoolean("ical4j.compatibility.outlook", true);
+        return getBoolean("ical4j.compatibility.outlook", true);
     }
 
     public void setIcal4jCompatibilityOutlook(boolean value) {
-        mPreferences.edit().putBoolean("ical4j.compatibility.outlook", value).commit();
+        putBoolean("ical4j.compatibility.outlook", value);
     }
 
     public boolean getIcal4jCompatibilityNotes() {
-        return mPreferences.getBoolean("ical4j.compatibility.notes", true);
+        return getBoolean("ical4j.compatibility.notes", true);
     }
 
     public void setIcal4jCompatibilityNotes(boolean value) {
-        mPreferences.edit().putBoolean("ical4j.compatibility.notes", value).commit();
+        putBoolean("ical4j.compatibility.notes", value);
     }
 
     public boolean getIcal4jCompatibilityVcard() {
-        return mPreferences.getBoolean("ical4j.compatibility.vcard", false);
+        return getBoolean("ical4j.compatibility.vcard", false);
     }
 
     public void setIcal4jCompatibilityVcard(boolean value) {
-        mPreferences.edit().putBoolean("ical4j.compatibility.vcard", value).commit();
+        putBoolean("ical4j.compatibility.vcard", value);
     }
 
     public boolean getIcal4jValidationRelaxed() {
-        return mPreferences.getBoolean("ical4j.validation.relaxed", true);
+        return getBoolean("ical4j.validation.relaxed", true);
     }
 
     public void setIcal4jValidationRelaxed(boolean value) {
-        mPreferences.edit().putBoolean("ical4j.validation.relaxed", value).commit();
+        putBoolean("ical4j.validation.relaxed", value);
     }
 
 }

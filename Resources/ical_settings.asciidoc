@@ -109,3 +109,10 @@ Skip extensive validation of the output file when exporting calendars.
 :defaultValue: true
 :key: ical4j.validation.relaxed
 
+///////////////////////////////////////////
+The following keys are used internally only
+:key: lastExportFile
+:key: lastUrl
+:key: lastUrlUsername
+:key: lastUrlPassword
+///////////////////////////////////////////

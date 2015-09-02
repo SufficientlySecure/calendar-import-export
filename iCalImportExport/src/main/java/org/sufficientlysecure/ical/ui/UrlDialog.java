@@ -38,9 +38,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 public class UrlDialog extends DialogFragment {
-    private static final String PREF_LAST_URL = "lastUrl";
-    private static final String PREF_LAST_USERNAME = "lastUrlUsername";
-    private static final String PREF_LAST_PASSWORD = SettingsActivity.PREF_LAST_URL_PASSWORD;
 
     private MainActivity mActivity;
     private EditText mTextCalendarUrl;
@@ -76,9 +73,9 @@ public class UrlDialog extends DialogFragment {
         mTextPassword = (EditText) view.findViewById(R.id.TextPassword);
 
         Settings settings = mActivity.getSettings();
-        mTextCalendarUrl.setText(settings.getString(PREF_LAST_URL));
-        mTextUsername.setText(settings.getString(PREF_LAST_USERNAME));
-        mTextPassword.setText(settings.getString(PREF_LAST_PASSWORD));
+        mTextCalendarUrl.setText(settings.getString(Settings.PREF_LASTURL));
+        mTextUsername.setText(settings.getString(Settings.PREF_LASTURLUSERNAME));
+        mTextPassword.setText(settings.getString(Settings.PREF_LASTURLPASSWORD));
 
         mCheckboxLoginRequired.setChecked(mTextUsername.getText().length() != 0);
         mTextCalendarUrl.selectAll();
@@ -138,11 +135,11 @@ public class UrlDialog extends DialogFragment {
 
                 Settings settings = mActivity.getSettings();
                 SharedPreferences.Editor e = settings.getPreferences().edit();
-                e.putString(PREF_LAST_URL, url);
+                e.putString(Settings.PREF_LASTURL, url);
                 if (loginRequired) {
-                    e.putString(PREF_LAST_USERNAME, username);
+                    e.putString(Settings.PREF_LASTURLUSERNAME, username);
                     if (settings.getSavePasswords()) {
-                        e.putString(PREF_LAST_PASSWORD, password);
+                        e.putString(Settings.PREF_LASTURLPASSWORD, password);
                     }
                 }
                 e.commit();
