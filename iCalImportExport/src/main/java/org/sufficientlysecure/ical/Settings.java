@@ -52,83 +52,83 @@ public class Settings {
     }
 
     public boolean getSavePasswords() {
-        return getBoolean("save_passwords", false);
+        return getBoolean(PREF_SAVE_PASSWORDS, false);
     }
 
     public void setSavePasswords(boolean value) {
-        putBoolean("save_passwords", value);
+        putBoolean(PREF_SAVE_PASSWORDS, value);
     }
 
     public boolean getIgnoreDuplicates() {
-        return getBoolean("ignore_duplicates", true);
+        return getBoolean(PREF_IGNORE_DUPLICATES, true);
     }
 
     public void setIgnoreDuplicates(boolean value) {
-        putBoolean("ignore_duplicates", value);
+        putBoolean(PREF_IGNORE_DUPLICATES, value);
     }
 
     public boolean getKeepUids() {
-        return getBoolean("keep_uids", true);
+        return getBoolean(PREF_KEEP_UIDS, true);
     }
 
     public void setKeepUids(boolean value) {
-        putBoolean("keep_uids", value);
+        putBoolean(PREF_KEEP_UIDS, value);
     }
 
     public boolean getImportReminders() {
-        return getBoolean("import_reminders", true);
+        return getBoolean(PREF_IMPORT_REMINDERS, true);
     }
 
     public void setImportReminders(boolean value) {
-        putBoolean("import_reminders", value);
+        putBoolean(PREF_IMPORT_REMINDERS, value);
     }
 
     public boolean getIcal4jUnfoldingRelaxed() {
-        return getBoolean("ical4j.unfolding.relaxed", true);
+        return getBoolean(PREF_ICAL4J_UNFOLDING_RELAXED, true);
     }
 
     public void setIcal4jUnfoldingRelaxed(boolean value) {
-        putBoolean("ical4j.unfolding.relaxed", value);
+        putBoolean(PREF_ICAL4J_UNFOLDING_RELAXED, value);
     }
 
     public boolean getIcal4jParsingRelaxed() {
-        return getBoolean("ical4j.parsing.relaxed", true);
+        return getBoolean(PREF_ICAL4J_PARSING_RELAXED, true);
     }
 
     public void setIcal4jParsingRelaxed(boolean value) {
-        putBoolean("ical4j.parsing.relaxed", value);
+        putBoolean(PREF_ICAL4J_PARSING_RELAXED, value);
     }
 
     public boolean getIcal4jCompatibilityOutlook() {
-        return getBoolean("ical4j.compatibility.outlook", true);
+        return getBoolean(PREF_ICAL4J_COMPATIBILITY_OUTLOOK, true);
     }
 
     public void setIcal4jCompatibilityOutlook(boolean value) {
-        putBoolean("ical4j.compatibility.outlook", value);
+        putBoolean(PREF_ICAL4J_COMPATIBILITY_OUTLOOK, value);
     }
 
     public boolean getIcal4jCompatibilityNotes() {
-        return getBoolean("ical4j.compatibility.notes", true);
+        return getBoolean(PREF_ICAL4J_COMPATIBILITY_NOTES, true);
     }
 
     public void setIcal4jCompatibilityNotes(boolean value) {
-        putBoolean("ical4j.compatibility.notes", value);
+        putBoolean(PREF_ICAL4J_COMPATIBILITY_NOTES, value);
     }
 
     public boolean getIcal4jCompatibilityVcard() {
-        return getBoolean("ical4j.compatibility.vcard", false);
+        return getBoolean(PREF_ICAL4J_COMPATIBILITY_VCARD, false);
     }
 
     public void setIcal4jCompatibilityVcard(boolean value) {
-        putBoolean("ical4j.compatibility.vcard", value);
+        putBoolean(PREF_ICAL4J_COMPATIBILITY_VCARD, value);
     }
 
     public boolean getIcal4jValidationRelaxed() {
-        return getBoolean("ical4j.validation.relaxed", true);
+        return getBoolean(PREF_ICAL4J_VALIDATION_RELAXED, true);
     }
 
     public void setIcal4jValidationRelaxed(boolean value) {
-        putBoolean("ical4j.validation.relaxed", value);
+        putBoolean(PREF_ICAL4J_VALIDATION_RELAXED, value);
     }
 
 }
