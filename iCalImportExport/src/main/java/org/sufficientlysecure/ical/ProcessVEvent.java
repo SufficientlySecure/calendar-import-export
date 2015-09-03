@@ -74,20 +74,20 @@ public class ProcessVEvent extends RunnableWithProgress {
     private boolean mIsInserter;
 
     private final class Options {
-        public boolean mCheckForDuplicates;
-        public boolean mUseUids;
-        private boolean mUseReminders;
+        public boolean mIgnoreDuplicates;
+        public boolean mKeepUids;
+        private boolean mImportReminders;
         private List<Integer> mDefaultReminders;
 
         public Options(Settings settings) {
-            mCheckForDuplicates = settings.getIgnoreDuplicates();
-            mUseUids = settings.getKeepUids();
-            mUseReminders = settings.getImportReminders();
+            mIgnoreDuplicates = settings.getIgnoreDuplicates();
+            mKeepUids = settings.getKeepUids();
+            mImportReminders = settings.getImportReminders();
             mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes(settings);
         }
 
         public List<Integer> getReminders(List<Integer> eventReminders) {
-            if (mUseReminders && eventReminders.size() > 0) {
+            if (mImportReminders && eventReminders.size() > 0) {
                 return eventReminders;
             }
             return mDefaultReminders;
@@ -190,7 +190,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             String msg = res.getQuantityString(R.plurals.processed_n_entries, n, n) + "\n";
             if (mIsInserter) {
                 msg += "\n";
-                if (options.mCheckForDuplicates) {
+                if (options.mIgnoreDuplicates) {
                     msg += res.getQuantityString(R.plurals.found_n_duplicates, numDups, numDups);
                 } else {
                     msg += res.getString(R.string.did_not_check_for_dupes);
@@ -437,7 +437,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private boolean dbHasDuplicate(ContentResolver resolver, Options options, ContentValues c) {
-        if (!options.mCheckForDuplicates) {
+        if (!options.mIgnoreDuplicates) {
             return false;
         }
         Cursor cur = query(resolver, options, c);
@@ -453,7 +453,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         final String[] cols = new String[] { Events._ID };
 
-        if (options.mUseUids && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
+        if (options.mKeepUids && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
             String where = Events.UID_2445 + "=?";
             String[] args = new String[] { c.getAsString(Events.UID_2445) };
             return resolver.query(Events.CONTENT_URI, cols, where, args, null);
