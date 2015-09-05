@@ -18,11 +18,13 @@
     <PreferenceCategory
         android:title="@string/_import_" >
 
-        <CheckBoxPreference
-            android:key="ignore_duplicates"
-            android:title="@string/ignore_duplicates"
-            android:summary="@string/ignore_entries_that_are_already"
-            android:defaultValue="true" />
+        <ListPreference
+            android:key="duplicate_handling"
+            android:title="@string/duplicate_handling"
+            android:summary="@string/how_to_handle_duplicate_events"
+            android:defaultValue="0"
+            android:entries="@array/duplicate_handling_array"
+            android:entryValues="@array/duplicate_handling_array_values" />
 
         <CheckBoxPreference
             android:key="keep_uids"

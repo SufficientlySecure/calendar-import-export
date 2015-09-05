@@ -6,13 +6,13 @@ import android.content.SharedPreferences;
 
 public class Settings {
     public static final String PREF_DEFAULT_REMINDERS = "default_reminders";
+    public static final String PREF_DUPLICATE_HANDLING = "duplicate_handling";
     public static final String PREF_ICAL4J_COMPATIBILITY_NOTES = "ical4j.compatibility.notes";
     public static final String PREF_ICAL4J_COMPATIBILITY_OUTLOOK = "ical4j.compatibility.outlook";
     public static final String PREF_ICAL4J_COMPATIBILITY_VCARD = "ical4j.compatibility.vcard";
     public static final String PREF_ICAL4J_PARSING_RELAXED = "ical4j.parsing.relaxed";
     public static final String PREF_ICAL4J_UNFOLDING_RELAXED = "ical4j.unfolding.relaxed";
     public static final String PREF_ICAL4J_VALIDATION_RELAXED = "ical4j.validation.relaxed";
-    public static final String PREF_IGNORE_DUPLICATES = "ignore_duplicates";
     public static final String PREF_IMPORT_REMINDERS = "import_reminders";
     public static final String PREF_KEEP_UIDS = "keep_uids";
     public static final String PREF_LASTEXPORTFILE = "lastExportFile";
@@ -21,6 +21,11 @@ public class Settings {
     public static final String PREF_LASTURLUSERNAME = "lastUrlUsername";
     public static final String PREF_SAVE_PASSWORDS = "save_passwords";
     public static final String PREF_UIDPID = "uidPid";
+    public enum DuplicateHandlingEnum {
+        DUP_REPLACE,
+        DUP_IGNORE,
+        DUP_DONT_CHECK,
+    }
     private SharedPreferences mPreferences;
 
     public Settings(SharedPreferences preferences) {
@@ -29,6 +34,14 @@ public class Settings {
 
     public SharedPreferences getPreferences() {
         return mPreferences;
+    }
+
+    public int getInt(String key, int def) {
+        return mPreferences.getInt(key, def);
+    }
+
+    public void putInt(String key, int value) {
+        mPreferences.edit().putInt(key, value).commit();
     }
 
     public boolean getBoolean(String key, boolean def) {
@@ -51,6 +64,14 @@ public class Settings {
         mPreferences.edit().putString(key, value).commit();
     }
 
+    private int getEnumInt(String key, int def) {
+        return Integer.parseInt(getString(key, String.valueOf(def)));
+    }
+
+    private void putEnumInt(String key, int value) {
+        putString(key, String.valueOf(value));
+    }
+
     public boolean getSavePasswords() {
         return getBoolean(PREF_SAVE_PASSWORDS, false);
     }
@@ -59,12 +80,12 @@ public class Settings {
         putBoolean(PREF_SAVE_PASSWORDS, value);
     }
 
-    public boolean getIgnoreDuplicates() {
-        return getBoolean(PREF_IGNORE_DUPLICATES, true);
+    public DuplicateHandlingEnum getDuplicateHandling() {
+        return DuplicateHandlingEnum.values()[getEnumInt(PREF_DUPLICATE_HANDLING, 0)];
     }
 
-    public void setIgnoreDuplicates(boolean value) {
-        putBoolean(PREF_IGNORE_DUPLICATES, value);
+    public void setDuplicateHandling(DuplicateHandlingEnum value) {
+        putEnumInt(PREF_DUPLICATE_HANDLING, value.ordinal());
     }
 
     public boolean getKeepUids() {

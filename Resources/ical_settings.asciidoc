@@ -29,11 +29,19 @@ These settings apply only when importing iCalendar files. You may wish
 to change the defaults in order to have finer control over the calendar
 contents in the imported result.
 
-==== Ignore duplicates (Y/N)
+==== Duplicate handling
 
-Ignore entries that are already in the destination calendar.
+How to handle duplicate events while importing.
 
-:defaultValue: true
+* Replace the existing event with the imported event (default)
+* Keep the existing event and ignore the imported event
+* Don't check for duplicates at all, always insert all imported events
+
+:enumValues: DUP_REPLACE, DUP_IGNORE, DUP_DONT_CHECK
+
+Importing will be slightly faster if you do not check for duplicates. Note
+that UID handling as described below will affect how duplicates are
+identified.
 
 ==== Keep UIDs (Y/N)
 

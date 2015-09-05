@@ -74,13 +74,13 @@ public class ProcessVEvent extends RunnableWithProgress {
     private boolean mIsInserter;
 
     private final class Options {
-        public boolean mIgnoreDuplicates;
+        public Settings.DuplicateHandlingEnum mDuplicateHandling;
         public boolean mKeepUids;
         private boolean mImportReminders;
         private List<Integer> mDefaultReminders;
 
         public Options(Settings settings) {
-            mIgnoreDuplicates = settings.getIgnoreDuplicates();
+            mDuplicateHandling = settings.getDuplicateHandling();
             mKeepUids = settings.getKeepUids();
             mImportReminders = settings.getImportReminders();
             mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes(settings);
@@ -117,6 +117,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             int numDel = 0;
             int numIns = 0;
             int numDups = 0;
+            final boolean ignoreDupes = options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_IGNORE;
 
             ContentValues alarm = new ContentValues();
             alarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
@@ -134,8 +135,17 @@ public class ProcessVEvent extends RunnableWithProgress {
                 }
 
                 ContentValues c = convertToDB(e, options, reminders, mAndroidCalendar.mId);
+                boolean mustDelete = !mIsInserter;
+                if (!mustDelete) {
+                    mustDelete = dbHasDuplicate(resolver, options, c);
+                    if (mustDelete && ignoreDupes) {
+                        Log.d(TAG, "Ignoring duplicate event");
+                        numDups++;
+                        continue;
+                    }
+                }
 
-                if (!mIsInserter) {
+                if (mustDelete) {
                     Cursor cur = query(resolver, options, c);
                     if (cur != null) {
                         while (cur.moveToNext()) {
@@ -147,13 +157,9 @@ public class ProcessVEvent extends RunnableWithProgress {
                         }
                         cur.close();
                     }
-                    continue;
-                }
-
-                if (dbHasDuplicate(resolver, options, c)) {
-                    Log.d(TAG, "Ignoring duplicate event");
-                    numDups++;
-                    continue;
+                    if (!mIsInserter) {
+                        continue;
+                    }
                 }
 
                 if (Events.UID_2445 != null && !c.containsKey(Events.UID_2445)) {
@@ -190,10 +196,10 @@ public class ProcessVEvent extends RunnableWithProgress {
             String msg = res.getQuantityString(R.plurals.processed_n_entries, n, n) + "\n";
             if (mIsInserter) {
                 msg += "\n";
-                if (options.mIgnoreDuplicates) {
-                    msg += res.getQuantityString(R.plurals.found_n_duplicates, numDups, numDups);
-                } else {
+                if (options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK) {
                     msg += res.getString(R.string.did_not_check_for_dupes);
+                } else {
+                    msg += res.getQuantityString(R.plurals.found_n_duplicates, numDups, numDups);
                 }
             }
 
@@ -437,7 +443,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private boolean dbHasDuplicate(ContentResolver resolver, Options options, ContentValues c) {
-        if (!options.mIgnoreDuplicates) {
+        if (options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK) {
             return false;
         }
         Cursor cur = query(resolver, options, c);
