@@ -24,11 +24,6 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.method.LinkMovementMethod;
-import android.text.method.PasswordTransformationMethod;
-import android.view.ViewGroup.LayoutParams;
-import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public final class DialogTools {
@@ -62,97 +57,5 @@ public final class DialogTools {
             }
         };
         activity.runOnUiThread(task);
-    }
-
-    public static String ask(final Activity activity, final int titleResource,
-                             final int messageResource, final String input,
-                             final boolean cancelable, final boolean password) {
-        final String[] result = new String[2];
-        Runnable task;
-        task = new Runnable() {
-            @Override
-            public void run() {
-                LinearLayout layout = new LinearLayout(activity);
-                layout.setOrientation(LinearLayout.VERTICAL);
-                layout.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                                                        LayoutParams.MATCH_PARENT));
-                layout.setMinimumWidth(300);
-
-                TextView view = new TextView(activity);
-                view.setPadding(10, 10, 10, 10);
-                view.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                                                      LayoutParams.WRAP_CONTENT));
-                view.setTextSize(16);
-                layout.addView(view);
-                view.setText(activity.getString(messageResource));
-
-                final EditText editText = new EditText(activity);
-                if (password) {
-                    editText.setTransformationMethod(PasswordTransformationMethod.getInstance());
-                } else {
-                    editText.setSingleLine();
-                }
-                editText.setLayoutParams(new LayoutParams(LayoutParams.MATCH_PARENT,
-                                                          LayoutParams.WRAP_CONTENT));
-                if (input != null) {
-                    editText.setText(input);
-                    editText.selectAll();
-                }
-                layout.addView(editText);
-
-                DialogInterface.OnClickListener yesTask;
-                yesTask = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface iface, int w) {
-                        result[0] = editText.getText().toString();
-                        result[1] = "";
-                        iface.cancel();
-                    }
-                };
-
-                DialogInterface.OnClickListener noTask;
-                noTask = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface iface, int w) {
-                        result[0] = "";
-                        result[1] = "";
-                        iface.cancel();
-                    }
-                };
-
-                DialogInterface.OnCancelListener cancelTask;
-                cancelTask = new DialogInterface.OnCancelListener() {
-                    @Override
-                    public void onCancel(DialogInterface iface) {
-                        result[1] = "";
-                    }
-                };
-
-
-                AlertDialog.Builder builder = new AlertDialog.Builder(activity)
-                                              .setTitle(activity.getString(titleResource))
-                                              .setPositiveButton(android.R.string.ok, yesTask);
-                if (cancelable) {
-                    builder.setNegativeButton(android.R.string.cancel, noTask);
-                }
-
-                builder.setCancelable(cancelable).setOnCancelListener(cancelTask);
-                AlertDialog dialog = builder.setView(layout).create();
-
-                int state = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
-                dialog.getWindow().setSoftInputMode(state);
-                dialog.show();
-            }
-        };
-
-        activity.runOnUiThread(task);
-
-        while (result[1] == null) {
-            try {
-                Thread.sleep(30);
-            } catch (InterruptedException e) {
-            }
-        }
-        return result[0];
     }
 }

@@ -67,8 +67,10 @@ import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -79,6 +81,8 @@ import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.WindowManager;
+import android.widget.EditText;
 
 @SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
@@ -98,7 +102,8 @@ public class SaveCalendar extends RunnableWithProgress {
         Events.ORGANIZER, Events.EVENT_LOCATION, Events.STATUS, Events.ALL_DAY, Events.RDATE,
         Events.RRULE, Events.DTSTART, Events.EVENT_TIMEZONE, Events.DURATION, Events.DTEND,
         Events.EVENT_END_TIMEZONE, Events.ACCESS_LEVEL, Events.AVAILABILITY, Events.EXDATE,
-        Events.EXRULE, Events.CUSTOM_APP_PACKAGE, Events.CUSTOM_APP_URI, Events.HAS_ALARM };
+        Events.EXRULE, Events.CUSTOM_APP_PACKAGE, Events.CUSTOM_APP_URI, Events.HAS_ALARM
+    };
 
     private static final String[] REMINDER_COLS = new String[] {
         Reminders.MINUTES, Reminders.METHOD
@@ -116,9 +121,8 @@ public class SaveCalendar extends RunnableWithProgress {
 
         mInsertedTimeZones.clear();
 
-        String file = settings.getString(Settings.PREF_LASTEXPORTFILE);
-        file = DialogTools.ask(activity, R.string.enter_filename, R.string.please_enter_filename,
-                               file, true, false);
+        String file = getFile(settings.getString(Settings.PREF_LASTEXPORTFILE));
+
         if (TextUtils.isEmpty(file)) {
             return;
         }
@@ -198,6 +202,50 @@ public class SaveCalendar extends RunnableWithProgress {
         }
     }
 
+    private void getFileImpl(final String previousFile, final String[] result) {
+
+        final EditText input = new EditText(getActivity());
+        input.setText(previousFile);
+        input.selectAll();
+
+        final int ok = android.R.string.ok;
+        final int cancel = android.R.string.cancel;
+        AlertDialog d = new AlertDialog.Builder(getActivity())
+                        .setTitle(R.string.enter_filename)
+                        .setMessage(R.string.please_enter_filename)
+                        .setView(input)
+                        .setPositiveButton(ok, new DialogInterface.OnClickListener() {
+                                               public void onClick(DialogInterface iface, int w) {
+                                                   result[0] = input.getText().toString();
+                                               }
+                                           })
+                        .setNegativeButton(cancel, new DialogInterface.OnClickListener() {
+                                               public void onClick(DialogInterface iface, int w) {
+                                                   result[0] = "";
+                                               }
+                                           })
+                        .create();
+        int state = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
+        d.getWindow().setSoftInputMode(state);
+        d.show();
+    }
+
+    private String getFile(final String previousFile) {
+        final String[] result = new String[1];
+        getActivity().runOnUiThread(new Runnable() {
+            public void run() {
+                getFileImpl(previousFile, result);
+            }
+        });
+        while (result[0] == null) {
+            try {
+                Thread.sleep(30);
+            } catch (InterruptedException e) {
+            }
+        }
+        return result[0];
+    }
+
     private VEvent convertFromDb(Cursor cur, MainActivity activity, Calendar cal, DtStamp timestamp)
             throws IOException {
         //String cursorContents = DatabaseUtils.dumpCurrentRowToString(cur);
@@ -263,7 +311,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
         int availability = getInt(cur, Events.AVAILABILITY);
         if (availability > Events.AVAILABILITY_TENTATIVE) {
-            availability = -1; // Unknown/Invalid
+            availability = -1;     // Unknown/Invalid
         }
 
         if (isTransparent) {
@@ -311,7 +359,7 @@ public class SaveCalendar extends RunnableWithProgress {
             while (alarmCur.moveToNext()) {
                 int mins = getInt(alarmCur, Reminders.MINUTES);
                 if (mins == -1) {
-                    mins = 60; // FIXME: Get the real default
+                    mins = 60;     // FIXME: Get the real default
                 }
                 // FIXME: We should support other types if possible
                 int method = getInt(alarmCur, Reminders.METHOD);
@@ -362,11 +410,11 @@ public class SaveCalendar extends RunnableWithProgress {
         int i = getColumnIndex(cur, dbName);
         if (i != -1 && !cur.isNull(i)) {
             if (cal == null) {
-                return utcDateFromMs(cur.getLong(i)); // Ignore timezone for date-only dates
+                return utcDateFromMs(cur.getLong(i));     // Ignore timezone for date-only dates
             }
 
             String tz = getString(cur, dbTzName);
-            DateTime dt = new DateTime(true); // UTC
+            DateTime dt = new DateTime(true);     // UTC
             dt.setTime(cur.getLong(i));
             if (!TextUtils.isEmpty(tz) && !TextUtils.equals(tz, Time.TIMEZONE_UTC)) {
                 TimeZone t = mTzRegistry.getTimeZone(tz);
