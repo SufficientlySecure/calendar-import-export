@@ -364,6 +364,7 @@ public class SaveCalendar extends RunnableWithProgress {
                     e.getAlarms().add(alarm);
                 }
             }
+            alarmCur.close();
         }
 
         return e;
