@@ -87,9 +87,8 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
 
         public List<Integer> getReminders(List<Integer> eventReminders) {
-            if (mImportReminders && eventReminders.size() > 0) {
+            if (mImportReminders && eventReminders.size() > 0)
                 return eventReminders;
-            }
             return mDefaultReminders;
         }
     }
@@ -101,8 +100,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         mIsInserter = isInserter;
     }
 
-    @Override
-    protected void run() {
+    public void run() {
         try {
             MainActivity activity = (MainActivity) getActivity();
             Options options = new Options(activity.getSettings());
@@ -119,8 +117,8 @@ public class ProcessVEvent extends RunnableWithProgress {
             int numDups = 0;
             final boolean ignoreDupes = options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_IGNORE;
 
-            ContentValues alarm = new ContentValues();
-            alarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+            ContentValues cAlarm = new ContentValues();
+            cAlarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
 
             for (Object ve: events) {
                 incrementProgressBy(1);
@@ -157,9 +155,8 @@ public class ProcessVEvent extends RunnableWithProgress {
                         }
                         cur.close();
                     }
-                    if (!mIsInserter) {
+                    if (!mIsInserter)
                         continue;
-                    }
                 }
 
                 if (Events.UID_2445 != null && !c.containsKey(Events.UID_2445)) {
@@ -171,9 +168,9 @@ public class ProcessVEvent extends RunnableWithProgress {
                 Log.d(TAG, "destination values: " + c);
 
                 Uri uri = insertAndLog(resolver, Events.CONTENT_URI, c, "Event");
-                if (uri == null) {
+                if (uri == null)
                     continue; // FIXME: Note the failure
-                }
+
                 final int id = Integer.parseInt(uri.getLastPathSegment());
 
                 numIns++;
@@ -181,9 +178,9 @@ public class ProcessVEvent extends RunnableWithProgress {
                 for (int time: options.getReminders(reminders)) {
                     Log.d(TAG, "Inserting reminder for event with id: " + id);
 
-                    alarm.put(Reminders.EVENT_ID, id);
-                    alarm.put(Reminders.MINUTES, time);
-                    insertAndLog(resolver, Reminders.CONTENT_URI, alarm, "Reminder");
+                    cAlarm.put(Reminders.EVENT_ID, id);
+                    cAlarm.put(Reminders.MINUTES, time);
+                    insertAndLog(resolver, Reminders.CONTENT_URI, cAlarm, "Reminder");
                 }
             }
 
@@ -196,11 +193,10 @@ public class ProcessVEvent extends RunnableWithProgress {
             String msg = res.getQuantityString(R.plurals.processed_n_entries, n, n) + "\n";
             if (mIsInserter) {
                 msg += "\n";
-                if (options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK) {
+                if (options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK)
                     msg += res.getString(R.string.did_not_check_for_dupes);
-                } else {
+                else
                     msg += res.getQuantityString(R.plurals.found_n_duplicates, numDups, numDups);
-                }
             }
 
             activity.showToast(msg);
@@ -214,7 +210,6 @@ public class ProcessVEvent extends RunnableWithProgress {
                 PrintStream out = new PrintStream(new FileOutputStream(p));
                 e.printStackTrace(out);
             } catch (Exception ignored) {
-
             }
             DialogTools.info(getActivity(), R.string.error, R.string.dialog_bug);
         }
@@ -295,25 +290,23 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         copyProperty(c, Events.DURATION, e, Property.DURATION);
 
-        if (allDay) {
+        if (allDay)
             c.put(Events.ALL_DAY, 1);
-        }
 
         copyDateProperty(c, Events.DTSTART, Events.EVENT_TIMEZONE, e.getStartDate());
-        if (hasProperty(e, Property.DTEND)) {
+        if (hasProperty(e, Property.DTEND))
             copyDateProperty(c, Events.DTEND, Events.EVENT_END_TIMEZONE, e.getEndDate());
-        }
 
         if (hasProperty(e, Property.CLASS)) {
             String access = e.getProperty(Property.CLASS).getValue();
             int accessLevel = Events.ACCESS_DEFAULT;
-            if (access.equals("CONFIDENTIAL")) {
+            if (access.equals("CONFIDENTIAL"))
                 accessLevel = Events.ACCESS_CONFIDENTIAL;
-            } else if (access.equals("PRIVATE")) {
+            else if (access.equals("PRIVATE"))
                 accessLevel = Events.ACCESS_PRIVATE;
-            } else if (access.equals("PUBLIC")) {
+            else if (access.equals("PUBLIC"))
                 accessLevel = Events.ACCESS_PUBLIC;
-            }
+
             c.put(Events.ACCESS_LEVEL, accessLevel);
         }
 
@@ -321,17 +314,16 @@ public class ProcessVEvent extends RunnableWithProgress {
         if (Events.AVAILABILITY != null) {
             int availability = Events.AVAILABILITY_BUSY;
             if (hasProperty(e, Property.TRANSP)) {
-                if (e.getTransparency() == Transp.TRANSPARENT) {
+                if (e.getTransparency() == Transp.TRANSPARENT)
                     availability = Events.AVAILABILITY_FREE;
-                }
+
             } else if (hasProperty(e, Property.FREEBUSY)) {
                 FreeBusy fb = (FreeBusy) e.getProperty(Property.FREEBUSY);
                 FbType fbType = (FbType) fb.getParameter(Parameter.FBTYPE);
-                if (fbType != null && fbType == FbType.FREE) {
+                if (fbType != null && fbType == FbType.FREE)
                     availability = Events.AVAILABILITY_FREE;
-                } else if (fbType != null && fbType == FbType.BUSY_TENTATIVE) {
+                else if (fbType != null && fbType == FbType.BUSY_TENTATIVE)
                     availability = Events.AVAILABILITY_TENTATIVE;
-                }
             }
             c.put(Events.AVAILABILITY, availability);
         }
@@ -350,34 +342,31 @@ public class ProcessVEvent extends RunnableWithProgress {
         for (Object alarm: e.getAlarms()) {
             VAlarm a = (VAlarm) alarm;
 
-            if (a.getAction() != Action.AUDIO && a.getAction() != Action.DISPLAY) {
+            if (a.getAction() != Action.AUDIO && a.getAction() != Action.DISPLAY)
                 continue; // Ignore email and procedure alarms
-            }
 
             Trigger t = a.getTrigger();
             long startMs = e.getStartDate().getDate().getTime();
             long alarmMs;
 
-            if (t.getDateTime() != null) {
+            if (t.getDateTime() != null)
                 alarmMs = t.getDateTime().getTime(); // Absolute
-            } else if (t.getDuration() != null && t.getDuration().isNegative()) {
+            else if (t.getDuration() != null && t.getDuration().isNegative()) {
                 Related rel = (Related) t.getParameter(Parameter.RELATED);
                 if (rel != null && rel == Related.END) {
                     startMs = e.getEndDate().getDate().getTime();
                 }
                 alarmMs = startMs - durationToMs(t.getDuration()); // Relative
-            } else {
+            } else
                 continue; // FIXME: Log this unsupported alarm
-            }
+
             int reminder = (int) ((startMs - alarmMs) / DateUtils.MINUTE_IN_MILLIS);
-            if (reminder >= 0 && !reminders.contains(reminder)) {
+            if (reminder >= 0 && !reminders.contains(reminder))
                 reminders.add(reminder);
-            }
         }
 
-        if (options.getReminders(reminders).size() > 0) {
+        if (options.getReminders(reminders).size() > 0)
             c.put(Events.HAS_ALARM, 1);
-        }
 
         // FIXME: Attendees, SELF_ATTENDEE_STATUS
         return c;
@@ -405,17 +394,15 @@ public class ProcessVEvent extends RunnableWithProgress {
 
     private void removeProperty(VEvent e, String name) {
         Property p = e.getProperty(name);
-        if (p != null) {
+        if (p != null)
             e.getProperties().remove(p);
-        }
     }
 
     private void copyProperty(ContentValues c, String dbName, VEvent e, String evName) {
         if (dbName != null) {
             Property p = e.getProperty(evName);
-            if (p != null) {
+            if (p != null)
                 c.put(dbName, p.getValue());
-            }
         }
     }
 
@@ -423,33 +410,31 @@ public class ProcessVEvent extends RunnableWithProgress {
         if (dbName != null && date.getDate() != null) {
             c.put(dbName, date.getDate().getTime()); // ms since epoc in GMT
             if (dbTzName != null) {
-                if (date.isUtc() || date.getTimeZone() == null) {
+                if (date.isUtc() || date.getTimeZone() == null)
                     c.put(dbTzName, Time.TIMEZONE_UTC);
-                } else {
+                else
                     c.put(dbTzName, date.getTimeZone().getID());
-                }
             }
         }
     }
 
-    private Uri insertAndLog(ContentResolver resolver, Uri uri, ContentValues vals, String type) {
-        Uri result = resolver.insert(uri, vals);
-        if (result == null) {
+    private Uri insertAndLog(ContentResolver resolver, Uri uri, ContentValues c, String type) {
+        Uri result = resolver.insert(uri, c);
+        if (result == null)
             Log.d(TAG, "Could not insert " + type);
-        } else {
+        else
             Log.d(TAG,  "Inserted " + type + ": " + result.toString());
-        }
         return result;
     }
 
     private boolean dbHasDuplicate(ContentResolver resolver, Options options, ContentValues c) {
-        if (options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK) {
+        if (options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK)
             return false;
-        }
+
         Cursor cur = query(resolver, options, c);
-        if (cur == null) {
+        if (cur == null)
             return false;
-        }
+
         int count = cur.getCount();
         cur.close();
         return count > 0;
@@ -467,9 +452,8 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         // Without UIDs, the best we can do is check the start date and title within
         // the current calendar, even though this may return false duplicates.
-        if (!c.containsKey(Events.CALENDAR_ID) || !c.containsKey(Events.DTSTART)) {
+        if (!c.containsKey(Events.CALENDAR_ID) || !c.containsKey(Events.DTSTART))
             return null;
-        }
 
         StringBuilder b = new StringBuilder();
         b.append(Events.CALENDAR_ID).append("=? AND ")
@@ -483,9 +467,8 @@ public class ProcessVEvent extends RunnableWithProgress {
         if (c.containsKey(Events.TITLE)) {
             b.append("=?");
             argsList.add(c.getAsString(Events.TITLE));
-        } else {
+        } else
             b.append(" is null");
-        }
 
         String where = b.toString();
         String[] args = argsList.toArray(new String[argsList.size()]);

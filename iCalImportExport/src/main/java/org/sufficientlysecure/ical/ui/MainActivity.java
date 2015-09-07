@@ -113,11 +113,10 @@ public class MainActivity extends FragmentActivity {
                 mTextCalOwner.setText(calendar.mOwner);
                 mTextCalState.setText(calendar.mIsActive ? R.string.active : R.string.inactive);
                 mTextCalId.setText(calendar.mIdStr);
-                if (calendar.mTimezone == null) {
+                if (calendar.mTimezone == null)
                     mTextCalTimezone.setText(R.string.not_applicable);
-                } else {
+                else
                     mTextCalTimezone.setText(calendar.mTimezone);
-                }
                 updateNumEntries(calendar);
             }
             @Override
@@ -157,25 +156,21 @@ public class MainActivity extends FragmentActivity {
         mTextCalSize = (TextView) findViewById(R.id.TextCalSize);
 
         Intent intent = getIntent();
-        if (intent == null) {
+        if (intent == null)
             return;
-        }
 
         String action = intent.getAction();
 
         final int id = action.equals(LOAD_CALENDAR) ? intent.getIntExtra(EXTRA_CALENDAR_ID, -1) : -1;
 
         new Thread(new Runnable() {
-                       @Override
                        public void run() {
                            mController.init(id);
                        }
                    }).start();
 
-        if (action.equals(Intent.ACTION_VIEW)) {
-            // File intent
-            setUrl(intent.getDataString(), null, null);
-        }
+        if (action.equals(Intent.ACTION_VIEW))
+            setUrl(intent.getDataString(), null, null); // File intent
     }
 
     public Settings getSettings() {
@@ -184,7 +179,6 @@ public class MainActivity extends FragmentActivity {
 
     public void showToast(final String msg) {
         runOnUiThread(new Runnable() {
-                          @Override
                           public void run() {
                               Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
                           }
@@ -194,7 +188,6 @@ public class MainActivity extends FragmentActivity {
     public void updateNumEntries(AndroidCalendar calendar) {
         final int entries = calendar.mNumEntries;
         runOnUiThread(new Runnable() {
-                          @Override
                           public void run() {
                               mTextCalSize.setText(Integer.toString(entries));
                               mExportButton.setEnabled(entries > 0);
@@ -203,27 +196,25 @@ public class MainActivity extends FragmentActivity {
                       });
     }
 
-    private Button setupButton(int resourceId) {
-        Button b = (Button) findViewById(resourceId);
-        b.setOnClickListener(mController);
-        return b;
+    private Button setupButton(int id) {
+        Button button = (Button) findViewById(id);
+        button.setOnClickListener(mController);
+        return button;
     }
 
-    private <E> void setupSpinner(final Spinner spinner, final List<E> list, final Button b) {
+    private <E> void setupSpinner(final Spinner spinner, final List<E> list, final Button button) {
         final int id = android.R.layout.simple_spinner_item;
         final int dropId = android.R.layout.simple_spinner_dropdown_item;
         final Context ctx = this;
 
         runOnUiThread(new Runnable() {
-                          @Override
                           public void run() {
                               ArrayAdapter<E> adaptor = new ArrayAdapter<E>(ctx, id, list);
                               adaptor.setDropDownViewResource(dropId);
                               spinner.setAdapter(adaptor);
-                              if (list.size() != 0) {
+                              if (list.size() != 0)
                                   spinner.setVisibility(View.VISIBLE);
-                              }
-                              b.setVisibility(View.VISIBLE);
+                              button.setVisibility(View.VISIBLE);
                           }
                       });
     }
@@ -262,7 +253,6 @@ public class MainActivity extends FragmentActivity {
 
     public void setCalendar(final Calendar calendar) {
         runOnUiThread(new Runnable() {
-                          @Override
                           public void run() {
                               if (calendar == null) {
                                   mInsertDeleteLayout.setVisibility(View.GONE);
@@ -290,7 +280,6 @@ public class MainActivity extends FragmentActivity {
             if (mCalendars.get(i).mId == id) {
                 final int index = i;
                 runOnUiThread(new Runnable() {
-                                  @Override
                                   public void run() {
                                       mCalendarSpinner.setSelection(index);
                                   }
@@ -317,9 +306,9 @@ public class MainActivity extends FragmentActivity {
         }
 
         long ms = System.currentTimeMillis();
-        if (mUidMs == ms) {
-            ms++; // Force ms to be unique within the app
-        }
+        if (mUidMs == ms)
+            ms++; // Force ms to be unique
+
         mUidMs = ms;
         return Long.toString(ms) + mUidTail;
     }
@@ -355,13 +344,10 @@ public class MainActivity extends FragmentActivity {
     }
 
     private void showLegalNotices() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
         TextView text = new TextView(this);
         text.setText(Html.fromHtml(getString(R.string.legal_notices_html)));
         text.setMovementMethod(LinkMovementMethod.getInstance());
-        builder.setView(text);
-        AlertDialog dialog = builder.create();
-        dialog.show();
+        new AlertDialog.Builder(this).setView(text).create().show();
     }
 
     private class CalendarSource {

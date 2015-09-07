@@ -35,24 +35,22 @@ public final class DialogTools {
     }
 
     public static void info(final Activity activity, final int title, final CharSequence message) {
-        Runnable task;
-        task = new Runnable() {
-            @Override
+        Runnable task = new Runnable() {
             public void run() {
                 DialogInterface.OnClickListener okTask;
                 okTask = new DialogInterface.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface iface, int which) {
+                    public void onClick(DialogInterface iface, int id) {
                         iface.cancel();
                     }
                 };
-                AlertDialog d = new AlertDialog.Builder(activity)
-                                .setMessage(message)
-                                .setIcon(R.drawable.icon)
-                                .setPositiveButton(android.R.string.ok, okTask)
-                                .setTitle(activity.getString(title)).create();
-                d.show();
-                TextView message = (TextView) d.findViewById(android.R.id.message);
+                AlertDialog dlg = new AlertDialog.Builder(activity)
+                                                 .setMessage(message)
+                                                 .setIcon(R.drawable.icon)
+                                                 .setPositiveButton(android.R.string.ok, okTask)
+                                                 .setTitle(activity.getString(title)).create();
+                dlg.show();
+                TextView message = (TextView) dlg.findViewById(android.R.id.message);
                 message.setMovementMethod(LinkMovementMethod.getInstance());
             }
         };

@@ -56,9 +56,9 @@ public class Controller implements OnClickListener {
 
     public void init(long calendarId) {
         List<AndroidCalendar> calendars = AndroidCalendar.loadAll(mActivity.getContentResolver());
-        if (calendars.isEmpty()) {
+        if (calendars.isEmpty())
             noCalendarFinish();
-        }
+
         mActivity.setCalendars(calendars);
         mActivity.selectCalendar(calendarId);
     }
@@ -66,23 +66,21 @@ public class Controller implements OnClickListener {
     private void noCalendarFinish() {
         Runnable task;
         task = new Runnable() {
-            @Override
             public void run() {
-                DialogInterface.OnClickListener buttonTask;
-                buttonTask = new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
+                DialogInterface.OnClickListener okTask;
+                okTask = new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface iface, int id) {
+                        iface.cancel();
                         mActivity.finish();
                     }
                 };
-                AlertDialog d = new AlertDialog.Builder(mActivity)
-                                .setMessage(R.string.no_calendars_found)
-                                .setIcon(R.drawable.icon)
-                                .setTitle(R.string.information)
-                                .setCancelable(false)
-                                .setPositiveButton(android.R.string.ok, buttonTask).create();
-                d.show();
+                new AlertDialog.Builder(mActivity)
+                               .setMessage(R.string.no_calendars_found)
+                               .setIcon(R.drawable.icon)
+                               .setTitle(R.string.information)
+                               .setCancelable(false)
+                               .setPositiveButton(android.R.string.ok, okTask).create()
+                               .show();
             }
         };
         mActivity.runOnUiThread(task);
@@ -110,14 +108,13 @@ public class Controller implements OnClickListener {
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(View view) {
         RunnableWithProgress task = null;
 
         // Handling search for file event
-        if (v.getId() == R.id.SearchButton) {
+        if (view.getId() == R.id.SearchButton) {
 
             task = new RunnableWithProgress(mActivity) {
-                @Override
                 public void run() {
                     setMessage(R.string.searching_for_files);
 
@@ -127,10 +124,9 @@ public class Controller implements OnClickListener {
                     mActivity.setFiles(files);
                 }
             };
-        } else if (v.getId() == R.id.LoadButton) {
+        } else if (view.getId() == R.id.LoadButton) {
 
             task = new RunnableWithProgress(mActivity) {
-                @Override
                 public void run() {
                     if (mCalendarBuilder == null) {
                         setMessage(R.string.performing_first_time_setup);
@@ -159,17 +155,17 @@ public class Controller implements OnClickListener {
                     }
                 }
             };
-        } else if (v.getId() == R.id.SetUrlButton) {
+        } else if (view.getId() == R.id.SetUrlButton) {
 
             UrlDialog.show(mActivity);
 
-        } else if (v.getId() == R.id.SaveButton) {
+        } else if (view.getId() == R.id.SaveButton) {
 
             task = new SaveCalendar(mActivity);
 
-        } else if (v.getId() == R.id.InsertButton || v.getId() == R.id.DeleteButton) {
+        } else if (view.getId() == R.id.InsertButton || view.getId() == R.id.DeleteButton) {
 
-            task = new ProcessVEvent(mActivity, mCalendar, v.getId() == R.id.InsertButton);
+            task = new ProcessVEvent(mActivity, mCalendar, view.getId() == R.id.InsertButton);
         }
 
         if (task != null) {

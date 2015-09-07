@@ -45,7 +45,6 @@ public abstract class RunnableWithProgress {
 
     public void start() {
         new Thread(new Runnable() {
-                       @Override
                        public void run() {
                            RunnableWithProgress.this.run();
                            mProgress.cancel();
@@ -61,23 +60,21 @@ public abstract class RunnableWithProgress {
         mProgress.setMax(max);
     }
 
-    protected void setMessage(final int resource) {
+    protected void setMessage(final int id) {
         mActivity.runOnUiThread(new Runnable() {
-                                    @Override
                                     public void run() {
-                                        mProgress.setMessage(mActivity.getString(resource));
+                                        mProgress.setMessage(mActivity.getString(id));
                                     }
                                 });
     }
 
-    protected void incrementProgressBy(final int progress) {
+    protected void incrementProgressBy(final int amount) {
         mActivity.runOnUiThread(new Runnable() {
-                                    @Override
                                     public void run() {
-                                        mProgress.incrementProgressBy(progress);
+                                        mProgress.incrementProgressBy(amount);
                                     }
                                 });
     }
 
-    protected abstract void run();
+    public abstract void run();
 }

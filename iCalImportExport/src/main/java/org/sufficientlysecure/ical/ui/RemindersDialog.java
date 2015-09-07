@@ -57,9 +57,8 @@ public class RemindersDialog extends DialogPreference {
     public static List<Integer> getSavedRemindersInMinutes(Settings settings) {
         List<Integer> result = new ArrayList<Integer>();
         for (String item: settings.getString(Settings.PREF_DEFAULT_REMINDERS).split(",")) {
-            if (item.length() > 0) {
+            if (item.length() > 0)
                 result.add(MINUTES[Integer.parseInt(item)]);
-            }
         }
         return result;
     }
@@ -72,18 +71,17 @@ public class RemindersDialog extends DialogPreference {
         String def = new Settings(mActivity.getPreferences()).getString(Settings.PREF_DEFAULT_REMINDERS);
 
         for (String item: def.split(",")) {
-            if (item.length() > 0) {
+            if (item.length() > 0)
                 addReminder(Integer.parseInt(item));
-            }
         }
 
         View.OnClickListener addClick = new View.OnClickListener() {
-            public void onClick(View v) {
+            public void onClick(View view) {
                 addReminder(0);
             }
         };
-        Button addButton = (Button) view.findViewById(R.id.button_reminder_add);
-        addButton.setOnClickListener(addClick);
+        Button button = (Button) view.findViewById(R.id.button_reminder_add);
+        button.setOnClickListener(addClick);
     }
 
     private void addReminder(int index) {
@@ -95,12 +93,12 @@ public class RemindersDialog extends DialogPreference {
         dropDown.setSelection(index);
 
         View.OnClickListener delClick = new View.OnClickListener() {
-            public void onClick(View v) {
+            public void onClick(View view) {
                 mItemsHolder.removeView(mItemsHolder.findViewById(id));
             }
         };
-        Button delButton = (Button) newItem.findViewById(R.id.button_reminder_delete);
-        delButton.setOnClickListener(delClick);
+        Button button = (Button) newItem.findViewById(R.id.button_reminder_delete);
+        button.setOnClickListener(delClick);
 
         mItemsHolder.addView(newItem);
     }
@@ -108,9 +106,8 @@ public class RemindersDialog extends DialogPreference {
     @Override
     protected void onDialogClosed(boolean positiveResult) {
         super.onDialogClosed(positiveResult);
-        if (!positiveResult) {
+        if (!positiveResult)
             return;
-        }
 
         // Save the (reordered and unique) chosen reminders to settings
         Set<Integer> values = new HashSet<Integer>();
@@ -125,11 +122,10 @@ public class RemindersDialog extends DialogPreference {
         Collections.sort(sorted);
 
         StringBuilder b = new StringBuilder();
-        for (Integer v: sorted) {
-            if (b.length() != 0) {
+        for (Integer value: sorted) {
+            if (b.length() != 0)
                 b.append(",");
-            }
-            b.append(v);
+            b.append(value);
         }
 
         new Settings(mActivity.getPreferences()).putString(Settings.PREF_DEFAULT_REMINDERS, b.toString());

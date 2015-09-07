@@ -52,38 +52,36 @@ public class AndroidCalendar {
     // read permissions in App Ops/XPrivacy etc.
     public static List<AndroidCalendar> loadAll(ContentResolver resolver) {
 
-        if (!haveProvider(resolver, Calendars.CONTENT_URI)
-            || !haveProvider(resolver, Events.CONTENT_URI)) {
+        if (!have(resolver, Calendars.CONTENT_URI) || !have(resolver, Events.CONTENT_URI))
             return new ArrayList<AndroidCalendar>();
-        }
 
-        Cursor src = resolver.query(Calendars.CONTENT_URI, CAL_COLS, null, null, null);
-        List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(src.getCount());
+        Cursor cur = resolver.query(Calendars.CONTENT_URI, CAL_COLS, null, null, null);
+        List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(cur.getCount());
 
-        while (src.moveToNext()) {
-            if (getInt(src, Calendars.DELETED) != 0) {
+        while (cur.moveToNext()) {
+            if (getInt(cur, Calendars.DELETED) != 0)
                 continue;
-            }
+
             AndroidCalendar calendar = new AndroidCalendar();
-            calendar.mId = getInt(src, Calendars._ID);
-            calendar.mIdStr = getString(src, Calendars._ID);
-            calendar.mName = getString(src, Calendars.NAME);
-            calendar.mDisplayName = getString(src, Calendars.CALENDAR_DISPLAY_NAME);
-            calendar.mAccountName = getString(src, Calendars.ACCOUNT_NAME);
-            calendar.mAccountType = getString(src, Calendars.ACCOUNT_TYPE);
-            calendar.mOwner = getString(src, Calendars.OWNER_ACCOUNT);
-            calendar.mIsActive = getInt(src, Calendars.VISIBLE) == 1;
-            calendar.mTimezone = getString(src, Calendars.CALENDAR_TIME_ZONE);
+            calendar.mId = getInt(cur, Calendars._ID);
+            calendar.mIdStr = getString(cur, Calendars._ID);
+            calendar.mName = getString(cur, Calendars.NAME);
+            calendar.mDisplayName = getString(cur, Calendars.CALENDAR_DISPLAY_NAME);
+            calendar.mAccountName = getString(cur, Calendars.ACCOUNT_NAME);
+            calendar.mAccountType = getString(cur, Calendars.ACCOUNT_TYPE);
+            calendar.mOwner = getString(cur, Calendars.OWNER_ACCOUNT);
+            calendar.mIsActive = getInt(cur, Calendars.VISIBLE) == 1;
+            calendar.mTimezone = getString(cur, Calendars.CALENDAR_TIME_ZONE);
 
             final String[] cols = new String[] { Events._ID };
             final String where = Events.CALENDAR_ID + "=?";
             final String[] args = new String[] { calendar.mIdStr };
-            Cursor sizer = resolver.query(Events.CONTENT_URI, cols, where, args, null);
-            calendar.mNumEntries = sizer.getCount();
-            sizer.close();
+            Cursor eventsCur = resolver.query(Events.CONTENT_URI, cols, where, args, null);
+            calendar.mNumEntries = eventsCur.getCount();
+            eventsCur.close();
             calendars.add(calendar);
         }
-        src.close();
+        cur.close();
 
         return calendars;
     }
@@ -96,12 +94,11 @@ public class AndroidCalendar {
         return src.getString(src.getColumnIndex(columnName));
     }
 
-    private static boolean haveProvider(ContentResolver resolver, Uri uri) {
+    private static boolean have(ContentResolver resolver, Uri uri) {
         // Check an individual provider is installed
         ContentProviderClient provider = resolver.acquireContentProviderClient(uri);
-        if (provider != null) {
+        if (provider != null)
             provider.release();
-        }
         return provider != null;
     }
 

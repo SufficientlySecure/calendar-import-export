@@ -82,7 +82,7 @@ public class UrlDialog extends DialogFragment {
         DialogInterface.OnClickListener okTask;
         okTask = new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
+            public void onClick(DialogInterface iface, int id) {
                 // We override this in onStart()
             }
         };
@@ -90,44 +90,40 @@ public class UrlDialog extends DialogFragment {
         DialogInterface.OnClickListener cancelTask;
         cancelTask = new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.cancel();
+            public void onClick(DialogInterface iface, int id) {
+                iface.cancel();
             }
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setIcon(R.drawable.icon)
-               .setTitle(R.string.enter_source_url)
-               .setView(view)
-               .setPositiveButton(android.R.string.ok, okTask)
-               .setNegativeButton(android.R.string.cancel, cancelTask);
-
-        AlertDialog dialog = builder.create();
-        if (mTextCalendarUrl.getText().length() != 0) {
-            dialog.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-        }
-        return dialog;
+        AlertDialog dlg = builder.setIcon(R.drawable.icon)
+                                 .setTitle(R.string.enter_source_url)
+                                 .setView(view)
+                                 .setPositiveButton(android.R.string.ok, okTask)
+                                 .setNegativeButton(android.R.string.cancel, cancelTask)
+                                 .create();
+        dlg.getWindow().setSoftInputMode(LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+        return dlg;
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        final AlertDialog dialog = (AlertDialog) getDialog();
-        if (dialog == null) {
+        final AlertDialog dlg = (AlertDialog) getDialog();
+        if (dlg == null)
             return;
-        }
 
         View.OnClickListener onClickTask;
         onClickTask = new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View view) {
                 String url = mTextCalendarUrl.getText().toString();
                 boolean loginRequired = mCheckboxLoginRequired.isChecked();
                 String username = loginRequired ? mTextUsername.getText().toString() : "";
                 String password = loginRequired ? mTextPassword.getText().toString() : "";
 
                 if (!mActivity.setUrl(url, username, password)) {
-                    TextView label = (TextView) dialog.findViewById(R.id.TextViewUrlError);
+                    TextView label = (TextView) dlg.findViewById(R.id.TextViewUrlError);
                     label.setText(R.string.invalid_url);
                     return;
                 }
@@ -136,15 +132,14 @@ public class UrlDialog extends DialogFragment {
                 settings.putString(Settings.PREF_LASTURL, url);
                 if (loginRequired) {
                     settings.putString(Settings.PREF_LASTURLUSERNAME, username);
-                    if (settings.getSavePasswords()) {
+                    if (settings.getSavePasswords())
                         settings.putString(Settings.PREF_LASTURLPASSWORD, password);
-                    }
                 }
-                dialog.dismiss();
+                dlg.dismiss();
             }
         };
 
-        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(onClickTask);
+        dlg.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(onClickTask);
     }
 
     public static void show(final Activity activity) {
