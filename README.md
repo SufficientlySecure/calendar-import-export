@@ -75,22 +75,22 @@ along with iCal Import/Export.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Libraries
 
-* iCal4J
-  https://github.com/ical4j
+* iCal4J  
+  https://github.com/ical4j  
   See LICENSE.iCal4j
 
-* Apache Commons
-  http://commons.apache.org
+* Apache Commons  
+  http://commons.apache.org  
   Apache License v2
 
-* backport-util-concurrent
-  http://backport-jsr166.sourceforge.net
+* backport-util-concurrent  
+  http://backport-jsr166.sourceforge.net  
   Public Domain
 
 ## Images
 
-* icon.svg
-  Based on Tango Icon Library and RRZE Icon Set
-  http://tango.freedesktop.org
-  http://rrze-icon-set.berlios.de
+* icon.svg  
+  Based on Tango Icon Library and RRZE Icon Set  
+  http://tango.freedesktop.org  
+  http://rrze-icon-set.berlios.de  
   Public Domain (Tango Icon Library) and Creative Commons Attribution Share-Alike license 3.0. (RRZE Icon Set)
