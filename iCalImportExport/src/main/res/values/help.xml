@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="help_html">
+<![CDATA[
+<html>
+<body>
+<p><b><h1>iCal Import/Export</h1></b></p>
+
+<p><h2>Importing</h2></p>
+<p>Select the <u>destination calendar</u> from the drop down list at the top of the screen.<p>
+<br>
+<p>Click <i>Import File</i> or <i>Import URL</i> and choose the file/URL to load. You may enter login details for URLs that require them.<p>
+<br>
+<p>For <i>Import File</i>, ensure the file you wish to import is selected from the drop down list that appears.</p>
+<br>
+<p>Click the <i>Load</i> button to load the events from the file.</p>
+<br>
+<p>Click <i>Insert entries</i> to import the events into the <u>destination calendar</u>.</p>
+<br>
+<p>Click <i>Delete entries</i> to remove the events in the file from the <u>destination calendar</u>.</p>
+<br>
+<hr>
+
+<p><h2>Exporting</h2></p>
+<p>Select the <u>source calendar</u> from the drop down list at the top of the screen.<p>
+<br>
+<p>Click <i>Export</i> and enter the file name to save. Note that if the calendar is empty,
+the <i>Export</i> button will not be enabled.</p>
+<br>
+<p>Click <i>OK</i> to complete the export.</p>
+<br>
+
+<p><h2>Support and Development</h2></p>
+<p>You can help development by translating, reporting bugs or submitting changes at
+<a href="http://sufficientlysecure.org/android-apps">sufficientlysecure.org</a>.
+If you have problems importing a specific iCalendar file, please provide it when reporting
+a bug.</p>
+
+</body>
+</html>
+]]>
+</string>
+</resources>
