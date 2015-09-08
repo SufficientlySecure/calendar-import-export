@@ -283,7 +283,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                 c.put(Events.STATUS, Events.STATUS_TENTATIVE);
             } else if (status.equals("CONFIRMED")) {
                 c.put(Events.STATUS, Events.STATUS_CONFIRMED);
-            } else if (status.equals("CANCELED")) {
+            } else if (status.equals("CANCELLED")) { // NOTE: In ical4j it is CANCELLED with two L
                 c.put(Events.STATUS, Events.STATUS_CANCELED);
             }
         }
