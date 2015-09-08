@@ -9,10 +9,10 @@ android {
         targetSdkVersion 22
     }
 
-    /* Fix duplicate files in our included libs */
+    /* exclude duplicate files in our included libs */
     packagingOptions {
-        pickFirst 'META-INF/LICENSE.txt'
-        pickFirst 'META-INF/NOTICE.txt'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
     }
 
     dependencies {
@@ -26,7 +26,7 @@ android {
         release {
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
-            debuggable true
+            debuggable false
         }
         debug {
             minifyEnabled false
