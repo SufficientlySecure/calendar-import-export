@@ -6,11 +6,11 @@
 <body>
 <p><b><h1>iCal Import/Export</h1></b></p>
 
-<p><tt>Copyright &#169; 2010, 2011 Lukas Aichbauer<br>
+<p><tt>Copyright &#169; 2015 Jon Griffiths<br>
 Copyright &#169; 2013 Dominik Schürmann<br>
-Copyright &#169; 2015 Jon Griffiths</tt></p>
+Copyright &#169; 2010, 2011 Lukas Aichbauer</tt></p>
 
-<p>Please see the <a href="https://github.com/dschuermann/ical-import-export">project page</a>
+<p>Please see the <a href="https://github.com/sufficientlysecure/ical-import-export">project page</a>
 for full details and source code.</p>
 
 <p>Based on <a href="https://code.google.com/p/ical-import-export/">ical-import-export</a> by Lukas
