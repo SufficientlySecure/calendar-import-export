@@ -279,12 +279,16 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         if (hasProperty(e, Property.STATUS)) {
             String status = e.getProperty(Property.STATUS).getValue();
-            if (status.equals("TENTATIVE")) {
-                c.put(Events.STATUS, Events.STATUS_TENTATIVE);
-            } else if (status.equals("CONFIRMED")) {
-                c.put(Events.STATUS, Events.STATUS_CONFIRMED);
-            } else if (status.equals("CANCELLED")) { // NOTE: In ical4j it is CANCELLED with two L
-                c.put(Events.STATUS, Events.STATUS_CANCELED);
+            switch (status) {
+                case "TENTATIVE":
+                    c.put(Events.STATUS, Events.STATUS_TENTATIVE);
+                    break;
+                case "CONFIRMED":
+                    c.put(Events.STATUS, Events.STATUS_CONFIRMED);
+                    break;
+                case "CANCELLED":  // NOTE: In ical4j it is CANCELLED with two L
+                    c.put(Events.STATUS, Events.STATUS_CANCELED);
+                    break;
             }
         }
 
@@ -300,12 +304,17 @@ public class ProcessVEvent extends RunnableWithProgress {
         if (hasProperty(e, Property.CLASS)) {
             String access = e.getProperty(Property.CLASS).getValue();
             int accessLevel = Events.ACCESS_DEFAULT;
-            if (access.equals("CONFIDENTIAL"))
-                accessLevel = Events.ACCESS_CONFIDENTIAL;
-            else if (access.equals("PRIVATE"))
-                accessLevel = Events.ACCESS_PRIVATE;
-            else if (access.equals("PUBLIC"))
-                accessLevel = Events.ACCESS_PUBLIC;
+            switch (access) {
+                case "CONFIDENTIAL":
+                    accessLevel = Events.ACCESS_CONFIDENTIAL;
+                    break;
+                case "PRIVATE":
+                    accessLevel = Events.ACCESS_PRIVATE;
+                    break;
+                case "PUBLIC":
+                    accessLevel = Events.ACCESS_PUBLIC;
+                    break;
+            }
 
             c.put(Events.ACCESS_LEVEL, accessLevel);
         }
