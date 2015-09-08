@@ -9,6 +9,11 @@ android {
         targetSdkVersion 22
     }
 
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+
     /* exclude duplicate files in our included libs */
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'

@@ -64,6 +64,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -80,7 +81,6 @@ import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.WindowManager;
 import android.widget.EditText;
 
@@ -91,7 +91,7 @@ public class SaveCalendar extends RunnableWithProgress {
     private AndroidCalendar mAndroidCalendar;
     private PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
     private TimeZoneRegistry mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
-    private Set<TimeZone> mInsertedTimeZones = new HashSet<TimeZone>();
+    private Set<TimeZone> mInsertedTimeZones = new HashSet<>();
 
     private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELLED");
     private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
@@ -164,7 +164,7 @@ public class SaveCalendar extends RunnableWithProgress {
         DtStamp timestamp = new DtStamp(); // Same timestamp for all events
 
         // Collect up events and add them after any timezones
-        List<VEvent> events = new ArrayList<VEvent>();
+        List<VEvent> events = new ArrayList<>();
 
         while (cur.moveToNext()) {
             try {
@@ -175,7 +175,7 @@ public class SaveCalendar extends RunnableWithProgress {
                     Log.d(TAG, "Adding event: " + e.toString());
                 }
                 i++;
-            } catch (IOException e) {
+            } catch (IOException ignored) {
             }
         }
         cur.close();
@@ -236,7 +236,7 @@ public class SaveCalendar extends RunnableWithProgress {
         while (result[0] == null) {
             try {
                 Thread.sleep(30);
-            } catch (InterruptedException e) {
+            } catch (InterruptedException ignored) {
             }
         }
         return result[0];
@@ -432,9 +432,7 @@ public class SaveCalendar extends RunnableWithProgress {
                 l.add(p);
                 return value;
             }
-        } catch (IOException e) {
-        } catch (URISyntaxException e) {
-        } catch (ParseException e) {
+        } catch (IOException | URISyntaxException | ParseException ignored) {
         }
         return null;
     }
@@ -453,9 +451,7 @@ public class SaveCalendar extends RunnableWithProgress {
                     return true;
                 }
             }
-        } catch (IOException e) {
-        } catch (URISyntaxException e) {
-        } catch (ParseException e) {
+        } catch (IOException | URISyntaxException | ParseException ignored) {
         }
         return false;
     }

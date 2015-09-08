@@ -45,6 +45,7 @@ import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.RemindersDialog;
+import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -60,7 +61,6 @@ import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
 import android.text.format.Time;
 import android.text.TextUtils;
-import android.util.Log;
 
 @SuppressLint("NewApi")
 public class ProcessVEvent extends RunnableWithProgress {
@@ -469,7 +469,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         .append(Events.DTSTART).append("=? AND ")
         .append(Events.TITLE);
 
-        List<String> argsList = new ArrayList<String>();
+        List<String> argsList = new ArrayList<>();
         argsList.add(c.getAsString(Events.CALENDAR_ID));
         argsList.add(c.getAsString(Events.DTSTART));
 

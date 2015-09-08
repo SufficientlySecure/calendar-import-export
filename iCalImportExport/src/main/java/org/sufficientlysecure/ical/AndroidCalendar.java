@@ -53,7 +53,7 @@ public class AndroidCalendar {
     public static List<AndroidCalendar> loadAll(ContentResolver resolver) {
 
         if (!have(resolver, Calendars.CONTENT_URI) || !have(resolver, Events.CONTENT_URI))
-            return new ArrayList<AndroidCalendar>();
+            return new ArrayList<>();
 
         Cursor cur = resolver.query(Calendars.CONTENT_URI, CAL_COLS, null, null, null);
         List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(cur.getCount());

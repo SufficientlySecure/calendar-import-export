@@ -32,13 +32,13 @@ import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.UrlDialog;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 
