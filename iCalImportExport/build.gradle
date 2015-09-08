@@ -16,6 +16,8 @@ android {
     }
 
     dependencies {
+        compile 'com.android.support:support-v4:23.0.1'
+
         // Exclude commons-logging as Android has it built-in
         compile fileTree(dir: 'libs', include: '*.jar', exclude: '**/commons-logging-1.2.jar')
     }

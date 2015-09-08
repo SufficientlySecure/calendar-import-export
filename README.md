@@ -9,7 +9,8 @@ This is a updated fork from iCal Import/Export, found on Google code (http://cod
 ## Prerequisites
 
 1. Run the _Android SDK Manager_ (shell command: ``android``)
-2. Expand the "Extras" directory and install "Android Support Repository" and "Google Repository"
+2. Expand the "Extras" directory and install "Android Support Repository",
+   "Android Support Library" and "Google Repository".
 3. Make sure the *ANDROID_HOME* environment variable is set and points to your Android SDK
    install directory (shell command ``export ANDROID_HOME=~/AndroidSDK/``)
 4. Make sure the Android SDK directories "platform-tools", and "tools" are in your
@@ -19,8 +20,11 @@ This is a updated fork from iCal Import/Export, found on Google code (http://cod
 
 1. Run the Gradle wrapper (shell commands ``./gradlew build``, ``./gradlew clean`` etc)
 2. Run ``./gradlew --help`` for help and ``./gradlew tasks`` for a list of available build tasks.
-2. If needed, edit "iCalImportExport/build.gradle" to change the "compileSdkVersion"
+3. If needed, edit "iCalImportExport/build.gradle" to change the "compileSdkVersion"
    and/or "buildToolsVersion" numbers to match what you installed using the SDK Manager.
+4. If needed, edit "iCalImportExport/build.gradle" to change the "com.android.support:support-v4"
+   version number to match the version of "Android Support Library" you installed
+   using the SDK Manager.
 
 ## Build with Android Studio
 
