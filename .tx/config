@@ -1,0 +1,8 @@
+[main]
+host = https://www.transifex.com
+lang_map = he: iw, zh_TW: zh-rTW
+
+[ical-import-export.strings]
+file_filter = iCalImportExport/src/main/res/values-<lang>/strings.xml
+source_file = iCalImportExport/src/main/res/values/strings.xml
+source_lang = en
