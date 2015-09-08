@@ -36,39 +36,47 @@ public class Settings {
         return mPreferences;
     }
 
-    public int getInt(String key, int def) {
+    public int getInt(final String key, final int def) {
         return mPreferences.getInt(key, def);
     }
 
-    public void putInt(String key, int value) {
+    public int getInt(final String key) {
+        return getInt(key, 0);
+    }
+
+    public void putInt(final String key, final int value) {
         mPreferences.edit().putInt(key, value).commit();
     }
 
-    public boolean getBoolean(String key, boolean def) {
+    public boolean getBoolean(final String key, final boolean def) {
         return mPreferences.getBoolean(key, def);
     }
 
-    public boolean getBoolean(String key) { return getBoolean(key, false); }
+    public boolean getBoolean(final String key) {
+        return getBoolean(key, false);
+    }
 
-    public void putBoolean(String key, boolean value) {
+    public void putBoolean(final String key, final boolean value) {
         mPreferences.edit().putBoolean(key, value).commit();
     }
 
-    public String getString(String key, String def) {
+    public String getString(final String key, final String def) {
         return mPreferences.getString(key, def);
     }
 
-    public String getString(String key) { return getString(key, ""); }
+    public String getString(final String key) {
+        return getString(key, "");
+    }
 
-    public void putString(String key, String value) {
+    public void putString(final String key, final String value) {
         mPreferences.edit().putString(key, value).commit();
     }
 
-    private int getEnumInt(String key, int def) {
+    public int getEnumInt(final String key, final int def) {
         return Integer.parseInt(getString(key, String.valueOf(def)));
     }
 
-    private void putEnumInt(String key, int value) {
+    public void putEnumInt(final String key, final int value) {
         putString(key, String.valueOf(value));
     }
 
