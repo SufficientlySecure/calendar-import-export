@@ -59,7 +59,6 @@ import android.os.Environment;
 import android.provider.CalendarContractWrapper.Events;
 import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
-import android.text.format.Time;
 import android.text.TextUtils;
 
 @SuppressLint("NewApi")
@@ -420,7 +419,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             c.put(dbName, date.getDate().getTime()); // ms since epoc in GMT
             if (dbTzName != null) {
                 if (date.isUtc() || date.getTimeZone() == null)
-                    c.put(dbTzName, Time.TIMEZONE_UTC);
+                    c.put(dbTzName, "UTC");
                 else
                     c.put(dbTzName, date.getTimeZone().getID());
             }

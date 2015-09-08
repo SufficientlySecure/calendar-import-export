@@ -79,7 +79,6 @@ import android.os.Environment;
 import android.provider.CalendarContractWrapper.Events;
 import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
-import android.text.format.Time;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.EditText;
@@ -409,7 +408,7 @@ public class SaveCalendar extends RunnableWithProgress {
             String tz = getString(cur, dbTzName);
             DateTime dt = new DateTime(true);     // UTC
             dt.setTime(cur.getLong(i));
-            if (!TextUtils.isEmpty(tz) && !TextUtils.equals(tz, Time.TIMEZONE_UTC)) {
+            if (!TextUtils.isEmpty(tz) && !TextUtils.equals(tz, "UTC")) {
                 TimeZone t = mTzRegistry.getTimeZone(tz);
                 dt.setTimeZone(t);
                 if (!mInsertedTimeZones.contains(t)) {
