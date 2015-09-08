@@ -6,7 +6,7 @@
     <string name="actions">ACTIONS</string>
     <string name="active">Active</string>
     <string name="add_reminder">Add Reminder</string>
-    <string name="app_name">iCal Import/Export</string>
+    <string name="app_name">ICS Import/Export</string>
     <string name="calendar_selection">CALENDAR SELECTION</string>
     <string name="calendar_url">Calendar URL</string>
     <string name="could_not_parse_file">Could not parse file\n\n</string>

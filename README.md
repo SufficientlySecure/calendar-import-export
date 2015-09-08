@@ -1,8 +1,6 @@
-# iCal Import/Export
+# ICS Import/Export
 
-This app allows you to import iCalendar files to your calender without using Google synchronization services.
-
-This is a updated fork from iCal Import/Export, found on Google code (http://code.google.com/p/ical-import-export/).
+This app allows you to import ics files to your calender without using Google synchronization services.
 
 For more information, see http://sufficientlysecure.org/android/.
 
@@ -45,7 +43,7 @@ Translations can be submitted at http://sufficientlysecure.org/android/.
 
 # Libraries
 
-All jar files are stored in this repository under "iCalImportExport/libs/".
+All jar files are stored in this repository under "ICSImportExport/libs/".
 
 # Coding Style
 
@@ -66,22 +64,22 @@ See http://source.android.com/source/code-style.html
 See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-with-eclipse/
 
 # Licenses
-iCal Import/Export is licensed under the GPL v3+.
+ICS Import/Export is licensed under the GPL v3+.
 The file LICENSE includes the full license text.
 
 ## Details
-iCal Import/Export is free software: you can redistribute it and/or modify
+ICS Import/Export is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-iCal Import/Export is distributed in the hope that it will be useful,
+ICS Import/Export is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with iCal Import/Export.  If not, see <http://www.gnu.org/licenses/>.
+along with ICS Import/Export.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Libraries
 
