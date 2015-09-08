@@ -161,7 +161,7 @@ public class MainActivity extends FragmentActivity {
 
         String action = intent.getAction();
 
-        final int id = action.equals(LOAD_CALENDAR) ? intent.getIntExtra(EXTRA_CALENDAR_ID, -1) : -1;
+        final long id = action.equals(LOAD_CALENDAR) ? intent.getLongExtra(EXTRA_CALENDAR_ID, -1) : -1;
 
         new Thread(new Runnable() {
                        public void run() {
