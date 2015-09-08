@@ -76,7 +76,7 @@ public class Controller implements OnClickListener {
                 };
                 new AlertDialog.Builder(mActivity)
                                .setMessage(R.string.no_calendars_found)
-                               .setIcon(R.drawable.icon)
+                               .setIcon(R.mipmap.ic_launcher)
                                .setTitle(R.string.information)
                                .setCancelable(false)
                                .setPositiveButton(android.R.string.ok, okTask).create()

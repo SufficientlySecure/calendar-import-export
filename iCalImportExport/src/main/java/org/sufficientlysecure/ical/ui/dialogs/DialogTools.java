@@ -46,7 +46,7 @@ public final class DialogTools {
                 };
                 AlertDialog dlg = new AlertDialog.Builder(activity)
                                                  .setMessage(message)
-                                                 .setIcon(R.drawable.icon)
+                                                 .setIcon(R.mipmap.ic_launcher)
                                                  .setPositiveButton(android.R.string.ok, okTask)
                                                  .setTitle(activity.getString(title)).create();
                 dlg.show();

@@ -96,7 +96,7 @@ public class UrlDialog extends DialogFragment {
         };
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        AlertDialog dlg = builder.setIcon(R.drawable.icon)
+        AlertDialog dlg = builder.setIcon(R.mipmap.ic_launcher)
                                  .setTitle(R.string.enter_source_url)
                                  .setView(view)
                                  .setPositiveButton(android.R.string.ok, okTask)
