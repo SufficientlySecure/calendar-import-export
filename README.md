@@ -4,6 +4,8 @@ This app allows you to import iCalendar files to your calender without using Goo
 
 This is a updated fork from iCal Import/Export, found on Google code (http://code.google.com/p/ical-import-export/).
 
+For more information, see http://sufficientlysecure.org/android/.
+
 # Build
 
 ## Prerequisites
@@ -36,6 +38,10 @@ This is a updated fork from iCal Import/Export, found on Google code (http://cod
 # Contribute
 
 Fork the git repository, make changes and submit a pull request with the details.
+
+## Translations
+
+Translations can be submitted at http://sufficientlysecure.org/android/.
 
 # Libraries
 
