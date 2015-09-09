@@ -20,9 +20,9 @@ For more information, see http://sufficientlysecure.org/android/.
 
 1. Run the Gradle wrapper (shell commands ``./gradlew build``, ``./gradlew clean`` etc)
 2. Run ``./gradlew --help`` for help and ``./gradlew tasks`` for a list of available build tasks.
-3. If needed, edit "iCalImportExport/build.gradle" to change the "compileSdkVersion"
+3. If needed, edit "ICSImportExport/build.gradle" to change the "compileSdkVersion"
    and/or "buildToolsVersion" numbers to match what you installed using the SDK Manager.
-4. If needed, edit "iCalImportExport/build.gradle" to change the "com.android.support:support-v4"
+4. If needed, edit "ICSImportExport/build.gradle" to change the "com.android.support:support-v4"
    version number to match the version of "Android Support Library" you installed
    using the SDK Manager.
 
