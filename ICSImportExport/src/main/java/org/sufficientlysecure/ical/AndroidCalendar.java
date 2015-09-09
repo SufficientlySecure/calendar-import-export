@@ -31,7 +31,7 @@ import android.provider.CalendarContractWrapper.Events;
 
 @SuppressLint("NewApi")
 public class AndroidCalendar {
-    public int mId;
+    public long mId;
     public String mIdStr;
     public String mName;
     public String mDisplayName;
@@ -63,7 +63,7 @@ public class AndroidCalendar {
                 continue;
 
             AndroidCalendar calendar = new AndroidCalendar();
-            calendar.mId = getInt(cur, Calendars._ID);
+            calendar.mId = getLong(cur, Calendars._ID);
             calendar.mIdStr = getString(cur, Calendars._ID);
             calendar.mName = getString(cur, Calendars.NAME);
             calendar.mDisplayName = getString(cur, Calendars.CALENDAR_DISPLAY_NAME);
@@ -84,6 +84,10 @@ public class AndroidCalendar {
         cur.close();
 
         return calendars;
+    }
+
+    private static long getLong(Cursor src, String columnName) {
+        return src.getLong(src.getColumnIndex(columnName));
     }
 
     private static int getInt(Cursor src, String columnName) {

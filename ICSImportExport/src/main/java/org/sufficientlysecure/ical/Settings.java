@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 public class Settings {
     public static final String PREF_DEFAULT_REMINDERS = "default_reminders";
     public static final String PREF_DUPLICATE_HANDLING = "duplicate_handling";
+    public static final String PREF_GLOBAL_UIDS = "global_uids";
     public static final String PREF_ICAL4J_COMPATIBILITY_NOTES = "ical4j.compatibility.notes";
     public static final String PREF_ICAL4J_COMPATIBILITY_OUTLOOK = "ical4j.compatibility.outlook";
     public static final String PREF_ICAL4J_COMPATIBILITY_VCARD = "ical4j.compatibility.vcard";
@@ -23,6 +24,7 @@ public class Settings {
     public static final String PREF_UIDPID = "uidPid";
     public enum DuplicateHandlingEnum {
         DUP_REPLACE,
+        DUP_REPLACE_ANY,
         DUP_IGNORE,
         DUP_DONT_CHECK,
     }
@@ -102,6 +104,14 @@ public class Settings {
 
     public void setKeepUids(boolean value) {
         putBoolean(PREF_KEEP_UIDS, value);
+    }
+
+    public boolean getGlobalUids() {
+        return getBoolean(PREF_GLOBAL_UIDS, false);
+    }
+
+    public void setGlobalUids(boolean value) {
+        putBoolean(PREF_GLOBAL_UIDS, value);
     }
 
     public boolean getImportReminders() {

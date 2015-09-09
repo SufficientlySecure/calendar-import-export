@@ -68,25 +68,24 @@ public class ProcessVEvent extends RunnableWithProgress {
     private static final Duration ONE_DAY = createDuration("P1D");
     private static final Duration ZERO_SECONDS = createDuration("PT0S");
 
+    private static final String[] EVENT_QUERY_COLUMNS = new String[] { Events.CALENDAR_ID, Events._ID };
+    private static final int EVENT_QUERY_CALENDAR_ID_COL = 0;
+    private static final int EVENT_QUERY_ID_COL = 1;
+
     private Calendar mICalCalendar;
     private AndroidCalendar mAndroidCalendar;
     private boolean mIsInserter;
 
-    private final class Options {
-        public Settings.DuplicateHandlingEnum mDuplicateHandling;
-        public boolean mKeepUids;
-        private boolean mImportReminders;
+    private final class Options extends Settings {
         private List<Integer> mDefaultReminders;
 
-        public Options(Settings settings) {
-            mDuplicateHandling = settings.getDuplicateHandling();
-            mKeepUids = settings.getKeepUids();
-            mImportReminders = settings.getImportReminders();
-            mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes(settings);
+        public Options(MainActivity activity) {
+            super(activity.getSettings().getPreferences());
+            mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes(this);
         }
 
         public List<Integer> getReminders(List<Integer> eventReminders) {
-            if (mImportReminders && eventReminders.size() > 0)
+            if (eventReminders.size() > 0 && getImportReminders())
                 return eventReminders;
             return mDefaultReminders;
         }
@@ -102,7 +101,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     public void run() {
         try {
             MainActivity activity = (MainActivity) getActivity();
-            Options options = new Options(activity.getSettings());
+            Options options = new Options(activity);
 
             List<Integer> reminders = new ArrayList<Integer>();
 
@@ -114,10 +113,14 @@ public class ProcessVEvent extends RunnableWithProgress {
             int numDel = 0;
             int numIns = 0;
             int numDups = 0;
-            final boolean ignoreDupes = options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_IGNORE;
 
             ContentValues cAlarm = new ContentValues();
             cAlarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+
+            final Settings.DuplicateHandlingEnum dupes = options.getDuplicateHandling();
+
+            Log.d(TAG, (mIsInserter ? "Ins" : "Del") + " for id " + mAndroidCalendar.mId);
+            Log.d(TAG, "Duplication option is " + dupes.ordinal());
 
             for (Object ve: events) {
                 incrementProgressBy(1);
@@ -131,32 +134,68 @@ public class ProcessVEvent extends RunnableWithProgress {
                     continue;
                 }
 
+                long insertCalendarId = mAndroidCalendar.mId; // Calendar id to insert to
+
                 ContentValues c = convertToDB(e, options, reminders, mAndroidCalendar.mId);
+
+                Cursor cur = null;
                 boolean mustDelete = !mIsInserter;
-                if (!mustDelete) {
-                    mustDelete = dbHasDuplicate(resolver, options, c);
-                    if (mustDelete && ignoreDupes) {
-                        Log.d(TAG, "Ignoring duplicate event");
-                        numDups++;
-                        continue;
+
+                // Determine if we need to delete a duplicate event in order to update it
+                if (!mustDelete && dupes != Settings.DuplicateHandlingEnum.DUP_DONT_CHECK) {
+
+                    cur = query(resolver, options, c);
+                    while (!mustDelete && cur != null && cur.moveToNext()) {
+                        if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE)
+                            mustDelete = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL) == mAndroidCalendar.mId;
+                        else
+                            mustDelete = true; // Replacing all (or ignoring, handled just below)
+                    }
+
+                    if (mustDelete) {
+                        if (dupes == Settings.DuplicateHandlingEnum.DUP_IGNORE) {
+                            Log.d(TAG, "Avoiding inserting a duplicate event");
+                            numDups++;
+                            cur.close();
+                            continue;
+                        }
+                        if (cur != null)
+                            cur.moveToPosition(-1); // Rewind for use below
                     }
                 }
 
                 if (mustDelete) {
-                    Cursor cur = query(resolver, options, c);
-                    if (cur != null) {
-                        while (cur.moveToNext()) {
-                            String id = cur.getString(0);
-                            Uri eventUri = Uri.withAppendedPath(Events.CONTENT_URI, id);
-                            numDel += resolver.delete(eventUri, null, null);
-                            String where = Reminders.EVENT_ID + "=?";
-                            resolver.delete(Reminders.CONTENT_URI, where, new String[] { id });
+                    if (cur == null)
+                        cur = query(resolver, options, c);
+
+                    while (cur != null && cur.moveToNext()) {
+                        long rowCalendarId = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL);
+
+                        if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE
+                            && rowCalendarId != mAndroidCalendar.mId) {
+                            Log.d(TAG, "Avoiding deleting duplicate event in calendar " + rowCalendarId);
+                            continue; // Not in the destination calendar
                         }
-                        cur.close();
+
+                        String id = cur.getString(EVENT_QUERY_ID_COL);
+                        Uri eventUri = Uri.withAppendedPath(Events.CONTENT_URI, id);
+                        numDel += resolver.delete(eventUri, null, null);
+                        String where = Reminders.EVENT_ID + "=?";
+                        resolver.delete(Reminders.CONTENT_URI, where, new String[] { id });
+                        if (mIsInserter && rowCalendarId != mAndroidCalendar.mId
+                            && dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE_ANY) {
+                            // Must update this event in the calendar this row came from
+                            Log.d(TAG, "Changing insert calendar from " + rowCalendarId + " to " + insertCalendarId);
+                            insertCalendarId = rowCalendarId;
+                        }
                     }
-                    if (!mIsInserter)
-                        continue;
                 }
+
+                if (cur != null)
+                    cur.close();
+
+                if (!mIsInserter)
+                    continue;
 
                 if (Events.UID_2445 != null && !c.containsKey(Events.UID_2445)) {
                     // Create a UID for this event to use. We create it here so if
@@ -164,19 +203,16 @@ public class ProcessVEvent extends RunnableWithProgress {
                     c.put(Events.UID_2445, activity.generateUid());
                 }
 
-                Log.d(TAG, "destination values: " + c);
-
+                c.put(Events.CALENDAR_ID, insertCalendarId);
                 Uri uri = insertAndLog(resolver, Events.CONTENT_URI, c, "Event");
                 if (uri == null)
                     continue; // FIXME: Note the failure
 
-                final int id = Integer.parseInt(uri.getLastPathSegment());
+                final long id = Long.parseLong(uri.getLastPathSegment());
 
                 numIns++;
 
                 for (int time: options.getReminders(reminders)) {
-                    Log.d(TAG, "Inserting reminder for event with id: " + id);
-
                     cAlarm.put(Reminders.EVENT_ID, id);
                     cAlarm.put(Reminders.MINUTES, time);
                     insertAndLog(resolver, Reminders.CONTENT_URI, cAlarm, "Reminder");
@@ -192,7 +228,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             String msg = res.getQuantityString(R.plurals.processed_n_entries, n, n) + "\n";
             if (mIsInserter) {
                 msg += "\n";
-                if (options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK)
+                if (options.getDuplicateHandling() == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK)
                     msg += res.getString(R.string.did_not_check_for_dupes);
                 else
                     msg += res.getQuantityString(R.plurals.found_n_duplicates, numDups, numDups);
@@ -216,7 +252,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
     // Munge a VEvent so Android won't reject it, then convert to ContentValues for inserting
     private ContentValues convertToDB(VEvent e, Options options,
-                                      List<Integer> reminders, int calendarId) {
+                                      List<Integer> reminders, long calendarId) {
         reminders.clear();
 
         boolean allDay = false;
@@ -427,6 +463,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private Uri insertAndLog(ContentResolver resolver, Uri uri, ContentValues c, String type) {
+       Log.d(TAG, "Inserting " + type + " values: " + c);
         Uri result = resolver.insert(uri, c);
         if (result == null)
             Log.d(TAG, "Could not insert " + type);
@@ -435,27 +472,26 @@ public class ProcessVEvent extends RunnableWithProgress {
         return result;
     }
 
-    private boolean dbHasDuplicate(ContentResolver resolver, Options options, ContentValues c) {
-        if (options.mDuplicateHandling == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK)
-            return false;
-
-        Cursor cur = query(resolver, options, c);
-        if (cur == null)
-            return false;
-
-        int count = cur.getCount();
-        cur.close();
-        return count > 0;
+    private Cursor queryEvents(ContentResolver resolver, StringBuilder b, List<String> argsList) {
+        final String where = b.toString();
+        final String[] args = argsList.toArray(new String[argsList.size()]);
+        return resolver.query(Events.CONTENT_URI, EVENT_QUERY_COLUMNS, where, args, null);
     }
 
     private Cursor query(ContentResolver resolver, Options options, ContentValues c) {
 
-        final String[] cols = new String[] { Events._ID };
+        StringBuilder b = new StringBuilder();
+        List<String> argsList = new ArrayList<String>();
 
-        if (options.mKeepUids && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
-            String where = Events.UID_2445 + "=?";
-            String[] args = new String[] { c.getAsString(Events.UID_2445) };
-            return resolver.query(Events.CONTENT_URI, cols, where, args, null);
+        if (options.getKeepUids() && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
+            // Use our UID to query, either globally or per-calendar unique
+            if (!options.getGlobalUids()) {
+                b.append(Events.CALENDAR_ID).append("=? AND ");
+                argsList.add(c.getAsString(Events.CALENDAR_ID));
+            }
+            b.append(Events.UID_2445).append("=?");
+            argsList.add(c.getAsString(Events.UID_2445));
+            return queryEvents(resolver, b, argsList);
         }
 
         // Without UIDs, the best we can do is check the start date and title within
@@ -463,12 +499,10 @@ public class ProcessVEvent extends RunnableWithProgress {
         if (!c.containsKey(Events.CALENDAR_ID) || !c.containsKey(Events.DTSTART))
             return null;
 
-        StringBuilder b = new StringBuilder();
-        b.append(Events.CALENDAR_ID).append("=? AND ")
-        .append(Events.DTSTART).append("=? AND ")
-        .append(Events.TITLE);
+        b.append(Events.CALENDAR_ID).append("=? AND ");
+        b.append(Events.DTSTART).append("=? AND ");
+        b.append(Events.TITLE);
 
-        List<String> argsList = new ArrayList<>();
         argsList.add(c.getAsString(Events.CALENDAR_ID));
         argsList.add(c.getAsString(Events.DTSTART));
 
@@ -478,9 +512,6 @@ public class ProcessVEvent extends RunnableWithProgress {
         } else
             b.append(" is null");
 
-        String where = b.toString();
-        String[] args = argsList.toArray(new String[argsList.size()]);
-
-        return resolver.query(Events.CONTENT_URI, cols, where, args, null);
+        return queryEvents(resolver, b, argsList);
     }
 }

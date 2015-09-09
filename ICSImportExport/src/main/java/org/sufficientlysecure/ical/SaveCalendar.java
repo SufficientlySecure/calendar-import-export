@@ -347,7 +347,7 @@ public class SaveCalendar extends RunnableWithProgress {
             Description desc = new Description(s);
 
             ContentResolver resolver = activity.getContentResolver();
-            int eventId = getInt(cur, Events._ID);
+            long eventId = getLong(cur, Events._ID);
             Cursor alarmCur = Reminders.query(resolver, eventId, REMINDER_COLS);
             while (alarmCur.moveToNext()) {
                 int mins = getInt(alarmCur, Reminders.MINUTES);
@@ -376,6 +376,11 @@ public class SaveCalendar extends RunnableWithProgress {
     private String getString(Cursor cur, String dbName) {
         int i = getColumnIndex(cur, dbName);
         return i == -1 ? null : cur.getString(i);
+    }
+
+    private long getLong(Cursor cur, String dbName) {
+        int i = getColumnIndex(cur, dbName);
+        return i == -1 ? -1 : cur.getLong(i);
     }
 
     private int getInt(Cursor cur, String dbName) {

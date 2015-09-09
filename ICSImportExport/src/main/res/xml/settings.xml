@@ -32,6 +32,12 @@
             android:summary="@string/use_any_existing_unique_identifiers"
             android:defaultValue="true" />
 
+        <CheckBoxPreference
+            android:key="global_uids"
+            android:title="@string/global_uids"
+            android:summary="@string/treat_unique_identifiers_as_globally"
+            android:defaultValue="false" />
+
     </PreferenceCategory>
 
     <PreferenceCategory

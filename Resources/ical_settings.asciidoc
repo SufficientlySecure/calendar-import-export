@@ -33,15 +33,19 @@ contents in the imported result.
 
 How to handle duplicate events while importing.
 
-* Replace the existing event with the imported event (default)
+* Replace with the imported event if in the same calendar (default)
+* Replace with the imported event regardless of calendar
 * Keep the existing event and ignore the imported event
 * Don't check for duplicates at all, always insert all imported events
 
-:enumValues: DUP_REPLACE, DUP_IGNORE, DUP_DONT_CHECK
+:enumValues: DUP_REPLACE, DUP_REPLACE_ANY, DUP_IGNORE, DUP_DONT_CHECK
 
 Importing will be slightly faster if you do not check for duplicates. Note
 that UID handling as described below will affect how duplicates are
-identified.
+identified. In the event that "Global UIDs" below is _disabled_, the choice
+"Replace with the imported event regardless of calendar" is equivalent to
+the default first option, since this means that only UIDs within the
+destination calendar will be considered as duplicates.
 
 ==== Keep UIDs (Y/N)
 
@@ -53,6 +57,15 @@ Enabling this setting means that if you import the same event multiple
 times, it will be correctly identified as a duplicate even if it has been
 renamed, moved in time or otherwise edited. When this option is not enabled
 duplicates are detected using a heuristic which can fail.
+
+==== Global UIDs (Y/N)
+
+Treat unique identifiers as globally unique across all calendars.
+
+This setting identifies imported entries by their unique id regardless of
+which calendar they are in. This should be enabled if you wish to ensure
+that events are globally unique by their id, i.e. that a given imported
+event can only be in one calendar at once.
 
 === Reminders
 

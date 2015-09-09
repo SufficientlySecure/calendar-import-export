@@ -9,6 +9,7 @@
     <string name="default_reminders">Default reminders</string>
     <string name="duplicate_handling">Duplicate handling</string>
     <string name="general">General</string>
+    <string name="global_uids">Global UIDs</string>
     <string name="how_to_handle_duplicate_events">How to handle duplicate events while importing</string>
     <string name="import_reminders">Import reminders</string>
     <string name="keep_uids">Keep UIDs</string>
@@ -25,11 +26,13 @@
     <string name="support_events_in_vcard_format">Support events in vCard format</string>
     <string name="support_various_incorrect_but_common">Support various incorrect but common iCalendar file quirks</string>
     <string name="support_various_line_wrapping_schemes">Support various line wrapping schemes used by different products</string>
+    <string name="treat_unique_identifiers_as_globally">Treat unique identifiers as globally unique across all calendars</string>
     <string name="use_any_existing_unique_identifiers">Use any existing unique identifiers to identify and find duplicate events</string>
     <string name="use_reminders_from_the_imported">Use reminders from the imported file instead of default reminders when present</string>
     <string name="vcard_compatible">vCard compatible</string>
     <string-array name="duplicate_handling_array">
-        <item>Replace the existing event with the imported event</item>
+        <item>Replace with the imported event if in the same calendar</item>
+        <item>Replace with the imported event regardless of calendar</item>
         <item>Keep the existing event and ignore the imported event</item>
         <item>Don\'t check for duplicates at all, always insert all imported events</item>
     </string-array>
@@ -37,5 +40,6 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+        <item>3</item>
     </string-array>
 </resources>
