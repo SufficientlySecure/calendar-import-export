@@ -1,6 +1,7 @@
 # Gradle
 .gradle
-build
+/build
+/ICSImportExport/build
 
 # Android Studio
 .idea
