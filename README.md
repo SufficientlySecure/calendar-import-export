@@ -19,12 +19,12 @@ For more information, see http://sufficientlysecure.org/android/.
 ## Build with Gradle
 
 1. Run the Gradle wrapper (shell commands ``./gradlew build``, ``./gradlew clean`` etc)
-2. Run ``./gradlew --help`` for help and ``./gradlew tasks`` for a list of available build tasks.
+2. Run ``./gradlew --help`` for help and ``./gradlew tasks`` for a list of available build tasks
 3. If needed, edit "ICSImportExport/build.gradle" to change the "compileSdkVersion"
-   and/or "buildToolsVersion" numbers to match what you installed using the SDK Manager.
+   and/or "buildToolsVersion" numbers to match what you installed using the SDK Manager
 4. If needed, edit "ICSImportExport/build.gradle" to change the "com.android.support:support-v4"
    version number to match the version of "Android Support Library" you installed
-   using the SDK Manager.
+   using the SDK Manager
 
 ## Build with Android Studio
 
@@ -37,13 +37,13 @@ For more information, see http://sufficientlysecure.org/android/.
 
 Fork the git repository, make changes and submit a pull request with the details.
 
+## Bugs
+
+Bugs can be raised at http://sufficientlysecure.org/android/.
+
 ## Translations
 
 Translations can be submitted at http://sufficientlysecure.org/android/.
-
-# Libraries
-
-All jar files are stored in this repository under "ICSImportExport/libs/".
 
 # Coding Style
 
