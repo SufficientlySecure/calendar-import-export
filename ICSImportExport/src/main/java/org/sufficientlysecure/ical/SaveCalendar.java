@@ -406,7 +406,7 @@ public class SaveCalendar extends RunnableWithProgress {
         if (TextUtils.isEmpty(tz))
             return true;
         final String utz = tz.toUpperCase(Locale.US);
-        return utz.equals("UTC") || utz.endsWith("/UTC");
+        return utz.equals("UTC") || utz.equals("UTC-0") || utz.equals("UTC+0") || utz.endsWith("/UTC");
     }
 
     private Date getDateTime(Cursor cur, String dbName, String dbTzName, Calendar cal) {
