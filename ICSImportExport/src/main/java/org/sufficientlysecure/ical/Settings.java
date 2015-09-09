@@ -5,6 +5,7 @@ package org.sufficientlysecure.ical;
 import android.content.SharedPreferences;
 
 public class Settings {
+    public static final String PREF_DEBUG_LOGGING = "debug_logging";
     public static final String PREF_DEFAULT_REMINDERS = "default_reminders";
     public static final String PREF_DUPLICATE_HANDLING = "duplicate_handling";
     public static final String PREF_GLOBAL_UIDS = "global_uids";
@@ -88,6 +89,14 @@ public class Settings {
 
     public void setSavePasswords(boolean value) {
         putBoolean(PREF_SAVE_PASSWORDS, value);
+    }
+
+    public boolean getDebugLogging() {
+        return getBoolean(PREF_DEBUG_LOGGING, false);
+    }
+
+    public void setDebugLogging(boolean value) {
+        putBoolean(PREF_DEBUG_LOGGING, value);
     }
 
     public DuplicateHandlingEnum getDuplicateHandling() {

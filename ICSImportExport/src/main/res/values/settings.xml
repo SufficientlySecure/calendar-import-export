@@ -6,8 +6,10 @@
     <string name="allow_different_line_endings">Allow different line endings</string>
     <string name="choose_the_reminders_to_apply">Choose the reminders to apply to imported events</string>
     <string name="compatibility">Compatibility</string>
+    <string name="debug_logging">Debug logging</string>
     <string name="default_reminders">Default reminders</string>
     <string name="duplicate_handling">Duplicate handling</string>
+    <string name="enable_extra_logging_output_for">Enable extra logging output for debugging issues</string>
     <string name="general">General</string>
     <string name="global_uids">Global UIDs</string>
     <string name="how_to_handle_duplicate_events">How to handle duplicate events while importing</string>

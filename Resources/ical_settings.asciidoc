@@ -23,6 +23,14 @@ when you next choose to import a URL again.
 WARNING: The password is _not_ encrypted and so on a compromised or rooted
 device the password could be stolen. *Enable only with care*.
 
+==== Debug logging (Y/N)
+
+Enable extra logging output for debugging issues.
+
+This feature is not yet available.
+
+:enabled: false
+
 === Import
 
 These settings apply only when importing iCalendar files. You may wish
