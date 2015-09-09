@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
@@ -390,7 +391,8 @@ public class SaveCalendar extends RunnableWithProgress {
     }
 
     private Date utcDateFromMs(long ms) {
-        // FIXME: Does not being able to change the timezone here affect this?
+        // This date will be UTC provided the default false value of the iCal4j property
+        // "net.fortuna.ical4j.timezone.date.floating" has not been changed.
         return new Date(ms);
     }
 
@@ -398,6 +400,13 @@ public class SaveCalendar extends RunnableWithProgress {
         if (d.getDate() instanceof DateTime)
             return (DateTime) (d.getDate());
         return new DateTime(d.getDate());
+    }
+
+    private boolean isUtcTimeZone(final String tz) {
+        if (TextUtils.isEmpty(tz))
+            return true;
+        final String utz = tz.toUpperCase(Locale.US);
+        return utz.equals("UTC") || utz.endsWith("/UTC");
     }
 
     private Date getDateTime(Cursor cur, String dbName, String dbTzName, Calendar cal) {
@@ -409,7 +418,7 @@ public class SaveCalendar extends RunnableWithProgress {
             String tz = getString(cur, dbTzName);
             DateTime dt = new DateTime(true);     // UTC
             dt.setTime(cur.getLong(i));
-            if (!TextUtils.isEmpty(tz) && !TextUtils.equals(tz, "UTC")) {
+            if (!isUtcTimeZone(tz)) {
                 TimeZone t = mTzRegistry.getTimeZone(tz);
                 dt.setTimeZone(t);
                 if (!mInsertedTimeZones.contains(t)) {
