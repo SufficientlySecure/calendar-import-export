@@ -103,7 +103,7 @@ public class ProcessVEvent extends RunnableWithProgress {
             MainActivity activity = (MainActivity) getActivity();
             Options options = new Options(activity);
 
-            List<Integer> reminders = new ArrayList<Integer>();
+            List<Integer> reminders = new ArrayList<>();
 
             setMessage(R.string.processing_entries);
             ComponentList events = mICalCalendar.getComponents(VEvent.VEVENT);
@@ -159,8 +159,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                             cur.close();
                             continue;
                         }
-                        if (cur != null)
-                            cur.moveToPosition(-1); // Rewind for use below
+                        cur.moveToPosition(-1); // Rewind for use below
                     }
                 }
 
@@ -481,7 +480,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     private Cursor query(ContentResolver resolver, Options options, ContentValues c) {
 
         StringBuilder b = new StringBuilder();
-        List<String> argsList = new ArrayList<String>();
+        List<String> argsList = new ArrayList<>();
 
         if (options.getKeepUids() && Events.UID_2445 != null && c.containsKey(Events.UID_2445)) {
             // Use our UID to query, either globally or per-calendar unique

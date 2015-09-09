@@ -119,7 +119,7 @@ public class Controller implements OnClickListener {
                     setMessage(R.string.searching_for_files);
 
                     File root = Environment.getExternalStorageDirectory();
-                    List<File> files = new ArrayList<File>();
+                    List<File> files = new ArrayList<>();
                     searchFiles(root, files, "ics", "ical", "icalendar");
                     mActivity.setFiles(files);
                 }

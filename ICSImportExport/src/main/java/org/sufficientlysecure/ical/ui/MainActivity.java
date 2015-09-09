@@ -209,7 +209,7 @@ public class MainActivity extends FragmentActivity {
 
         runOnUiThread(new Runnable() {
                           public void run() {
-                              ArrayAdapter<E> adaptor = new ArrayAdapter<E>(ctx, id, list);
+                              ArrayAdapter<E> adaptor = new ArrayAdapter<>(ctx, id, list);
                               adaptor.setDropDownViewResource(dropId);
                               spinner.setAdapter(adaptor);
                               if (list.size() != 0)
@@ -229,7 +229,7 @@ public class MainActivity extends FragmentActivity {
     }
 
     public void setFiles(List<File> files) {
-        List<CalendarSource> sources = new ArrayList<CalendarSource>(files.size());
+        List<CalendarSource> sources = new ArrayList<>(files.size());
 
         for (File file: files) {
             try {

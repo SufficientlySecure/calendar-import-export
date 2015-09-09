@@ -29,7 +29,7 @@ public abstract class RunnableWithProgress {
         init(ProgressDialog.STYLE_SPINNER);
     }
 
-    public RunnableWithProgress(Activity activity, int style) {
+    protected RunnableWithProgress(Activity activity, int style) {
         mActivity = activity;
         init(style);
     }

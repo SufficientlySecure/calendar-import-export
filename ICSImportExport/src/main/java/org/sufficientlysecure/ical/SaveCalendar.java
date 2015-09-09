@@ -166,16 +166,13 @@ public class SaveCalendar extends RunnableWithProgress {
         List<VEvent> events = new ArrayList<>();
 
         while (cur.moveToNext()) {
-            try {
-                incrementProgressBy(1);
-                VEvent e = convertFromDb(cur, activity, cal, timestamp);
-                if (e != null) {
-                    events.add(e);
-                    Log.d(TAG, "Adding event: " + e.toString());
-                }
-                i++;
-            } catch (IOException ignored) {
+            incrementProgressBy(1);
+            VEvent e = convertFromDb(cur, activity, cal, timestamp);
+            if (e != null) {
+                events.add(e);
+                Log.d(TAG, "Adding event: " + e.toString());
             }
+            i++;
         }
         cur.close();
 
@@ -241,8 +238,7 @@ public class SaveCalendar extends RunnableWithProgress {
         return result[0];
     }
 
-    private VEvent convertFromDb(Cursor cur, MainActivity activity, Calendar cal, DtStamp timestamp)
-            throws IOException {
+    private VEvent convertFromDb(Cursor cur, MainActivity activity, Calendar cal, DtStamp timestamp) {
         //String cursorContents = DatabaseUtils.dumpCurrentRowToString(cur);
         //Log.d(TAG, "cursor: " + cursorContents);
 
@@ -441,7 +437,7 @@ public class SaveCalendar extends RunnableWithProgress {
         return null;
     }
 
-    private boolean copyEnumProperty(PropertyList l, String evName, Cursor cur, String dbName,
+    private void copyEnumProperty(PropertyList l, String evName, Cursor cur, String dbName,
                                      List<String> vals) {
         // None of the exceptions caught below should be able to be thrown AFAICS.
         try {
@@ -452,11 +448,9 @@ public class SaveCalendar extends RunnableWithProgress {
                     Property p = mPropertyFactory.createProperty(evName);
                     p.setValue(vals.get(value));
                     l.add(p);
-                    return true;
                 }
             }
         } catch (IOException | URISyntaxException | ParseException ignored) {
         }
-        return false;
     }
 }

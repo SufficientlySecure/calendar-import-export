@@ -56,7 +56,7 @@ public class AndroidCalendar {
             return new ArrayList<>();
 
         Cursor cur = resolver.query(Calendars.CONTENT_URI, CAL_COLS, null, null, null);
-        List<AndroidCalendar> calendars = new ArrayList<AndroidCalendar>(cur.getCount());
+        List<AndroidCalendar> calendars = new ArrayList<>(cur.getCount());
 
         while (cur.moveToNext()) {
             if (getInt(cur, Calendars.DELETED) != 0)
