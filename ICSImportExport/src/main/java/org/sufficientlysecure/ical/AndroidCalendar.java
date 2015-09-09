@@ -59,7 +59,7 @@ public class AndroidCalendar {
         List<AndroidCalendar> calendars = new ArrayList<>(cur.getCount());
 
         while (cur.moveToNext()) {
-            if (getInt(cur, Calendars.DELETED) != 0)
+            if (getLong(cur, Calendars.DELETED) != 0)
                 continue;
 
             AndroidCalendar calendar = new AndroidCalendar();
@@ -70,7 +70,7 @@ public class AndroidCalendar {
             calendar.mAccountName = getString(cur, Calendars.ACCOUNT_NAME);
             calendar.mAccountType = getString(cur, Calendars.ACCOUNT_TYPE);
             calendar.mOwner = getString(cur, Calendars.OWNER_ACCOUNT);
-            calendar.mIsActive = getInt(cur, Calendars.VISIBLE) == 1;
+            calendar.mIsActive = getLong(cur, Calendars.VISIBLE) == 1;
             calendar.mTimezone = getString(cur, Calendars.CALENDAR_TIME_ZONE);
 
             final String[] cols = new String[] { Events._ID };
@@ -88,10 +88,6 @@ public class AndroidCalendar {
 
     private static long getLong(Cursor src, String columnName) {
         return src.getLong(src.getColumnIndex(columnName));
-    }
-
-    private static int getInt(Cursor src, String columnName) {
-        return src.getInt(src.getColumnIndex(columnName));
     }
 
     private static String getString(Cursor src, String columnName) {
