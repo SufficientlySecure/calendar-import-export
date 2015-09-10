@@ -29,6 +29,11 @@ android {
         compile 'commons-lang:commons-lang:2.6'
     }
 
+    configurations {
+        // Exclude commons-logging as Android has it built-in
+        compile.exclude group: 'commons-logging'
+    }
+
     buildTypes {
         release {
             minifyEnabled true
