@@ -416,9 +416,12 @@ public class SaveCalendar extends RunnableWithProgress {
                 return utcDateFromMs(cur.getLong(i));     // Ignore timezone for date-only dates
 
             String tz = getString(cur, dbTzName);
-            DateTime dt = new DateTime(true);     // UTC
+            final boolean isUtc = isUtcTimeZone(tz);
+
+            DateTime dt = new DateTime(isUtc);
             dt.setTime(cur.getLong(i));
-            if (!isUtcTimeZone(tz)) {
+
+            if (!isUtc) {
                 TimeZone t = mTzRegistry.getTimeZone(tz);
                 dt.setTimeZone(t);
                 if (!mInsertedTimeZones.contains(t)) {
