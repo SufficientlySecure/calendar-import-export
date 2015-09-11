@@ -213,8 +213,20 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             runOnUiThread(task);
         }
 
-        setCalendars(calendars);
-        selectCalendar(calendarId);
+        mCalendars = calendars;
+        setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
+
+        for (int i = 0; i < mCalendars.size(); i++) {
+            if (mCalendars.get(i).mId == calendarId) {
+                final int index = i;
+                runOnUiThread(new Runnable() {
+                                  public void run() {
+                                      mCalendarSpinner.setSelection(index);
+                                  }
+                              });
+                break;
+            }
+        }
     }
 
     public void showToast(final String msg) {
@@ -259,26 +271,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                       });
     }
 
-    public void setCalendars(List<AndroidCalendar> calendars) {
-        mCalendars = calendars;
-        setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
-    }
-
     private void setSources(List<CalendarSource> sources) {
         setupSpinner(mFileSpinner, sources, mLoadButton);
-    }
-
-    public void setFiles(List<File> files) {
-        List<CalendarSource> sources = new ArrayList<>(files.size());
-
-        for (File file: files) {
-            try {
-                sources.add(new CalendarSource(file.toURI().toURL(), null, null));
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-        }
-        setSources(sources);
     }
 
     public boolean setUrl(String url, String username, String password) {
@@ -291,42 +285,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private void setCalendar(final Calendar calendar) {
-        runOnUiThread(new Runnable() {
-                          public void run() {
-                              if (calendar == null) {
-                                  mInsertDeleteLayout.setVisibility(View.GONE);
-                                  return;
-                              }
-
-                              Resources res = getResources();
-                              final int n = calendar.getComponents(VEvent.VEVENT).size();
-                              mInsertButton.setText(get(res, R.plurals.insert_n_entries, n));
-                              mDeleteButton.setText(get(res, R.plurals.delete_n_entries, n));
-                              mInsertDeleteLayout.setVisibility(View.VISIBLE);
-                          }
-                          private String get(Resources res, int id, int n) {
-                              return res.getQuantityString(id, n, n);
-                          }
-                      });
-    }
-
     public AndroidCalendar getSelectedCalendar() {
         return (AndroidCalendar) mCalendarSpinner.getSelectedItem();
-    }
-
-    public void selectCalendar(long id) {
-        for (int i = 0; i < mCalendars.size(); i++) {
-            if (mCalendars.get(i).mId == id) {
-                final int index = i;
-                runOnUiThread(new Runnable() {
-                                  public void run() {
-                                      mCalendarSpinner.setSelection(index);
-                                  }
-                              });
-                return;
-            }
-        }
     }
 
     public URLConnection getSelectedURL() throws IOException {
@@ -451,62 +411,97 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    private class SearchForFiles extends RunnableWithProgress {
+        public SearchForFiles(MainActivity activity) {
+            super(activity);
+        }
+
+        @Override
+        protected void runImpl() throws Exception {
+            setMessage(R.string.searching_for_files);
+            File root = Environment.getExternalStorageDirectory();
+            List<File> files = new ArrayList<>();
+            searchFiles(root, files, "ics", "ical", "icalendar");
+            List<CalendarSource> sources = new ArrayList<>(files.size());
+
+            for (File file: files) {
+                try {
+                    sources.add(new CalendarSource(file.toURI().toURL(), null, null));
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+            ((MainActivity) getActivity()).setSources(sources);
+        }
+    }
+
+    private class LoadFile extends RunnableWithProgress {
+        public LoadFile(MainActivity activity) {
+            super(activity);
+        }
+
+        @Override
+        protected void runImpl() throws Exception {
+            setMessage(R.string.reading_file_please_wait);
+            if (mCalendarBuilder == null) {
+                mCalendarBuilder = new CalendarBuilder();
+            }
+            URLConnection c = getSelectedURL();
+            InputStream in = c == null ? null : c.getInputStream();
+            if (in != null) {
+                setHint(CompatibilityHints.KEY_RELAXED_UNFOLDING, mSettings.getIcal4jUnfoldingRelaxed());
+                setHint(CompatibilityHints.KEY_RELAXED_PARSING, mSettings.getIcal4jParsingRelaxed());
+                setHint(CompatibilityHints.KEY_RELAXED_VALIDATION, mSettings.getIcal4jValidationRelaxed());
+                setHint(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, mSettings.getIcal4jCompatibilityOutlook());
+                setHint(CompatibilityHints.KEY_NOTES_COMPATIBILITY, mSettings.getIcal4jCompatibilityNotes());
+                setHint(CompatibilityHints.KEY_VCARD_COMPATIBILITY, mSettings.getIcal4jCompatibilityVcard());
+                mCalendar = mCalendarBuilder.build(in);
+            }
+
+            runOnUiThread(new Runnable() {
+                              public void run() {
+                                  if (mCalendar == null) {
+                                      mInsertDeleteLayout.setVisibility(View.GONE);
+                                      return;
+                                  }
+
+                                  Resources res = getResources();
+                                  final int n = mCalendar.getComponents(VEvent.VEVENT).size();
+                                  mInsertButton.setText(get(res, R.plurals.insert_n_entries, n));
+                                  mDeleteButton.setText(get(res, R.plurals.delete_n_entries, n));
+                                  mInsertDeleteLayout.setVisibility(View.VISIBLE);
+                              }
+                              private String get(Resources res, int id, int n) {
+                                  return res.getQuantityString(id, n, n);
+                              }
+                          });
+        }
+    }
+
     @Override
     public void onClick(View view) {
-        RunnableWithProgress task = null;
+        RunnableWithProgress task;
 
-        // Handling search for file event
-        if (view.getId() == R.id.SearchButton) {
-
-            task = new RunnableWithProgress(this) {
-                @Override
-                protected void runImpl() throws Exception {
-                    setMessage(R.string.searching_for_files);
-
-                    File root = Environment.getExternalStorageDirectory();
-                    List<File> files = new ArrayList<>();
-                    searchFiles(root, files, "ics", "ical", "icalendar");
-                    setFiles(files);
-                }
-            };
-        } else if (view.getId() == R.id.LoadButton) {
-
-            task = new RunnableWithProgress(this) {
-                @Override
-                protected void runImpl() throws Exception {
-                    setMessage(R.string.reading_file_please_wait);
-                    if (mCalendarBuilder == null) {
-                        mCalendarBuilder = new CalendarBuilder();
-                    }
-                    URLConnection c = getSelectedURL();
-                    InputStream in = c == null ? null : c.getInputStream();
-                    if (in != null) {
-                        setHint(CompatibilityHints.KEY_RELAXED_UNFOLDING, mSettings.getIcal4jUnfoldingRelaxed());
-                        setHint(CompatibilityHints.KEY_RELAXED_PARSING, mSettings.getIcal4jParsingRelaxed());
-                        setHint(CompatibilityHints.KEY_RELAXED_VALIDATION, mSettings.getIcal4jValidationRelaxed());
-                        setHint(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, mSettings.getIcal4jCompatibilityOutlook());
-                        setHint(CompatibilityHints.KEY_NOTES_COMPATIBILITY, mSettings.getIcal4jCompatibilityNotes());
-                        setHint(CompatibilityHints.KEY_VCARD_COMPATIBILITY, mSettings.getIcal4jCompatibilityVcard());
-                        mCalendar = mCalendarBuilder.build(in);
-                    }
-                    setCalendar(mCalendar);
-                }
-            };
-        } else if (view.getId() == R.id.SetUrlButton) {
-
-            UrlDialog.show(this);
-
-        } else if (view.getId() == R.id.SaveButton) {
-
-            task = new SaveCalendar(this);
-
-        } else if (view.getId() == R.id.InsertButton || view.getId() == R.id.DeleteButton) {
-
-            task = new ProcessVEvent(this, mCalendar, view.getId() == R.id.InsertButton);
+        switch (view.getId()) {
+            case R.id.SetUrlButton:
+                UrlDialog.show(this);
+                return;
+            case R.id.SearchButton:
+                task = new SearchForFiles(this);
+                break;
+            case R.id.LoadButton:
+                task = new LoadFile(this);
+                break;
+            case R.id.SaveButton:
+                task = new SaveCalendar(this);
+                break;
+            case R.id.InsertButton:
+            case R.id.DeleteButton:
+                task = new ProcessVEvent(this, mCalendar, view.getId() == R.id.InsertButton);
+                break;
+            default:
+                return;
         }
-
-        if (task != null) {
-            task.start();
-        }
+        task.start();
     }
 }
