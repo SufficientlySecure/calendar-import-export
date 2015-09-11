@@ -33,7 +33,6 @@
     <string name="not_applicable">N/A</string>
     <string name="owner">Owner</string>
     <string name="password">Password</string>
-    <string name="performing_first_time_setup">Performing first time setup&#8230;</string>
     <string name="please_enter_filename">Please enter the filename to save to.</string>
     <string name="processing_entries">Processing entries&#8230;</string>
     <string name="reading_file_please_wait">Reading file, please wait&#8230;</string>

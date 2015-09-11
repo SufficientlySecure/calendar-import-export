@@ -474,11 +474,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             task = new RunnableWithProgress(this) {
                 @Override
                 protected void runImpl() throws Exception {
+                    setMessage(R.string.reading_file_please_wait);
                     if (mCalendarBuilder == null) {
-                        setMessage(R.string.performing_first_time_setup);
                         mCalendarBuilder = new CalendarBuilder();
                     }
-                    setMessage(R.string.reading_file_please_wait);
                     URLConnection c = getSelectedURL();
                     InputStream in = c == null ? null : c.getInputStream();
                     if (in != null) {
