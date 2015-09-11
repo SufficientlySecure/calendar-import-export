@@ -171,6 +171,7 @@ public class SaveCalendar extends RunnableWithProgress {
             incrementProgressBy(1);
             VEvent e = convertFromDb(cur, activity, cal, timestamp);
             if (e != null) {
+                e.validate(true); // FIXME: Temporary
                 events.add(e);
                 if (Log.getIsUserEnabled())
                     Log.d(TAG, "Adding event: " + e.toString());
