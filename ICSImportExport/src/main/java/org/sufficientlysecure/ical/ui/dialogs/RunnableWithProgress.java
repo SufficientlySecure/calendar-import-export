@@ -1,4 +1,5 @@
 /**
+ *  Copyright (C) 2015  Jon Griffiths (jon_p_griffiths@yahoo.com)
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
  *  This program is free software: you can redistribute it and/or modify
@@ -16,6 +17,9 @@
  */
 
 package org.sufficientlysecure.ical.ui.dialogs;
+
+import org.sufficientlysecure.ical.R;
+import org.sufficientlysecure.ical.util.Log;
 
 import android.app.Activity;
 import android.app.ProgressDialog;
@@ -76,5 +80,14 @@ public abstract class RunnableWithProgress {
                                 });
     }
 
-    public abstract void run();
+    public final void run() {
+        try {
+            runImpl();
+        } catch (Exception e) {
+            Log.e("RunnableWithProgress", "An exception occurred", e);
+            DialogTools.info(getActivity(), R.string.error, "Error:\n" + e.getMessage());
+        }
+    }
+
+    protected abstract void runImpl() throws Exception;
 }

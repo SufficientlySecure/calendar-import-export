@@ -30,9 +30,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.UrlDialog;
-import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
-import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
@@ -115,7 +113,8 @@ public class Controller implements OnClickListener {
         if (view.getId() == R.id.SearchButton) {
 
             task = new RunnableWithProgress(mActivity) {
-                public void run() {
+                @Override
+                protected void runImpl() throws Exception {
                     setMessage(R.string.searching_for_files);
 
                     File root = Environment.getExternalStorageDirectory();
@@ -127,32 +126,26 @@ public class Controller implements OnClickListener {
         } else if (view.getId() == R.id.LoadButton) {
 
             task = new RunnableWithProgress(mActivity) {
-                public void run() {
+                @Override
+                protected void runImpl() throws Exception {
                     if (mCalendarBuilder == null) {
                         setMessage(R.string.performing_first_time_setup);
                         mCalendarBuilder = new CalendarBuilder();
                     }
-                    try {
-                        setMessage(R.string.reading_file_please_wait);
-                        URLConnection c = mActivity.getSelectedURL();
-                        InputStream in = c == null ? null : c.getInputStream();
-                        if (in != null) {
-                            SharedPreferences prefs = mActivity.getSettings().getPreferences();
-                            setHint(prefs, CompatibilityHints.KEY_RELAXED_UNFOLDING);
-                            setHint(prefs, CompatibilityHints.KEY_RELAXED_PARSING);
-                            setHint(prefs, CompatibilityHints.KEY_RELAXED_VALIDATION);
-                            setHint(prefs, CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
-                            setHint(prefs, CompatibilityHints.KEY_NOTES_COMPATIBILITY);
-                            setHint(prefs, CompatibilityHints.KEY_VCARD_COMPATIBILITY);
-                            mCalendar = mCalendarBuilder.build(in);
-                        }
-                        mActivity.setCalendar(mCalendar);
-                    } catch (Exception exc) {
-                        String msg = mActivity.getString(R.string.could_not_parse_file)
-                                     + exc.getMessage();
-                        DialogTools.info(mActivity, R.string.error, msg);
-                        Log.d(TAG, "Error", exc);
+                    setMessage(R.string.reading_file_please_wait);
+                    URLConnection c = mActivity.getSelectedURL();
+                    InputStream in = c == null ? null : c.getInputStream();
+                    if (in != null) {
+                        SharedPreferences prefs = mActivity.getSettings().getPreferences();
+                        setHint(prefs, CompatibilityHints.KEY_RELAXED_UNFOLDING);
+                        setHint(prefs, CompatibilityHints.KEY_RELAXED_PARSING);
+                        setHint(prefs, CompatibilityHints.KEY_RELAXED_VALIDATION);
+                        setHint(prefs, CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY);
+                        setHint(prefs, CompatibilityHints.KEY_NOTES_COMPATIBILITY);
+                        setHint(prefs, CompatibilityHints.KEY_VCARD_COMPATIBILITY);
+                        mCalendar = mCalendarBuilder.build(in);
                     }
+                    mActivity.setCalendar(mCalendar);
                 }
             };
         } else if (view.getId() == R.id.SetUrlButton) {

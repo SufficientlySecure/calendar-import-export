@@ -63,7 +63,6 @@ import net.fortuna.ical4j.model.TimeZoneRegistryFactory;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.sufficientlysecure.ical.ui.MainActivity;
-import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import org.sufficientlysecure.ical.util.Log;
 
@@ -115,7 +114,8 @@ public class SaveCalendar extends RunnableWithProgress {
         mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
     }
 
-    public void run() {
+    @Override
+    protected void runImpl() throws Exception {
         MainActivity activity = (MainActivity) getActivity();
         Settings settings = activity.getSettings();
 
@@ -182,19 +182,12 @@ public class SaveCalendar extends RunnableWithProgress {
         for (VEvent v: events)
             cal.getComponents().add(v);
 
-        try {
-            setMessage(R.string.writing_calendar_to_file);
-            new CalendarOutputter().output(cal, new FileOutputStream(output));
+        setMessage(R.string.writing_calendar_to_file);
+        new CalendarOutputter().output(cal, new FileOutputStream(output));
 
-            Resources res = activity.getResources();
-            String msg = res.getQuantityString(R.plurals.wrote_n_events_to, i, i, file);
-            activity.showToast(msg);
-
-        } catch (Exception e) {
-            Log.e(TAG, "SaveCalendar", e);
-
-            DialogTools.info(activity, R.string.error, "Error:\n" + e.getMessage());
-        }
+        Resources res = activity.getResources();
+        String msg = res.getQuantityString(R.plurals.wrote_n_events_to, i, i, file);
+        activity.showToast(msg);
     }
 
     private void getFileImpl(final String previousFile, final String[] result) {

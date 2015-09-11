@@ -9,10 +9,8 @@
     <string name="app_name">ICS Import/Export</string>
     <string name="calendar_selection">CALENDAR SELECTION</string>
     <string name="calendar_url">Calendar URL</string>
-    <string name="could_not_parse_file">Could not parse file\n\n</string>
     <string name="delete">Delete</string>
     <string name="delete_entries">Delete entries</string>
-    <string name="dialog_bug">I am sorry for you inconvenience. Please open a new issue report on http://sufficientlysecure.org/android-apps and attach ical_error.log located on your sd card.</string>
     <string name="did_not_check_for_dupes">Did not check for duplicates.</string>
     <string name="enter_filename">Enter filename</string>
     <string name="enter_source_url">Enter Source URL</string>

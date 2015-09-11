@@ -19,8 +19,6 @@
 
 package org.sufficientlysecure.ical;
 
-import java.io.FileOutputStream;
-import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -41,7 +39,6 @@ import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Trigger;
 import net.fortuna.ical4j.model.Property;
 
-import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.RemindersDialog;
@@ -55,7 +52,6 @@ import android.content.ContentValues;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.net.Uri;
-import android.os.Environment;
 import android.provider.CalendarContractWrapper.Events;
 import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
@@ -98,155 +94,142 @@ public class ProcessVEvent extends RunnableWithProgress {
         mIsInserter = isInserter;
     }
 
-    public void run() {
-        try {
-            MainActivity activity = (MainActivity) getActivity();
-            Options options = new Options(activity);
+    @Override
+    protected void runImpl() throws Exception {
+        MainActivity activity = (MainActivity) getActivity();
+        Options options = new Options(activity);
 
-            List<Integer> reminders = new ArrayList<>();
+        List<Integer> reminders = new ArrayList<>();
 
-            setMessage(R.string.processing_entries);
-            ComponentList events = mICalCalendar.getComponents(VEvent.VEVENT);
+        setMessage(R.string.processing_entries);
+        ComponentList events = mICalCalendar.getComponents(VEvent.VEVENT);
 
-            setMax(events.size());
-            ContentResolver resolver = activity.getContentResolver();
-            int numDel = 0;
-            int numIns = 0;
-            int numDups = 0;
+        setMax(events.size());
+        ContentResolver resolver = activity.getContentResolver();
+        int numDel = 0;
+        int numIns = 0;
+        int numDups = 0;
 
-            ContentValues cAlarm = new ContentValues();
-            cAlarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
+        ContentValues cAlarm = new ContentValues();
+        cAlarm.put(Reminders.METHOD, Reminders.METHOD_ALERT);
 
-            final Settings.DuplicateHandlingEnum dupes = options.getDuplicateHandling();
+        final Settings.DuplicateHandlingEnum dupes = options.getDuplicateHandling();
 
-            Log.d(TAG, (mIsInserter ? "Ins" : "Del") + " for id " + mAndroidCalendar.mId);
-            Log.d(TAG, "Duplication option is " + dupes.ordinal());
+        Log.d(TAG, (mIsInserter ? "Ins" : "Del") + " for id " + mAndroidCalendar.mId);
+        Log.d(TAG, "Duplication option is " + dupes.ordinal());
 
-            for (Object ve: events) {
-                incrementProgressBy(1);
+        for (Object ve: events) {
+            incrementProgressBy(1);
 
-                VEvent e = (VEvent) ve;
-                Log.d(TAG, "source event: " + e.toString());
+            VEvent e = (VEvent) ve;
+            Log.d(TAG, "source event: " + e.toString());
 
-                if (e.getRecurrenceId() != null) {
-                    // FIXME: Support these edited instances
-                    Log.d(TAG, "Ignoring edited instance of a recurring event");
-                    continue;
-                }
+            if (e.getRecurrenceId() != null) {
+                // FIXME: Support these edited instances
+                Log.d(TAG, "Ignoring edited instance of a recurring event");
+                continue;
+            }
 
-                long insertCalendarId = mAndroidCalendar.mId; // Calendar id to insert to
+            long insertCalendarId = mAndroidCalendar.mId; // Calendar id to insert to
 
-                ContentValues c = convertToDB(e, options, reminders, mAndroidCalendar.mId);
+            ContentValues c = convertToDB(e, options, reminders, mAndroidCalendar.mId);
 
-                Cursor cur = null;
-                boolean mustDelete = !mIsInserter;
+            Cursor cur = null;
+            boolean mustDelete = !mIsInserter;
 
-                // Determine if we need to delete a duplicate event in order to update it
-                if (!mustDelete && dupes != Settings.DuplicateHandlingEnum.DUP_DONT_CHECK) {
+            // Determine if we need to delete a duplicate event in order to update it
+            if (!mustDelete && dupes != Settings.DuplicateHandlingEnum.DUP_DONT_CHECK) {
 
-                    cur = query(resolver, options, c);
-                    while (!mustDelete && cur != null && cur.moveToNext()) {
-                        if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE)
-                            mustDelete = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL) == mAndroidCalendar.mId;
-                        else
-                            mustDelete = true; // Replacing all (or ignoring, handled just below)
-                    }
-
-                    if (mustDelete) {
-                        if (dupes == Settings.DuplicateHandlingEnum.DUP_IGNORE) {
-                            Log.d(TAG, "Avoiding inserting a duplicate event");
-                            numDups++;
-                            cur.close();
-                            continue;
-                        }
-                        cur.moveToPosition(-1); // Rewind for use below
-                    }
+                cur = query(resolver, options, c);
+                while (!mustDelete && cur != null && cur.moveToNext()) {
+                    if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE)
+                        mustDelete = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL) == mAndroidCalendar.mId;
+                    else
+                        mustDelete = true; // Replacing all (or ignoring, handled just below)
                 }
 
                 if (mustDelete) {
-                    if (cur == null)
-                        cur = query(resolver, options, c);
+                    if (dupes == Settings.DuplicateHandlingEnum.DUP_IGNORE) {
+                        Log.d(TAG, "Avoiding inserting a duplicate event");
+                        numDups++;
+                        cur.close();
+                        continue;
+                    }
+                    cur.moveToPosition(-1); // Rewind for use below
+                }
+            }
 
-                    while (cur != null && cur.moveToNext()) {
-                        long rowCalendarId = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL);
+            if (mustDelete) {
+                if (cur == null)
+                    cur = query(resolver, options, c);
 
-                        if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE
-                            && rowCalendarId != mAndroidCalendar.mId) {
-                            Log.d(TAG, "Avoiding deleting duplicate event in calendar " + rowCalendarId);
-                            continue; // Not in the destination calendar
-                        }
+                while (cur != null && cur.moveToNext()) {
+                    long rowCalendarId = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL);
 
-                        String id = cur.getString(EVENT_QUERY_ID_COL);
-                        Uri eventUri = Uri.withAppendedPath(Events.CONTENT_URI, id);
-                        numDel += resolver.delete(eventUri, null, null);
-                        String where = Reminders.EVENT_ID + "=?";
-                        resolver.delete(Reminders.CONTENT_URI, where, new String[] { id });
-                        if (mIsInserter && rowCalendarId != mAndroidCalendar.mId
-                            && dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE_ANY) {
-                            // Must update this event in the calendar this row came from
-                            Log.d(TAG, "Changing insert calendar from " + rowCalendarId + " to " + insertCalendarId);
-                            insertCalendarId = rowCalendarId;
-                        }
+                    if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE
+                        && rowCalendarId != mAndroidCalendar.mId) {
+                        Log.d(TAG, "Avoiding deleting duplicate event in calendar " + rowCalendarId);
+                        continue; // Not in the destination calendar
+                    }
+
+                    String id = cur.getString(EVENT_QUERY_ID_COL);
+                    Uri eventUri = Uri.withAppendedPath(Events.CONTENT_URI, id);
+                    numDel += resolver.delete(eventUri, null, null);
+                    String where = Reminders.EVENT_ID + "=?";
+                    resolver.delete(Reminders.CONTENT_URI, where, new String[] { id });
+                    if (mIsInserter && rowCalendarId != mAndroidCalendar.mId
+                        && dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE_ANY) {
+                        // Must update this event in the calendar this row came from
+                        Log.d(TAG, "Changing insert calendar from " + rowCalendarId + " to " + insertCalendarId);
+                        insertCalendarId = rowCalendarId;
                     }
                 }
-
-                if (cur != null)
-                    cur.close();
-
-                if (!mIsInserter)
-                    continue;
-
-                if (Events.UID_2445 != null && !c.containsKey(Events.UID_2445)) {
-                    // Create a UID for this event to use. We create it here so if
-                    // exported multiple times it will always have the same id.
-                    c.put(Events.UID_2445, activity.generateUid());
-                }
-
-                c.put(Events.CALENDAR_ID, insertCalendarId);
-                Uri uri = insertAndLog(resolver, Events.CONTENT_URI, c, "Event");
-                if (uri == null)
-                    continue; // FIXME: Note the failure
-
-                final long id = Long.parseLong(uri.getLastPathSegment());
-
-                numIns++;
-
-                for (int time: options.getReminders(reminders)) {
-                    cAlarm.put(Reminders.EVENT_ID, id);
-                    cAlarm.put(Reminders.MINUTES, time);
-                    insertAndLog(resolver, Reminders.CONTENT_URI, cAlarm, "Reminder");
-                }
             }
 
-            mAndroidCalendar.mNumEntries += numIns;
-            mAndroidCalendar.mNumEntries -= numDel;
-            activity.updateNumEntries(mAndroidCalendar);
+            if (cur != null)
+                cur.close();
 
-            Resources res = activity.getResources();
-            int n = mIsInserter ? numIns : numDel;
-            String msg = res.getQuantityString(R.plurals.processed_n_entries, n, n) + "\n";
-            if (mIsInserter) {
-                msg += "\n";
-                if (options.getDuplicateHandling() == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK)
-                    msg += res.getString(R.string.did_not_check_for_dupes);
-                else
-                    msg += res.getQuantityString(R.plurals.found_n_duplicates, numDups, numDups);
+            if (!mIsInserter)
+                continue;
+
+            if (Events.UID_2445 != null && !c.containsKey(Events.UID_2445)) {
+                // Create a UID for this event to use. We create it here so if
+                // exported multiple times it will always have the same id.
+                c.put(Events.UID_2445, activity.generateUid());
             }
 
-            activity.showToast(msg);
+            c.put(Events.CALENDAR_ID, insertCalendarId);
+            Uri uri = insertAndLog(resolver, Events.CONTENT_URI, c, "Event");
+            if (uri == null)
+                continue; // FIXME: Note the failure
 
-        } catch (RuntimeException e) {
-            throw e;
-        } catch (Exception e) {
-            Log.e(TAG, "ProcessVEvent", e);
-            try {
-                String p = Environment.getExternalStorageDirectory() + "/ical_error.log";
-                PrintStream out = new PrintStream(new FileOutputStream(p));
-                e.printStackTrace(out);
-            } catch (Exception ignored) {
+            final long id = Long.parseLong(uri.getLastPathSegment());
+
+            numIns++;
+
+            for (int time: options.getReminders(reminders)) {
+                cAlarm.put(Reminders.EVENT_ID, id);
+                cAlarm.put(Reminders.MINUTES, time);
+                insertAndLog(resolver, Reminders.CONTENT_URI, cAlarm, "Reminder");
             }
-            DialogTools.info(getActivity(), R.string.error, R.string.dialog_bug);
         }
+
+        mAndroidCalendar.mNumEntries += numIns;
+        mAndroidCalendar.mNumEntries -= numDel;
+        activity.updateNumEntries(mAndroidCalendar);
+
+        Resources res = activity.getResources();
+        int n = mIsInserter ? numIns : numDel;
+        String msg = res.getQuantityString(R.plurals.processed_n_entries, n, n) + "\n";
+        if (mIsInserter) {
+            msg += "\n";
+            if (options.getDuplicateHandling() == Settings.DuplicateHandlingEnum.DUP_DONT_CHECK)
+                msg += res.getString(R.string.did_not_check_for_dupes);
+            else
+                msg += res.getQuantityString(R.plurals.found_n_duplicates, numDups, numDups);
+        }
+
+        activity.showToast(msg);
     }
 
     // Munge a VEvent so Android won't reject it, then convert to ContentValues for inserting
