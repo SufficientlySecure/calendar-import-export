@@ -86,7 +86,7 @@ import android.database.DatabaseUtils;
 
 @SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
-    private static final String TAG = SaveCalendar.class.getSimpleName();
+    private static final String TAG = "ICS_SaveCalendar";
 
     private AndroidCalendar mAndroidCalendar;
     private PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();

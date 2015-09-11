@@ -42,7 +42,7 @@ import android.view.View.OnClickListener;
 
 @SuppressLint("NewApi")
 public class Controller implements OnClickListener {
-    private static final String TAG = Controller.class.getName();
+    private static final String TAG = "ICS_Controller";
 
     private MainActivity mActivity;
     private CalendarBuilder mCalendarBuilder;

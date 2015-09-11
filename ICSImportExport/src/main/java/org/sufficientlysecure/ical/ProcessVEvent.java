@@ -59,7 +59,7 @@ import android.text.TextUtils;
 
 @SuppressLint("NewApi")
 public class ProcessVEvent extends RunnableWithProgress {
-    private static final String TAG = ProcessVEvent.class.getSimpleName();
+    private static final String TAG = "ICS_RunnableWithProgress";
 
     private static final Duration ONE_DAY = createDuration("P1D");
     private static final Duration ZERO_SECONDS = createDuration("PT0S");
