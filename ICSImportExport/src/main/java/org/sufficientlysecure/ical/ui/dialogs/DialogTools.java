@@ -30,10 +30,6 @@ public final class DialogTools {
     private DialogTools() {
     }
 
-    public static void info(final Activity activity, final int title, final int message) {
-        info(activity, title, activity.getString(message));
-    }
-
     public static void info(final Activity activity, final int title, final CharSequence message) {
         Runnable task = new Runnable() {
             public void run() {

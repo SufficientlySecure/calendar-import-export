@@ -29,7 +29,7 @@ public class Settings {
         DUP_IGNORE,
         DUP_DONT_CHECK,
     }
-    private SharedPreferences mPreferences;
+    private final SharedPreferences mPreferences;
 
     public Settings(SharedPreferences preferences) {
         mPreferences = preferences;

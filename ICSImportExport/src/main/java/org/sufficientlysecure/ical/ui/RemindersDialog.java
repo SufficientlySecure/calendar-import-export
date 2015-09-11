@@ -44,7 +44,7 @@ public class RemindersDialog extends DialogPreference {
     };
 
     private LinearLayout mItemsHolder;
-    private SettingsActivity mActivity;
+    private final SettingsActivity mActivity;
     private int mNewId;
 
     public RemindersDialog(Context context, AttributeSet attrs) {

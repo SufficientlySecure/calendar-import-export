@@ -52,7 +52,7 @@ public class AndroidCalendar {
     // read permissions in App Ops/XPrivacy etc.
     public static List<AndroidCalendar> loadAll(ContentResolver resolver) {
 
-        if (!have(resolver, Calendars.CONTENT_URI) || !have(resolver, Events.CONTENT_URI))
+        if (missing(resolver, Calendars.CONTENT_URI) || missing(resolver, Events.CONTENT_URI))
             return new ArrayList<>();
 
         Cursor cur = resolver.query(Calendars.CONTENT_URI, CAL_COLS, null, null, null);
@@ -94,12 +94,12 @@ public class AndroidCalendar {
         return src.getString(src.getColumnIndex(columnName));
     }
 
-    private static boolean have(ContentResolver resolver, Uri uri) {
-        // Check an individual provider is installed
+    private static boolean missing(ContentResolver resolver, Uri uri) {
+        // Determine if a provider is missing
         ContentProviderClient provider = resolver.acquireContentProviderClient(uri);
         if (provider != null)
             provider.release();
-        return provider != null;
+        return provider == null;
     }
 
     @Override

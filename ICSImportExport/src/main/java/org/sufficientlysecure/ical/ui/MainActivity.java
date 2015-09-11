@@ -353,9 +353,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private class CalendarSource {
         private static final String HTTP_SEP = "://";
 
-        private URL mUrl;
-        private String mUsername;
-        private String mPassword;
+        private final URL mUrl;
+        private final String mUsername;
+        private final String mPassword;
 
         public CalendarSource(URL url, String username, String password) {
             mUrl = url;

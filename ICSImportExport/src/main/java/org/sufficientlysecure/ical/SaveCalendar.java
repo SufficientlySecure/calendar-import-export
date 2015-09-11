@@ -88,10 +88,10 @@ import android.database.DatabaseUtils;
 public class SaveCalendar extends RunnableWithProgress {
     private static final String TAG = "ICS_SaveCalendar";
 
-    private AndroidCalendar mAndroidCalendar;
-    private PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
-    private TimeZoneRegistry mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
-    private Set<TimeZone> mInsertedTimeZones = new HashSet<>();
+    private final AndroidCalendar mAndroidCalendar;
+    private final PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
+    private final TimeZoneRegistry mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
 
     private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELLED");
     private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");

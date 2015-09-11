@@ -29,9 +29,7 @@ public class SettingsActivityBase extends android.preference.PreferenceActivity
     }
 
     protected String createPreferenceText(int id, CharSequence choice) {
-        return new StringBuilder().append(getResources().getString(id))
-                                  .append(" (").append(choice).append(")")
-                                  .toString();
+        return getResources().getString(id) + " (" + choice + ")";
     }
 
     protected void updatePreferenceText(String key) {

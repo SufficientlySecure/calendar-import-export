@@ -25,7 +25,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 
 public abstract class RunnableWithProgress {
-    private Activity mActivity;
+    private final Activity mActivity;
     private ProgressDialog mProgress;
 
     public RunnableWithProgress(Activity activity) {

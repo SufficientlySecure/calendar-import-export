@@ -68,12 +68,12 @@ public class ProcessVEvent extends RunnableWithProgress {
     private static final int EVENT_QUERY_CALENDAR_ID_COL = 0;
     private static final int EVENT_QUERY_ID_COL = 1;
 
-    private Calendar mICalCalendar;
-    private AndroidCalendar mAndroidCalendar;
-    private boolean mIsInserter;
+    private final Calendar mICalCalendar;
+    private final AndroidCalendar mAndroidCalendar;
+    private final boolean mIsInserter;
 
     private final class Options extends Settings {
-        private List<Integer> mDefaultReminders;
+        private final List<Integer> mDefaultReminders;
 
         public Options(MainActivity activity) {
             super(activity.getSettings().getPreferences());
