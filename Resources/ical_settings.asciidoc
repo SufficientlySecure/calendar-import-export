@@ -28,9 +28,9 @@ device the password could be stolen. *Enable only with care*.
 
 Extra logging for debugging/Normal logging.
 
-This feature is not yet available.
-
-:enabled: false
+When enabled, more information will be logged about the activity of the
+application while it runs. You may be asked to enable this setting to
+help the developers fix a bug you have reported.
 
 === Import
 

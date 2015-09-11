@@ -18,6 +18,8 @@
 package org.sufficientlysecure.ical.ui;
 
 import org.sufficientlysecure.ical.Settings;
+import org.sufficientlysecure.ical.util.Log;
+
 import android.content.SharedPreferences;
 
 public class SettingsActivity extends SettingsActivityBase {
@@ -29,6 +31,9 @@ public class SettingsActivity extends SettingsActivityBase {
         if (key.equals(Settings.PREF_SAVE_PASSWORDS)) {
             // Blank any stored password when this setting is changed
             new Settings(prefs).putString(Settings.PREF_LASTURLPASSWORD, "");
+        } else if (key.equals(Settings.PREF_DEBUG_LOGGING)) {
+            // Enable or disable debug logging in release builds
+            Log.setIsUserEnabled(new Settings(prefs).getDebugLogging());
         }
     }
 

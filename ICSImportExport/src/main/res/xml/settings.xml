@@ -17,8 +17,7 @@
             android:title="@string/debug_logging"
             android:summaryOn="@string/extra_logging_for_debugging"
             android:summaryOff="@string/normal_logging"
-            android:defaultValue="false"
-            android:enabled="false" />
+            android:defaultValue="false" />
 
     </PreferenceCategory>
 
