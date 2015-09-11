@@ -27,7 +27,7 @@ public final class Log {
     static private boolean mIsUserEnabled = false;
 
     static public void setIsUserEnabled(boolean isUserEnabled) {
-        mIsUserEnabled = true;
+        mIsUserEnabled = isUserEnabled;
     }
 
     static public boolean getIsUserEnabled() {
