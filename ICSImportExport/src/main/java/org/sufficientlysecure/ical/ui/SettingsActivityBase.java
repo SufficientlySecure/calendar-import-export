@@ -2,6 +2,8 @@
 
 package org.sufficientlysecure.ical.ui;
 
+import org.sufficientlysecure.ical.Settings;
+
 import android.content.SharedPreferences;
 
 public class SettingsActivityBase extends android.preference.PreferenceActivity
@@ -18,16 +20,41 @@ public class SettingsActivityBase extends android.preference.PreferenceActivity
     }
 
     @Override
-    public void onSharedPreferenceChanged(SharedPreferences p, String k) { }
+    public void onSharedPreferenceChanged(SharedPreferences p, String key) {
+        updatePreferenceText(key);
+    }
 
     protected SharedPreferences getPreferences() {
         return getPreferenceScreen().getSharedPreferences();
+    }
+
+    protected String createPreferenceText(int id, CharSequence choice) {
+        return new StringBuilder().append(getResources().getString(id))
+                                  .append(" (").append(choice).append(")")
+                                  .toString();
+    }
+
+    protected void updatePreferenceText(String key) {
+        android.preference.Preference p = findPreference(key);
+        int resId;
+        if (p instanceof android.preference.ListPreference) {
+            switch (key) {
+                case Settings.PREF_DUPLICATE_HANDLING:
+                    resId = org.sufficientlysecure.ical.R.string.how_to_handle_duplicate_events;
+                    break;
+                default:
+                    return;
+            }
+            CharSequence choice = ((android.preference.ListPreference)p).getEntry();
+            p.setSummary(createPreferenceText(resId, choice));
+        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         getPreferences().registerOnSharedPreferenceChangeListener(this);
+        updatePreferenceText(Settings.PREF_DUPLICATE_HANDLING);
     }
     @Override
     protected void onPause() {
