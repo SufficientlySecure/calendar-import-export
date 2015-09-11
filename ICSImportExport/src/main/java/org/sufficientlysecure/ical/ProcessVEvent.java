@@ -59,7 +59,7 @@ import android.text.TextUtils;
 
 @SuppressLint("NewApi")
 public class ProcessVEvent extends RunnableWithProgress {
-    private static final String TAG = "ICS_RunnableWithProgress";
+    private static final String TAG = "ICS_ProcessVEvent";
 
     private static final Duration ONE_DAY = createDuration("P1D");
     private static final Duration ZERO_SECONDS = createDuration("PT0S");
@@ -122,7 +122,8 @@ public class ProcessVEvent extends RunnableWithProgress {
             incrementProgressBy(1);
 
             VEvent e = (VEvent) ve;
-            Log.d(TAG, "source event: " + e.toString());
+            if (Log.getIsUserEnabled())
+                Log.d(TAG, "source event: " + e.toString());
 
             if (e.getRecurrenceId() != null) {
                 // FIXME: Support these edited instances
