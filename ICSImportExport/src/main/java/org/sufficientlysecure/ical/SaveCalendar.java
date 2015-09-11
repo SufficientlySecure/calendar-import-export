@@ -307,19 +307,20 @@ public class SaveCalendar extends RunnableWithProgress {
             if (availability >= 0 && availability != Events.AVAILABILITY_FREE)
                 l.add(Transp.OPAQUE);
 
-        } else if (availability >= 0 && availability != Events.AVAILABILITY_BUSY) {
+        } else if (availability > Events.AVAILABILITY_BUSY) {
             // This event is ordinarily busy but differs, so output a FREEBUSY
             // period covering the time of the event
             FreeBusy fb = new FreeBusy();
             fb.getParameters().add(new FbType(AVAIL_ENUM.get(availability)));
-            DateTime start = dateTimeFromProperty((DtStart) l.getProperty(Property.DTSTART));
+            DateTime start = new DateTime(((DtStart) l.getProperty(Property.DTSTART)).getDate());
 
             if (dtEnd != null)
-                fb.getPeriods().add(new Period(start, dateTimeFromProperty(dtEnd)));
+                fb.getPeriods().add(new Period(start, new DateTime(dtEnd.getDate())));
             else {
                 Duration d = (Duration) l.getProperty(Property.DURATION);
                 fb.getPeriods().add(new Period(start, d.getDuration()));
             }
+            l.add(fb);
         }
 
         copyProperty(l, Property.RRULE, cur, Events.RRULE);
@@ -390,12 +391,6 @@ public class SaveCalendar extends RunnableWithProgress {
         // This date will be UTC provided the default false value of the iCal4j property
         // "net.fortuna.ical4j.timezone.date.floating" has not been changed.
         return new Date(ms);
-    }
-
-    private DateTime dateTimeFromProperty(DateProperty d) {
-        if (d.getDate() instanceof DateTime)
-            return (DateTime) (d.getDate());
-        return new DateTime(d.getDate());
     }
 
     private boolean isUtcTimeZone(final String tz) {
