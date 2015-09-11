@@ -406,27 +406,31 @@ public class SaveCalendar extends RunnableWithProgress {
 
     private Date getDateTime(Cursor cur, String dbName, String dbTzName, Calendar cal) {
         int i = getColumnIndex(cur, dbName);
-        if (i != -1 && !cur.isNull(i)) {
-            if (cal == null)
-                return utcDateFromMs(cur.getLong(i));     // Ignore timezone for date-only dates
+        if (i == -1 || cur.isNull(i))
+            return null;
 
-            String tz = getString(cur, dbTzName);
-            final boolean isUtc = isUtcTimeZone(tz);
-
-            DateTime dt = new DateTime(isUtc);
-            dt.setTime(cur.getLong(i));
-
-            if (!isUtc) {
-                TimeZone t = mTzRegistry.getTimeZone(tz);
-                dt.setTimeZone(t);
-                if (!mInsertedTimeZones.contains(t)) {
-                    cal.getComponents().add(t.getVTimeZone());
-                    mInsertedTimeZones.add(t);
-                }
-            }
-            return dt;
+        if (cal == null) {
+            Log.d(TAG, "getDateTime UTC from long: " + dbName + "->" + cur.getLong(i));
+            return utcDateFromMs(cur.getLong(i));     // Ignore timezone for date-only dates
         }
-        return null;
+
+        String tz = getString(cur, dbTzName);
+        final boolean isUtc = isUtcTimeZone(tz);
+
+        DateTime dt = new DateTime(isUtc);
+        dt.setTime(cur.getLong(i));
+        Log.d(TAG, "getDateTime from tz: " + dbName + "->" + cur.getLong(i));
+
+        if (!isUtc) {
+            Log.d(TAG, "getDateTime non-UTC tz: '" + tz + "'");
+            TimeZone t = mTzRegistry.getTimeZone(tz);
+            dt.setTimeZone(t);
+            if (!mInsertedTimeZones.contains(t)) {
+                cal.getComponents().add(t.getVTimeZone());
+                mInsertedTimeZones.add(t);
+            }
+        }
+        return dt;
     }
 
     private String copyProperty(PropertyList l, String evName, Cursor cur, String dbName) {
