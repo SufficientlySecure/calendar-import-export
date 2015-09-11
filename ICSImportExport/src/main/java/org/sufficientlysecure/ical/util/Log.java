@@ -24,13 +24,16 @@ import org.sufficientlysecure.ical.BuildConfig;
  */
 public final class Log {
 
-    static private boolean mIsUserEnabled = false;
+    private static boolean mIsUserEnabled = false;
 
-    static public void setIsUserEnabled(boolean isUserEnabled) {
+    private Log() {
+    }
+
+    public static void setIsUserEnabled(boolean isUserEnabled) {
         mIsUserEnabled = isUserEnabled;
     }
 
-    static public boolean getIsUserEnabled() {
+    public static boolean getIsUserEnabled() {
         return mIsUserEnabled;
     }
 
