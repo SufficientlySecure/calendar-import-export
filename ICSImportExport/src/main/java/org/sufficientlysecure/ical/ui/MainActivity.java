@@ -390,10 +390,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private void setHint(String key, boolean value) {
-        CompatibilityHints.setHintEnabled(key, value);
-    }
-
     private void searchFiles(File root, List<File> files, String... extension) {
         if (root.isFile()) {
             for (String string: extension) {
@@ -440,23 +436,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             super(activity);
         }
 
+        private void setHint(String key, boolean value) {
+            CompatibilityHints.setHintEnabled(key, value);
+        }
+
         @Override
         protected void runImpl() throws Exception {
             setMessage(R.string.reading_file_please_wait);
-            if (mCalendarBuilder == null) {
+
+            setHint(CompatibilityHints.KEY_RELAXED_UNFOLDING, mSettings.getIcal4jUnfoldingRelaxed());
+            setHint(CompatibilityHints.KEY_RELAXED_PARSING, mSettings.getIcal4jParsingRelaxed());
+            setHint(CompatibilityHints.KEY_RELAXED_VALIDATION, mSettings.getIcal4jValidationRelaxed());
+            setHint(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, mSettings.getIcal4jCompatibilityOutlook());
+            setHint(CompatibilityHints.KEY_NOTES_COMPATIBILITY, mSettings.getIcal4jCompatibilityNotes());
+            setHint(CompatibilityHints.KEY_VCARD_COMPATIBILITY, mSettings.getIcal4jCompatibilityVcard());
+
+            if (mCalendarBuilder == null)
                 mCalendarBuilder = new CalendarBuilder();
-            }
+
             URLConnection c = getSelectedURL();
             InputStream in = c == null ? null : c.getInputStream();
-            if (in != null) {
-                setHint(CompatibilityHints.KEY_RELAXED_UNFOLDING, mSettings.getIcal4jUnfoldingRelaxed());
-                setHint(CompatibilityHints.KEY_RELAXED_PARSING, mSettings.getIcal4jParsingRelaxed());
-                setHint(CompatibilityHints.KEY_RELAXED_VALIDATION, mSettings.getIcal4jValidationRelaxed());
-                setHint(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, mSettings.getIcal4jCompatibilityOutlook());
-                setHint(CompatibilityHints.KEY_NOTES_COMPATIBILITY, mSettings.getIcal4jCompatibilityNotes());
-                setHint(CompatibilityHints.KEY_VCARD_COMPATIBILITY, mSettings.getIcal4jCompatibilityVcard());
-                mCalendar = mCalendarBuilder.build(in);
-            }
+            mCalendar = in == null ? null : mCalendarBuilder.build(in);
 
             runOnUiThread(new Runnable() {
                               public void run() {
