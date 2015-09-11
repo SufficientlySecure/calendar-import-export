@@ -14,9 +14,10 @@ These settings control general application behaviour.
 
 ==== Save passwords (Y/N)
 
-Store user entered passwords in insecure local storage.
+Save passwords in insecure local storage/Do not save passwords.
 
-When you enter a password for importing from a URL, this setting controls
+Whether to store user entered passwords in insecure local storage. When
+you enter a password for importing from a URL, this setting controls
 whether the password will be saved so that you can avoid re-typing it
 when you next choose to import a URL again.
 
@@ -25,7 +26,7 @@ device the password could be stolen. *Enable only with care*.
 
 ==== Debug logging (Y/N)
 
-Enable extra logging output for debugging issues.
+Extra logging for debugging/Normal logging.
 
 This feature is not yet available.
 
@@ -57,7 +58,8 @@ destination calendar will be considered as duplicates.
 
 ==== Keep UIDs (Y/N)
 
-Use any existing unique identifiers to identify and find duplicate events.
+Import unique identifiers to identify events/Generate new identifiers for
+imported events.
 
 :defaultValue: true
 
@@ -68,7 +70,7 @@ duplicates are detected using a heuristic which can fail.
 
 ==== Global UIDs (Y/N)
 
-Treat unique identifiers as globally unique across all calendars.
+Identifiers are globally unique/Identifiers are unique only within a calendar.
 
 This setting identifies imported entries by their unique id regardless of
 which calendar they are in. This should be enabled if you wish to ensure
@@ -82,8 +84,7 @@ for events that have been imported.
 
 ==== Import reminders (Y/N)
 
-Use reminders from the imported file instead of default reminders when
-present.
+Import reminders/Do not import reminders.
 
 :defaultValue: true
 
@@ -113,7 +114,7 @@ these if your file is not parsed correctly or gives errors when importing.
 
 ==== Allow different line endings (Y/N)
 
-Support various line wrapping schemes used by different products.
+Allow various line wrapping schemes/Enforce RFC compliant line wrapping.
 
 :defaultValue: true
 :key: ical4j.unfolding.relaxed
@@ -123,7 +124,7 @@ a given iCalendar file adheres to the iCalendar specification.
 
 ==== Permissive parsing (Y/N)
 
-Support various incorrect but common iCalendar file quirks.
+Support common incorrect quirks/Enforce RFC compliant input.
 
 :defaultValue: true
 :key: ical4j.parsing.relaxed
@@ -133,7 +134,8 @@ sources of iCalendar files usually require it.
 
 ==== Microsoft compatible (Y/N)
 
-Support calendars exported by Microsoft&#174; Outlook&#174; and Microsoft&#174; Exchange&#8482;.
+Support calendars exported by Microsoft&#174; Outlook&#174; and
+Microsoft&#174; Exchange&#8482;/No Microsoft&#174; calendar support.
 
 :defaultValue: true
 :key: ical4j.compatibility.outlook
@@ -144,14 +146,15 @@ imported.
 
 ==== Notes compatible (Y/N)
 
-Support calendars exported by IBM&#174; Notes&#174; (Formerly Lotus Notes&#174;).
+Support calendars exported by IBM&#174; (Formerly Lotus) Notes&#174;/
+No Notes&#174; calendar support.
 
 :defaultValue: true
 :key: ical4j.compatibility.notes
 
 ==== vCard compatible (Y/N)
 
-Support events in vCard format.
+Support events in vCard format/No vCard support.
 
 :key: ical4j.compatibility.vcard
 
@@ -162,7 +165,7 @@ iCalendar file.
 
 ==== Permissive export (Y/N)
 
-Skip extensive validation of the output file when exporting calendars.
+Skip extensive validation of the output file/Validate the output file.
 
 :defaultValue: true
 :key: ical4j.validation.relaxed

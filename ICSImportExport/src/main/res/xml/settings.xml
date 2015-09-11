@@ -8,13 +8,15 @@
         <CheckBoxPreference
             android:key="save_passwords"
             android:title="@string/save_passwords"
-            android:summary="@string/store_user_entered_passwords_in"
+            android:summaryOn="@string/save_passwords_in_insecure_local"
+            android:summaryOff="@string/do_not_save_passwords"
             android:defaultValue="false" />
 
         <CheckBoxPreference
             android:key="debug_logging"
             android:title="@string/debug_logging"
-            android:summary="@string/enable_extra_logging_output_for"
+            android:summaryOn="@string/extra_logging_for_debugging"
+            android:summaryOff="@string/normal_logging"
             android:defaultValue="false"
             android:enabled="false" />
 
@@ -34,13 +36,15 @@
         <CheckBoxPreference
             android:key="keep_uids"
             android:title="@string/keep_uids"
-            android:summary="@string/use_any_existing_unique_identifiers"
+            android:summaryOn="@string/import_unique_identifiers_to_identify"
+            android:summaryOff="@string/generate_new_identifiers_for_imported"
             android:defaultValue="true" />
 
         <CheckBoxPreference
             android:key="global_uids"
             android:title="@string/global_uids"
-            android:summary="@string/treat_unique_identifiers_as_globally"
+            android:summaryOn="@string/identifiers_are_globally_unique"
+            android:summaryOff="@string/identifiers_are_unique_only_within"
             android:defaultValue="false" />
 
     </PreferenceCategory>
@@ -51,7 +55,8 @@
         <CheckBoxPreference
             android:key="import_reminders"
             android:title="@string/import_reminders"
-            android:summary="@string/use_reminders_from_the_imported"
+            android:summaryOn="@string/import_reminders"
+            android:summaryOff="@string/do_not_import_reminders"
             android:defaultValue="true" />
 
         <org.sufficientlysecure.ical.ui.RemindersDialog
@@ -68,31 +73,36 @@
         <CheckBoxPreference
             android:key="ical4j.unfolding.relaxed"
             android:title="@string/allow_different_line_endings"
-            android:summary="@string/support_various_line_wrapping_schemes"
+            android:summaryOn="@string/allow_various_line_wrapping_schemes"
+            android:summaryOff="@string/enforce_rfc_compliant_line_wrapping"
             android:defaultValue="true" />
 
         <CheckBoxPreference
             android:key="ical4j.parsing.relaxed"
             android:title="@string/permissive_parsing"
-            android:summary="@string/support_various_incorrect_but_common"
+            android:summaryOn="@string/support_common_incorrect_quirks"
+            android:summaryOff="@string/enforce_rfc_compliant_input"
             android:defaultValue="true" />
 
         <CheckBoxPreference
             android:key="ical4j.compatibility.outlook"
             android:title="@string/microsoft_compatible"
-            android:summary="@string/support_calendars_exported_by_microsoft174"
+            android:summaryOn="@string/support_calendars_exported_by_microsoft174"
+            android:summaryOff="@string/no_microsoft174_calendar_support"
             android:defaultValue="true" />
 
         <CheckBoxPreference
             android:key="ical4j.compatibility.notes"
             android:title="@string/notes_compatible"
-            android:summary="@string/support_calendars_exported_by_ibm174"
+            android:summaryOn="@string/support_calendars_exported_by_ibm174"
+            android:summaryOff="@string/_no_notes174_calendar_support"
             android:defaultValue="true" />
 
         <CheckBoxPreference
             android:key="ical4j.compatibility.vcard"
             android:title="@string/vcard_compatible"
-            android:summary="@string/support_events_in_vcard_format"
+            android:summaryOn="@string/support_events_in_vcard_format"
+            android:summaryOff="@string/no_vcard_support"
             android:defaultValue="false" />
 
     </PreferenceCategory>
@@ -103,7 +113,8 @@
         <CheckBoxPreference
             android:key="ical4j.validation.relaxed"
             android:title="@string/permissive_export"
-            android:summary="@string/skip_extensive_validation_of_the"
+            android:summaryOn="@string/skip_extensive_validation_of_the"
+            android:summaryOff="@string/validate_the_output_file"
             android:defaultValue="true" />
 
     </PreferenceCategory>
