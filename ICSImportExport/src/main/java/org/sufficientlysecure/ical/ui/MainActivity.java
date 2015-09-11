@@ -1,4 +1,5 @@
 /**
+ *  Copyright (C) 2015  Jon Griffiths (jon_p_griffiths@yahoo.com)
  *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
@@ -19,6 +20,7 @@
 package org.sufficientlysecure.ical.ui;
 
 import java.io.File;
+import java.io.InputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -29,21 +31,27 @@ import java.util.List;
 import java.util.UUID;
 
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.apache.commons.codec.binary.Base64;
 
 import org.sufficientlysecure.ical.AndroidCalendar;
-import org.sufficientlysecure.ical.Controller;
+import org.sufficientlysecure.ical.ProcessVEvent;
+import org.sufficientlysecure.ical.SaveCalendar;
 import org.sufficientlysecure.ical.Settings;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.os.Environment;
 import android.preference.PreferenceManager;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
@@ -59,11 +67,14 @@ import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.TextView;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements View.OnClickListener {
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 
     private Settings mSettings;
+
+    private CalendarBuilder mCalendarBuilder;
+    private Calendar mCalendar;
 
     // UID generation
     private long mUidMs = 0;
@@ -76,7 +87,6 @@ public class MainActivity extends FragmentActivity {
     private Button mInsertButton;
     private Button mDeleteButton;
     private Button mExportButton;
-    private Controller mController;
 
     private TextView mTextCalName;
     private TextView mTextCalAccountName;
@@ -97,7 +107,6 @@ public class MainActivity extends FragmentActivity {
 
         setContentView(R.layout.main);
 
-        mController = new Controller(this);
         mSettings = new Settings(PreferenceManager.getDefaultSharedPreferences(this));
 
         // Retrieve views
@@ -165,7 +174,7 @@ public class MainActivity extends FragmentActivity {
 
         new Thread(new Runnable() {
                        public void run() {
-                           mController.init(id);
+                           MainActivity.this.init(id);
                        }
                    }).start();
 
@@ -175,6 +184,35 @@ public class MainActivity extends FragmentActivity {
 
     public Settings getSettings() {
         return mSettings;
+    }
+
+    private void init(long calendarId) {
+        List<AndroidCalendar> calendars = AndroidCalendar.loadAll(getContentResolver());
+        if (calendars.isEmpty()) {
+            Runnable task;
+            task = new Runnable() {
+                public void run() {
+                    DialogInterface.OnClickListener okTask;
+                    okTask = new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface iface, int id) {
+                            iface.cancel();
+                            MainActivity.this.finish();
+                        }
+                    };
+                    new AlertDialog.Builder(MainActivity.this)
+                                   .setMessage(R.string.no_calendars_found)
+                                   .setIcon(R.mipmap.ic_launcher)
+                                   .setTitle(R.string.information)
+                                   .setCancelable(false)
+                                   .setPositiveButton(android.R.string.ok, okTask).create()
+                                   .show();
+                }
+            };
+            runOnUiThread(task);
+        }
+
+        setCalendars(calendars);
+        selectCalendar(calendarId);
     }
 
     public void showToast(final String msg) {
@@ -198,7 +236,7 @@ public class MainActivity extends FragmentActivity {
 
     private Button setupButton(int id) {
         Button button = (Button) findViewById(id);
-        button.setOnClickListener(mController);
+        button.setOnClickListener(this);
         return button;
     }
 
@@ -251,7 +289,7 @@ public class MainActivity extends FragmentActivity {
         }
     }
 
-    public void setCalendar(final Calendar calendar) {
+    private void setCalendar(final Calendar calendar) {
         runOnUiThread(new Runnable() {
                           public void run() {
                               if (calendar == null) {
@@ -387,6 +425,87 @@ public class MainActivity extends FragmentActivity {
         @Override
         public String toString() {
             return mUrl.toString();
+        }
+    }
+
+    private void setHint(String key, boolean value) {
+        CompatibilityHints.setHintEnabled(key, value);
+    }
+
+    private void searchFiles(File root, List<File> files, String... extension) {
+        if (root.isFile()) {
+            for (String string: extension) {
+                if (root.toString().endsWith(string)) {
+                    files.add(root);
+                }
+            }
+        } else {
+            File[] children = root.listFiles();
+            if (children != null) {
+                for (File file: children) {
+                    searchFiles(file, files, extension);
+                }
+            }
+        }
+    }
+
+    @Override
+    public void onClick(View view) {
+        RunnableWithProgress task = null;
+
+        // Handling search for file event
+        if (view.getId() == R.id.SearchButton) {
+
+            task = new RunnableWithProgress(this) {
+                @Override
+                protected void runImpl() throws Exception {
+                    setMessage(R.string.searching_for_files);
+
+                    File root = Environment.getExternalStorageDirectory();
+                    List<File> files = new ArrayList<>();
+                    searchFiles(root, files, "ics", "ical", "icalendar");
+                    setFiles(files);
+                }
+            };
+        } else if (view.getId() == R.id.LoadButton) {
+
+            task = new RunnableWithProgress(this) {
+                @Override
+                protected void runImpl() throws Exception {
+                    if (mCalendarBuilder == null) {
+                        setMessage(R.string.performing_first_time_setup);
+                        mCalendarBuilder = new CalendarBuilder();
+                    }
+                    setMessage(R.string.reading_file_please_wait);
+                    URLConnection c = getSelectedURL();
+                    InputStream in = c == null ? null : c.getInputStream();
+                    if (in != null) {
+                        setHint(CompatibilityHints.KEY_RELAXED_UNFOLDING, mSettings.getIcal4jUnfoldingRelaxed());
+                        setHint(CompatibilityHints.KEY_RELAXED_PARSING, mSettings.getIcal4jParsingRelaxed());
+                        setHint(CompatibilityHints.KEY_RELAXED_VALIDATION, mSettings.getIcal4jValidationRelaxed());
+                        setHint(CompatibilityHints.KEY_OUTLOOK_COMPATIBILITY, mSettings.getIcal4jCompatibilityOutlook());
+                        setHint(CompatibilityHints.KEY_NOTES_COMPATIBILITY, mSettings.getIcal4jCompatibilityNotes());
+                        setHint(CompatibilityHints.KEY_VCARD_COMPATIBILITY, mSettings.getIcal4jCompatibilityVcard());
+                        mCalendar = mCalendarBuilder.build(in);
+                    }
+                    setCalendar(mCalendar);
+                }
+            };
+        } else if (view.getId() == R.id.SetUrlButton) {
+
+            UrlDialog.show(this);
+
+        } else if (view.getId() == R.id.SaveButton) {
+
+            task = new SaveCalendar(this);
+
+        } else if (view.getId() == R.id.InsertButton || view.getId() == R.id.DeleteButton) {
+
+            task = new ProcessVEvent(this, mCalendar, view.getId() == R.id.InsertButton);
+        }
+
+        if (task != null) {
+            task.start();
         }
     }
 }
