@@ -419,13 +419,20 @@ public class SaveCalendar extends RunnableWithProgress {
         final boolean isUtc = isUtcTimeZone(tz);
 
         DateTime dt = new DateTime(isUtc);
+        if (dt.isUtc() != isUtc)
+            throw new RuntimeException("UTC mismatch after construction");
         dt.setTime(cur.getLong(i));
+        if (dt.isUtc() != isUtc)
+            throw new RuntimeException("UTC mismatch after setTime");
         Log.d(TAG, "getDateTime from tz: " + dbName + "->" + cur.getLong(i));
 
         if (!isUtc) {
             Log.d(TAG, "getDateTime non-UTC tz: '" + tz + "'");
             TimeZone t = mTzRegistry.getTimeZone(tz);
+            Log.d(TAG, "getDateTime tz: " + t.getDisplayName());
             dt.setTimeZone(t);
+            if (dt.isUtc() != isUtc)
+                throw new RuntimeException("UTC mismatch after setTime");
             if (!mInsertedTimeZones.contains(t)) {
                 cal.getComponents().add(t.getVTimeZone());
                 mInsertedTimeZones.add(t);
