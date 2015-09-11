@@ -30,8 +30,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
-import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.Calendar;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
