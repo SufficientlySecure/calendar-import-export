@@ -83,6 +83,7 @@ import android.text.format.DateUtils;
 import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.EditText;
+import android.database.DatabaseUtils;
 
 @SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
@@ -171,7 +172,8 @@ public class SaveCalendar extends RunnableWithProgress {
             VEvent e = convertFromDb(cur, activity, cal, timestamp);
             if (e != null) {
                 events.add(e);
-                Log.d(TAG, "Adding event: " + e.toString());
+                if (Log.getIsUserEnabled())
+                    Log.d(TAG, "Adding event: " + e.toString());
             }
             i++;
         }
@@ -240,8 +242,8 @@ public class SaveCalendar extends RunnableWithProgress {
     }
 
     private VEvent convertFromDb(Cursor cur, MainActivity activity, Calendar cal, DtStamp timestamp) {
-        //String cursorContents = DatabaseUtils.dumpCurrentRowToString(cur);
-        //Log.d(TAG, "cursor: " + cursorContents);
+        if (Log.getIsUserEnabled())
+            Log.d(TAG, "cursor: " + DatabaseUtils.dumpCurrentRowToString(cur));
 
         if (hasStringValue(cur, Events.ORIGINAL_ID)) {
             // FIXME: Support these edited instances

@@ -462,12 +462,13 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private Uri insertAndLog(ContentResolver resolver, Uri uri, ContentValues c, String type) {
-       Log.d(TAG, "Inserting " + type + " values: " + c);
+        if (Log.getIsUserEnabled())
+            Log.d(TAG, "Inserting " + type + " values: " + c);
         Uri result = resolver.insert(uri, c);
         if (result == null)
-            Log.d(TAG, "Could not insert " + type);
+            Log.d(TAG, "Could not insert");
         else
-            Log.d(TAG,  "Inserted " + type + ": " + result.toString());
+            Log.d(TAG,  "Insert returned " + result.toString());
         return result;
     }
 

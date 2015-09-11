@@ -30,6 +30,10 @@ public final class Log {
         mIsUserEnabled = true;
     }
 
+    static public boolean getIsUserEnabled() {
+        return mIsUserEnabled;
+    }
+
     public static void v(String tag, String msg) {
         if (BuildConfig.DEBUG)
             android.util.Log.v(tag, msg);
