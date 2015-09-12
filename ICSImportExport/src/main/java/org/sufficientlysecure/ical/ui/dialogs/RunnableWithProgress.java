@@ -24,34 +24,29 @@ import org.sufficientlysecure.ical.util.Log;
 
 import android.app.ProgressDialog;
 
-public abstract class RunnableWithProgress {
+public abstract class RunnableWithProgress extends ProgressDialog {
     private final MainActivity mActivity;
-    private ProgressDialog mProgress;
 
-    public RunnableWithProgress(MainActivity activity) {
+    protected RunnableWithProgress(MainActivity activity, boolean isHorizontal) {
+        super(activity);
         mActivity = activity;
-        init(ProgressDialog.STYLE_SPINNER);
-    }
-
-    protected RunnableWithProgress(MainActivity activity, int style) {
-        mActivity = activity;
-        init(style);
-    }
-
-    private void init(int style) {
-        mProgress = new ProgressDialog(mActivity);
-        mProgress.setProgressStyle(style);
-        mProgress.setCancelable(false);
-        mProgress.setMessage("");
-        mProgress.setTitle("");
-        mProgress.show();
+        setProgressStyle(isHorizontal ? STYLE_HORIZONTAL : STYLE_SPINNER);
+        setCancelable(false);
+        setMessage("");
+        setTitle("");
+        show();
     }
 
     public void start() {
         new Thread(new Runnable() {
                        public void run() {
-                           RunnableWithProgress.this.run();
-                           mProgress.cancel();
+                           try {
+                               RunnableWithProgress.this.run();
+                           } catch (Exception e) {
+                               Log.e("ICS_RunnableWithProgress", "An exception occurred", e);
+                               DialogTools.info(getActivity(), R.string.error, "Error:\n" + e.getMessage());
+                           }
+                           cancel();
                        }
                    }).start();
     }
@@ -60,34 +55,21 @@ public abstract class RunnableWithProgress {
         return mActivity;
     }
 
-    protected void setMax(int max) {
-        mProgress.setMax(max);
-    }
-
     protected void setMessage(final int id) {
         mActivity.runOnUiThread(new Runnable() {
                                     public void run() {
-                                        mProgress.setMessage(mActivity.getString(id));
+                                        RunnableWithProgress.super.setMessage(mActivity.getString(id));
                                     }
                                 });
     }
 
-    protected void incrementProgressBy(final int amount) {
+    protected void incrementProgress() {
         mActivity.runOnUiThread(new Runnable() {
                                     public void run() {
-                                        mProgress.incrementProgressBy(amount);
+                                        RunnableWithProgress.super.incrementProgressBy(1);
                                     }
                                 });
     }
 
-    public final void run() {
-        try {
-            runImpl();
-        } catch (Exception e) {
-            Log.e("RunnableWithProgress", "An exception occurred", e);
-            DialogTools.info(getActivity(), R.string.error, "Error:\n" + e.getMessage());
-        }
-    }
-
-    protected abstract void runImpl() throws Exception;
+    protected abstract void run() throws Exception;
 }

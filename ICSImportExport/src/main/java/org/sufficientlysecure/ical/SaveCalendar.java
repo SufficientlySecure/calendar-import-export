@@ -67,7 +67,6 @@ import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -108,12 +107,12 @@ public class SaveCalendar extends RunnableWithProgress {
     };
 
     public SaveCalendar(MainActivity activity) {
-        super(activity, ProgressDialog.STYLE_HORIZONTAL);
+        super(activity, true);
         mAndroidCalendar = activity.getSelectedCalendar();
     }
 
     @Override
-    protected void runImpl() throws Exception {
+    protected void run() throws Exception {
         MainActivity activity = getActivity();
         Settings settings = activity.getSettings();
 
@@ -166,7 +165,7 @@ public class SaveCalendar extends RunnableWithProgress {
         List<VEvent> events = new ArrayList<>();
 
         while (cur.moveToNext()) {
-            incrementProgressBy(1);
+            incrementProgress();
             VEvent e = convertFromDb(cur, cal, timestamp);
             if (e != null) {
                 e.validate(true); // FIXME: Temporary

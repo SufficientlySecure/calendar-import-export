@@ -45,7 +45,6 @@ import org.sufficientlysecure.ical.ui.RemindersDialog;
 import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.res.Resources;
@@ -87,14 +86,14 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     public ProcessVEvent(MainActivity activity, Calendar iCalCalendar, boolean isInserter) {
-        super(activity, ProgressDialog.STYLE_HORIZONTAL);
+        super(activity, true);
         mICalCalendar = iCalCalendar;
         mAndroidCalendar = activity.getSelectedCalendar();
         mIsInserter = isInserter;
     }
 
     @Override
-    protected void runImpl() throws Exception {
+    protected void run() throws Exception {
         MainActivity activity = getActivity();
         Options options = new Options(activity);
 
@@ -118,7 +117,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         Log.d(TAG, "Duplication option is " + dupes.ordinal());
 
         for (Object ve: events) {
-            incrementProgressBy(1);
+            incrementProgress();
 
             VEvent e = (VEvent) ve;
             if (Log.getIsUserEnabled())

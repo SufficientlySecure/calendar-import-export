@@ -391,7 +391,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private class SearchForFiles extends RunnableWithProgress {
         public SearchForFiles(MainActivity activity) {
-            super(activity);
+            super(activity, false);
         }
 
         private void search(File root, List<CalendarSource> sources, String... extensions) {
@@ -414,7 +414,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         @Override
-        protected void runImpl() throws Exception {
+        protected void run() throws Exception {
             setMessage(R.string.searching_for_files);
             List<CalendarSource> sources = new ArrayList<>();
             search(Environment.getExternalStorageDirectory(), sources, "ics", "ical", "icalendar");
@@ -424,7 +424,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private class LoadFile extends RunnableWithProgress {
         public LoadFile(MainActivity activity) {
-            super(activity);
+            super(activity, false);
         }
 
         private void setHint(String key, boolean value) {
@@ -432,7 +432,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         @Override
-        protected void runImpl() throws Exception {
+        protected void run() throws Exception {
             setMessage(R.string.reading_file_please_wait);
 
             setHint(CompatibilityHints.KEY_RELAXED_UNFOLDING, mSettings.getIcal4jUnfoldingRelaxed());
@@ -471,28 +471,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
-        RunnableWithProgress task;
-
         switch (view.getId()) {
             case R.id.SetUrlButton:
                 UrlDialog.show(this);
-                return;
+                break;
             case R.id.SearchButton:
-                task = new SearchForFiles(this);
+                new SearchForFiles(this).start();
                 break;
             case R.id.LoadButton:
-                task = new LoadFile(this);
+                new LoadFile(this).start();
                 break;
             case R.id.SaveButton:
-                task = new SaveCalendar(this);
+                new SaveCalendar(this).start();
                 break;
             case R.id.InsertButton:
             case R.id.DeleteButton:
-                task = new ProcessVEvent(this, mCalendar, view.getId() == R.id.InsertButton);
+                new ProcessVEvent(this, mCalendar, view.getId() == R.id.InsertButton).start();
                 break;
-            default:
-                return;
         }
-        task.start();
     }
 }
