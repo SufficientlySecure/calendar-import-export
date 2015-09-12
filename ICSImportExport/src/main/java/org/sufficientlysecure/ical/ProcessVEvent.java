@@ -112,7 +112,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         final Settings.DuplicateHandlingEnum dupes = options.getDuplicateHandling();
 
-        Log.d(TAG, (mIsInserter ? "Ins" : "Del") + " for id " + mAndroidCalendar.mId);
+        Log.i(TAG, (mIsInserter ? "Insert" : "Delete") + " for id " + mAndroidCalendar.mIdStr);
         Log.d(TAG, "Duplication option is " + dupes.ordinal());
 
         for (Object ve: events) {
@@ -124,7 +124,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
             if (e.getRecurrenceId() != null) {
                 // FIXME: Support these edited instances
-                Log.d(TAG, "Ignoring edited instance of a recurring event");
+                Log.w(TAG, "Ignoring edited instance of a recurring event");
                 continue;
             }
 
@@ -148,7 +148,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
                 if (mustDelete) {
                     if (dupes == Settings.DuplicateHandlingEnum.DUP_IGNORE) {
-                        Log.d(TAG, "Avoiding inserting a duplicate event");
+                        Log.i(TAG, "Avoiding inserting a duplicate event");
                         numDups++;
                         cur.close();
                         continue;
@@ -166,7 +166,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
                     if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE
                         && rowCalendarId != mAndroidCalendar.mId) {
-                        Log.d(TAG, "Avoiding deleting duplicate event in calendar " + rowCalendarId);
+                        Log.i(TAG, "Avoiding deleting duplicate event in calendar " + rowCalendarId);
                         continue; // Not in the destination calendar
                     }
 
@@ -178,7 +178,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                     if (mIsInserter && rowCalendarId != mAndroidCalendar.mId
                         && dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE_ANY) {
                         // Must update this event in the calendar this row came from
-                        Log.d(TAG, "Changing insert calendar from " + rowCalendarId + " to " + insertCalendarId);
+                        Log.i(TAG, "Changing calendar: " + rowCalendarId + " to " + insertCalendarId);
                         insertCalendarId = rowCalendarId;
                     }
                 }
@@ -199,17 +199,16 @@ public class ProcessVEvent extends RunnableWithProgress {
             c.put(Events.CALENDAR_ID, insertCalendarId);
             Uri uri = insertAndLog(resolver, Events.CONTENT_URI, c, "Event");
             if (uri == null)
-                continue; // FIXME: Note the failure
+                continue;
 
             final long id = Long.parseLong(uri.getLastPathSegment());
-
-            numIns++;
 
             for (int time: options.getReminders(reminders)) {
                 cAlarm.put(Reminders.EVENT_ID, id);
                 cAlarm.put(Reminders.MINUTES, time);
                 insertAndLog(resolver, Reminders.CONTENT_URI, cAlarm, "Reminder");
             }
+            numIns++;
         }
 
         mAndroidCalendar.mNumEntries += numIns;
@@ -446,10 +445,13 @@ public class ProcessVEvent extends RunnableWithProgress {
         if (Log.getIsUserEnabled())
             Log.d(TAG, "Inserting " + type + " values: " + c);
         Uri result = resolver.insert(uri, c);
-        if (result == null)
-            Log.d(TAG, "Could not insert");
+        if (result == null) {
+            Log.e(TAG, "failed to insert " + type);
+            if (!Log.getIsUserEnabled())
+                Log.e(TAG, "failed " + type + " values: " + c); // Not already logged, dump now
+        }
         else
-            Log.d(TAG,  "Insert returned " + result.toString());
+            Log.d(TAG,  "Insert " + type + " returned " + result.toString());
         return result;
     }
 

@@ -126,8 +126,10 @@ public class SaveCalendar extends RunnableWithProgress {
         if (!file.endsWith(".ics"))
             file += ".ics";
 
-        String output = Environment.getExternalStorageDirectory() + File.separator + file;
+        String fileName = Environment.getExternalStorageDirectory() + File.separator + file;
         int i = 0;
+
+        Log.i(TAG, "Save id " + mAndroidCalendar.mIdStr + " to file " + fileName);
 
         // query events
         ContentResolver resolver = activity.getContentResolver();
@@ -167,7 +169,6 @@ public class SaveCalendar extends RunnableWithProgress {
             incrementProgress();
             VEvent e = convertFromDb(cur, cal, timestamp);
             if (e != null) {
-                e.validate(true); // FIXME: Temporary
                 events.add(e);
                 if (Log.getIsUserEnabled())
                     Log.d(TAG, "Adding event: " + e.toString());
@@ -179,7 +180,7 @@ public class SaveCalendar extends RunnableWithProgress {
         for (VEvent v: events)
             cal.getComponents().add(v);
 
-        new CalendarOutputter().output(cal, new FileOutputStream(output));
+        new CalendarOutputter().output(cal, new FileOutputStream(fileName));
 
         Resources res = activity.getResources();
         String msg = res.getQuantityString(R.plurals.wrote_n_events_to, i, i, file);
@@ -236,7 +237,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
         if (hasStringValue(cur, Events.ORIGINAL_ID)) {
             // FIXME: Support these edited instances
-            Log.d(TAG, "Ignoring edited instance of a recurring event");
+            Log.w(TAG, "Ignoring edited instance of a recurring event");
             return null;
         }
 
@@ -401,7 +402,6 @@ public class SaveCalendar extends RunnableWithProgress {
             return null;
 
         if (cal == null) {
-            Log.d(TAG, "getDateTime UTC from long: " + dbName + "->" + cur.getLong(i));
             return utcDateFromMs(cur.getLong(i));     // Ignore timezone for date-only dates
         }
 
@@ -414,17 +414,12 @@ public class SaveCalendar extends RunnableWithProgress {
         dt.setTime(cur.getLong(i));
         if (dt.isUtc() != isUtc)
             throw new RuntimeException("UTC mismatch after setTime");
-        Log.d(TAG, "getDateTime from tz: " + dbName + "->" + cur.getLong(i));
 
         if (!isUtc) {
-            Log.d(TAG, "getDateTime non-UTC tz: '" + tz + "'");
             if (mTzRegistry == null)
                 mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
             TimeZone t = mTzRegistry.getTimeZone(tz);
-            Log.d(TAG, "getDateTime tz: " + t.getDisplayName());
             dt.setTimeZone(t);
-            if (dt.isUtc() != isUtc)
-                throw new RuntimeException("UTC mismatch after setTime");
             if (!mInsertedTimeZones.contains(t)) {
                 cal.getComponents().add(t.getVTimeZone());
                 mInsertedTimeZones.add(t);
