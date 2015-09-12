@@ -389,43 +389,35 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private void searchFiles(File root, List<File> files, String... extension) {
-        if (root.isFile()) {
-            for (String string: extension) {
-                if (root.toString().endsWith(string)) {
-                    files.add(root);
-                }
-            }
-        } else {
-            File[] children = root.listFiles();
-            if (children != null) {
-                for (File file: children) {
-                    searchFiles(file, files, extension);
-                }
-            }
-        }
-    }
-
     private class SearchForFiles extends RunnableWithProgress {
         public SearchForFiles(MainActivity activity) {
             super(activity);
         }
 
+        private void search(File root, List<CalendarSource> sources, String... extensions) {
+            if (!root.isFile()) {
+                File[] children = root.listFiles();
+                if (children == null)
+                    return;
+                for (File file: children)
+                    search(file, sources, extensions);
+            }
+            for (String ext: extensions) {
+                if (root.toString().endsWith(ext)) {
+                    try {
+                        sources.add(new CalendarSource(root.toURI().toURL(), null, null));
+                    } catch (MalformedURLException e) {
+                        // Can't happen
+                    }
+                }
+            }
+        }
+
         @Override
         protected void runImpl() throws Exception {
             setMessage(R.string.searching_for_files);
-            File root = Environment.getExternalStorageDirectory();
-            List<File> files = new ArrayList<>();
-            searchFiles(root, files, "ics", "ical", "icalendar");
-            List<CalendarSource> sources = new ArrayList<>(files.size());
-
-            for (File file: files) {
-                try {
-                    sources.add(new CalendarSource(file.toURI().toURL(), null, null));
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
-                }
-            }
+            List<CalendarSource> sources = new ArrayList<>();
+            search(Environment.getExternalStorageDirectory(), sources, "ics", "ical", "icalendar");
             ((MainActivity) getActivity()).setSources(sources);
         }
     }
