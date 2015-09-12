@@ -67,7 +67,6 @@ public class ProcessVEvent extends RunnableWithProgress {
     private static final int EVENT_QUERY_ID_COL = 1;
 
     private final Calendar mICalCalendar;
-    private final AndroidCalendar mAndroidCalendar;
     private final boolean mIsInserter;
 
     private final class Options extends Settings {
@@ -88,14 +87,14 @@ public class ProcessVEvent extends RunnableWithProgress {
     public ProcessVEvent(MainActivity activity, Calendar iCalCalendar, boolean isInserter) {
         super(activity, R.string.processing_entries, true);
         mICalCalendar = iCalCalendar;
-        mAndroidCalendar = activity.getSelectedCalendar();
         mIsInserter = isInserter;
     }
 
     @Override
     protected void run() throws Exception {
-        MainActivity activity = getActivity();
-        Options options = new Options(activity);
+        final MainActivity activity = getActivity();
+        final Options options = new Options(activity);
+        final AndroidCalendar selectedCal = activity.getSelectedCalendar();
 
         List<Integer> reminders = new ArrayList<>();
 
@@ -112,7 +111,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         final Settings.DuplicateHandlingEnum dupes = options.getDuplicateHandling();
 
-        Log.i(TAG, (mIsInserter ? "Insert" : "Delete") + " for id " + mAndroidCalendar.mIdStr);
+        Log.i(TAG, (mIsInserter ? "Insert" : "Delete") + " for id " + selectedCal.mIdStr);
         Log.d(TAG, "Duplication option is " + dupes.ordinal());
 
         for (Object ve: events) {
@@ -128,9 +127,9 @@ public class ProcessVEvent extends RunnableWithProgress {
                 continue;
             }
 
-            long insertCalendarId = mAndroidCalendar.mId; // Calendar id to insert to
+            long insertCalendarId = selectedCal.mId; // Calendar id to insert to
 
-            ContentValues c = convertToDB(e, options, reminders, mAndroidCalendar.mId);
+            ContentValues c = convertToDB(e, options, reminders, selectedCal.mId);
 
             Cursor cur = null;
             boolean mustDelete = !mIsInserter;
@@ -141,7 +140,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                 cur = query(resolver, options, c);
                 while (!mustDelete && cur != null && cur.moveToNext()) {
                     if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE)
-                        mustDelete = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL) == mAndroidCalendar.mId;
+                        mustDelete = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL) == selectedCal.mId;
                     else
                         mustDelete = true; // Replacing all (or ignoring, handled just below)
                 }
@@ -165,7 +164,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                     long rowCalendarId = cur.getLong(EVENT_QUERY_CALENDAR_ID_COL);
 
                     if (dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE
-                        && rowCalendarId != mAndroidCalendar.mId) {
+                        && rowCalendarId != selectedCal.mId) {
                         Log.i(TAG, "Avoiding deleting duplicate event in calendar " + rowCalendarId);
                         continue; // Not in the destination calendar
                     }
@@ -175,7 +174,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                     numDel += resolver.delete(eventUri, null, null);
                     String where = Reminders.EVENT_ID + "=?";
                     resolver.delete(Reminders.CONTENT_URI, where, new String[] { id });
-                    if (mIsInserter && rowCalendarId != mAndroidCalendar.mId
+                    if (mIsInserter && rowCalendarId != selectedCal.mId
                         && dupes == Settings.DuplicateHandlingEnum.DUP_REPLACE_ANY) {
                         // Must update this event in the calendar this row came from
                         Log.i(TAG, "Changing calendar: " + rowCalendarId + " to " + insertCalendarId);
@@ -211,9 +210,9 @@ public class ProcessVEvent extends RunnableWithProgress {
             numIns++;
         }
 
-        mAndroidCalendar.mNumEntries += numIns;
-        mAndroidCalendar.mNumEntries -= numDel;
-        activity.updateNumEntries(mAndroidCalendar);
+        selectedCal.mNumEntries += numIns;
+        selectedCal.mNumEntries -= numDel;
+        activity.updateNumEntries(selectedCal);
 
         Resources res = activity.getResources();
         int n = mIsInserter ? numIns : numDel;

@@ -85,7 +85,6 @@ import android.database.DatabaseUtils;
 public class SaveCalendar extends RunnableWithProgress {
     private static final String TAG = "ICS_SaveCalendar";
 
-    private final AndroidCalendar mAndroidCalendar;
     private final PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
     private TimeZoneRegistry mTzRegistry;
     private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
@@ -108,13 +107,13 @@ public class SaveCalendar extends RunnableWithProgress {
 
     public SaveCalendar(MainActivity activity) {
         super(activity, R.string.writing_calendar_to_file, true);
-        mAndroidCalendar = activity.getSelectedCalendar();
     }
 
     @Override
     protected void run() throws Exception {
-        MainActivity activity = getActivity();
-        Settings settings = activity.getSettings();
+        final MainActivity activity = getActivity();
+        final Settings settings = activity.getSettings();
+        final AndroidCalendar selectedCal = activity.getSelectedCalendar();
 
         mInsertedTimeZones.clear();
 
@@ -129,12 +128,12 @@ public class SaveCalendar extends RunnableWithProgress {
         String fileName = Environment.getExternalStorageDirectory() + File.separator + file;
         int i = 0;
 
-        Log.i(TAG, "Save id " + mAndroidCalendar.mIdStr + " to file " + fileName);
+        Log.i(TAG, "Save id " + selectedCal.mIdStr + " to file " + fileName);
 
         // query events
         ContentResolver resolver = activity.getContentResolver();
         String where = Events.CALENDAR_ID + "=?";
-        String[] args = new String[] { mAndroidCalendar.mIdStr };
+        String[] args = new String[] { selectedCal.mIdStr };
         Cursor cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, null);
         setMax(cur.getCount());
 
@@ -149,15 +148,15 @@ public class SaveCalendar extends RunnableWithProgress {
         } catch (NameNotFoundException e) {
             ver = "Unknown Build";
         }
-        String prodId = "-//" + mAndroidCalendar.mOwner + "//iCal Import/Export " + ver + "//EN";
+        String prodId = "-//" + selectedCal.mOwner + "//iCal Import/Export " + ver + "//EN";
         cal.getProperties().add(new ProdId(prodId));
         cal.getProperties().add(Version.VERSION_2_0);
         cal.getProperties().add(CalScale.GREGORIAN);
-        if (mAndroidCalendar.mTimezone != null) {
+        if (selectedCal.mTimezone != null) {
             // We don't write any events with floating times, but export this
             // anyway so the default timezone for new events is correct when
             // the file is imported into a system that supports it.
-            cal.getProperties().add(new XProperty("X-WR-TIMEZONE", mAndroidCalendar.mTimezone));
+            cal.getProperties().add(new XProperty("X-WR-TIMEZONE", selectedCal.mTimezone));
         }
 
         DtStamp timestamp = new DtStamp(); // Same timestamp for all events
