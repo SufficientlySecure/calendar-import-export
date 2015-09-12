@@ -45,7 +45,6 @@ import org.sufficientlysecure.ical.ui.RemindersDialog;
 import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -87,16 +86,16 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
     }
 
-    public ProcessVEvent(Activity activity, Calendar iCalCalendar, boolean isInserter) {
+    public ProcessVEvent(MainActivity activity, Calendar iCalCalendar, boolean isInserter) {
         super(activity, ProgressDialog.STYLE_HORIZONTAL);
         mICalCalendar = iCalCalendar;
-        mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
+        mAndroidCalendar = activity.getSelectedCalendar();
         mIsInserter = isInserter;
     }
 
     @Override
     protected void runImpl() throws Exception {
-        MainActivity activity = (MainActivity) getActivity();
+        MainActivity activity = getActivity();
         Options options = new Options(activity);
 
         List<Integer> reminders = new ArrayList<>();

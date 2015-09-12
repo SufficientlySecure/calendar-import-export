@@ -19,21 +19,21 @@
 package org.sufficientlysecure.ical.ui.dialogs;
 
 import org.sufficientlysecure.ical.R;
+import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.util.Log;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 
 public abstract class RunnableWithProgress {
-    private final Activity mActivity;
+    private final MainActivity mActivity;
     private ProgressDialog mProgress;
 
-    public RunnableWithProgress(Activity activity) {
+    public RunnableWithProgress(MainActivity activity) {
         mActivity = activity;
         init(ProgressDialog.STYLE_SPINNER);
     }
 
-    protected RunnableWithProgress(Activity activity, int style) {
+    protected RunnableWithProgress(MainActivity activity, int style) {
         mActivity = activity;
         init(style);
     }
@@ -56,7 +56,7 @@ public abstract class RunnableWithProgress {
                    }).start();
     }
 
-    protected Activity getActivity() {
+    protected MainActivity getActivity() {
         return mActivity;
     }
 

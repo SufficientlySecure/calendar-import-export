@@ -66,7 +66,6 @@ import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
@@ -108,14 +107,14 @@ public class SaveCalendar extends RunnableWithProgress {
         Reminders.MINUTES, Reminders.METHOD
     };
 
-    public SaveCalendar(Activity activity) {
+    public SaveCalendar(MainActivity activity) {
         super(activity, ProgressDialog.STYLE_HORIZONTAL);
-        mAndroidCalendar = ((MainActivity) activity).getSelectedCalendar();
+        mAndroidCalendar = activity.getSelectedCalendar();
     }
 
     @Override
     protected void runImpl() throws Exception {
-        MainActivity activity = (MainActivity) getActivity();
+        MainActivity activity = getActivity();
         Settings settings = activity.getSettings();
 
         mInsertedTimeZones.clear();
@@ -168,7 +167,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
         while (cur.moveToNext()) {
             incrementProgressBy(1);
-            VEvent e = convertFromDb(cur, activity, cal, timestamp);
+            VEvent e = convertFromDb(cur, cal, timestamp);
             if (e != null) {
                 e.validate(true); // FIXME: Temporary
                 events.add(e);
@@ -234,7 +233,7 @@ public class SaveCalendar extends RunnableWithProgress {
         return result[0];
     }
 
-    private VEvent convertFromDb(Cursor cur, MainActivity activity, Calendar cal, DtStamp timestamp) {
+    private VEvent convertFromDb(Cursor cur, Calendar cal, DtStamp timestamp) {
         if (Log.getIsUserEnabled())
             Log.d(TAG, "cursor: " + DatabaseUtils.dumpCurrentRowToString(cur));
 
@@ -248,7 +247,7 @@ public class SaveCalendar extends RunnableWithProgress {
         l.add(timestamp);
         if (copyProperty(l, Property.UID, cur, Events.UID_2445) == null) {
             // Generate a UID. Not ideal, since its not reproducible
-            l.add(new Uid(activity.generateUid()));
+            l.add(new Uid(getActivity().generateUid()));
         }
 
         String summary = copyProperty(l, Property.SUMMARY, cur, Events.TITLE);
@@ -339,7 +338,7 @@ public class SaveCalendar extends RunnableWithProgress {
             String s = summary == null ? (description == null ? "" : description) : summary;
             Description desc = new Description(s);
 
-            ContentResolver resolver = activity.getContentResolver();
+            ContentResolver resolver = getActivity().getContentResolver();
             long eventId = getLong(cur, Events._ID);
             Cursor alarmCur = Reminders.query(resolver, eventId, REMINDER_COLS);
             while (alarmCur.moveToNext()) {

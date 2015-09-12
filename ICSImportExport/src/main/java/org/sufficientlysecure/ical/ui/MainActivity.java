@@ -418,7 +418,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             setMessage(R.string.searching_for_files);
             List<CalendarSource> sources = new ArrayList<>();
             search(Environment.getExternalStorageDirectory(), sources, "ics", "ical", "icalendar");
-            ((MainActivity) getActivity()).setSources(sources);
+            getActivity().setSources(sources);
         }
     }
 
