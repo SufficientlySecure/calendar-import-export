@@ -47,6 +47,7 @@ import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.FreeBusy;
+import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Uid;
@@ -151,6 +152,7 @@ public class SaveCalendar extends RunnableWithProgress {
         String prodId = "-//" + selectedCal.mOwner + "//iCal Import/Export " + ver + "//EN";
         cal.getProperties().add(new ProdId(prodId));
         cal.getProperties().add(Version.VERSION_2_0);
+        cal.getProperties().add(Method.PUBLISH);
         cal.getProperties().add(CalScale.GREGORIAN);
         if (selectedCal.mTimezone != null) {
             // We don't write any events with floating times, but export this
