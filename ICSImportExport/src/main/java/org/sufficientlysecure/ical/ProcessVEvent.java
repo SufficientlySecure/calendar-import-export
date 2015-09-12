@@ -375,12 +375,13 @@ public class ProcessVEvent extends RunnableWithProgress {
                 alarmMs = t.getDateTime().getTime(); // Absolute
             else if (t.getDuration() != null && t.getDuration().isNegative()) {
                 Related rel = (Related) t.getParameter(Parameter.RELATED);
-                if (rel != null && rel == Related.END) {
+                if (rel != null && rel == Related.END)
                     startMs = e.getEndDate().getDate().getTime();
-                }
                 alarmMs = startMs - durationToMs(t.getDuration()); // Relative
-            } else
-                continue; // FIXME: Log this unsupported alarm
+            } else {
+                Log.w(TAG, "Ignoring unsupported alarm"); // FIXME: Add support
+                continue;
+            }
 
             int reminder = (int) ((startMs - alarmMs) / DateUtils.MINUTE_IN_MILLIS);
             if (reminder >= 0 && !reminders.contains(reminder))

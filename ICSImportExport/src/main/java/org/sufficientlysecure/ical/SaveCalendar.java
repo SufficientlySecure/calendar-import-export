@@ -271,7 +271,6 @@ public class SaveCalendar extends RunnableWithProgress {
 
             // Use duration if we have one, otherwise end date
             if (hasStringValue(cur, Events.DURATION)) {
-                // FIXME: Are any other values used for 0 durations?
                 isTransparent = getString(cur, Events.DURATION).equals("PT0S");
                 if (!isTransparent) {
                     copyProperty(l, Property.DURATION, cur, Events.DURATION);
