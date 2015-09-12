@@ -21,6 +21,7 @@ public class Settings {
     public static final String PREF_LASTURL = "lastUrl";
     public static final String PREF_LASTURLPASSWORD = "lastUrlPassword";
     public static final String PREF_LASTURLUSERNAME = "lastUrlUsername";
+    public static final String PREF_MICROSOFT_EXTENSIONS = "microsoft_extensions";
     public static final String PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
     public static final String PREF_SAVE_PASSWORDS = "save_passwords";
     public static final String PREF_UIDPID = "uidPid";
@@ -186,6 +187,14 @@ public class Settings {
 
     public void setIcal4jValidationRelaxed(boolean value) {
         putBoolean(PREF_ICAL4J_VALIDATION_RELAXED, value);
+    }
+
+    public boolean getMicrosoftExtensions() {
+        return getBoolean(PREF_MICROSOFT_EXTENSIONS, true);
+    }
+
+    public void setMicrosoftExtensions(boolean value) {
+        putBoolean(PREF_MICROSOFT_EXTENSIONS, value);
     }
 
 }

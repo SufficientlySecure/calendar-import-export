@@ -93,7 +93,7 @@
         <CheckBoxPreference
             android:key="ical4j.compatibility.outlook"
             android:title="@string/microsoft_compatible"
-            android:summaryOn="@string/support_calendars_exported_by_microsoft174"
+            android:summaryOn="@string/support_calendars_exported_by_outlook174"
             android:summaryOff="@string/no_microsoft174_calendar_support"
             android:defaultValue="true" />
 
@@ -121,6 +121,13 @@
             android:title="@string/permissive_export"
             android:summaryOn="@string/skip_extensive_validation_of_the"
             android:summaryOff="@string/validate_the_output_file"
+            android:defaultValue="true" />
+
+        <CheckBoxPreference
+            android:key="microsoft_extensions"
+            android:title="@string/microsoft_extensions"
+            android:summaryOn="@string/add_outlook174_and_exchange8482_extensions"
+            android:summaryOff="@string/no_microsoft174_calendar_extensions"
             android:defaultValue="true" />
 
     </PreferenceCategory>

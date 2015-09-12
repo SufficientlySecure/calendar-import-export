@@ -146,8 +146,8 @@ sources of iCalendar files usually require it.
 
 ==== Microsoft compatible (Y/N)
 
-Support calendars exported by Microsoft&#174; Outlook&#174; and
-Microsoft&#174; Exchange&#8482;/No Microsoft&#174; calendar support.
+Support calendars exported by Outlook&#174; and Exchange&#8482;/No
+Microsoft&#174; calendar support.
 
 :defaultValue: true
 :key: ical4j.compatibility.outlook
@@ -186,6 +186,13 @@ This setting does not disable all validation. The iCal4j library used
 for writing calendars will reject gratuitous errors such as missing
 mandatory elements. These can occur when the Android calendar being exported
 is corrupt, for example.
+
+==== Microsoft extensions (Y/N)
+
+Add Outlook&#174; and Exchange&#8482; extensions to exported calendars/No
+Microsoft&#174; calendar extensions.
+
+:defaultValue: true
 
 ///////////////////////////////////////////
 The following keys are used internally only
