@@ -86,7 +86,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     public ProcessVEvent(MainActivity activity, Calendar iCalCalendar, boolean isInserter) {
-        super(activity, true);
+        super(activity, R.string.processing_entries, true);
         mICalCalendar = iCalCalendar;
         mAndroidCalendar = activity.getSelectedCalendar();
         mIsInserter = isInserter;
@@ -99,7 +99,6 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         List<Integer> reminders = new ArrayList<>();
 
-        setMessage(R.string.processing_entries);
         ComponentList events = mICalCalendar.getComponents(VEvent.VEVENT);
 
         setMax(events.size());

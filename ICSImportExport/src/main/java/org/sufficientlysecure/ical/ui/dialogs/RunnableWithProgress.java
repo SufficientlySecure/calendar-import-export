@@ -27,12 +27,12 @@ import android.app.ProgressDialog;
 public abstract class RunnableWithProgress extends ProgressDialog {
     private final MainActivity mActivity;
 
-    protected RunnableWithProgress(MainActivity activity, boolean isHorizontal) {
+    protected RunnableWithProgress(MainActivity activity, int messageId, boolean isHorizontal) {
         super(activity);
         mActivity = activity;
         setProgressStyle(isHorizontal ? STYLE_HORIZONTAL : STYLE_SPINNER);
         setCancelable(false);
-        setMessage("");
+        setMessage(activity.getString(messageId));
         setTitle("");
         show();
     }
@@ -55,18 +55,10 @@ public abstract class RunnableWithProgress extends ProgressDialog {
         return mActivity;
     }
 
-    protected void setMessage(final int id) {
-        mActivity.runOnUiThread(new Runnable() {
-                                    public void run() {
-                                        RunnableWithProgress.super.setMessage(mActivity.getString(id));
-                                    }
-                                });
-    }
-
     protected void incrementProgress() {
         mActivity.runOnUiThread(new Runnable() {
                                     public void run() {
-                                        RunnableWithProgress.super.incrementProgressBy(1);
+                                        RunnableWithProgress.this.incrementProgressBy(1);
                                     }
                                 });
     }

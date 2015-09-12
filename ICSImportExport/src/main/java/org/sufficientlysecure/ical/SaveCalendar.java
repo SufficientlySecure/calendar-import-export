@@ -107,7 +107,7 @@ public class SaveCalendar extends RunnableWithProgress {
     };
 
     public SaveCalendar(MainActivity activity) {
-        super(activity, true);
+        super(activity, R.string.writing_calendar_to_file, true);
         mAndroidCalendar = activity.getSelectedCalendar();
     }
 
@@ -128,7 +128,6 @@ public class SaveCalendar extends RunnableWithProgress {
 
         String output = Environment.getExternalStorageDirectory() + File.separator + file;
         int i = 0;
-        setMessage(R.string.loading_calendar_entries);
 
         // query events
         ContentResolver resolver = activity.getContentResolver();
@@ -180,7 +179,6 @@ public class SaveCalendar extends RunnableWithProgress {
         for (VEvent v: events)
             cal.getComponents().add(v);
 
-        setMessage(R.string.writing_calendar_to_file);
         new CalendarOutputter().output(cal, new FileOutputStream(output));
 
         Resources res = activity.getResources();

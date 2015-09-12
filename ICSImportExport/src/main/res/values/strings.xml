@@ -26,7 +26,6 @@
     <string name="invalid_url">Invalid URL</string>
     <string name="legal_notices">Legal Notices</string>
     <string name="load_calendar">Load</string>
-    <string name="loading_calendar_entries">Loading calendar entries&#8230;</string>
     <string name="login_required">Login Required</string>
     <string name="name">Name</string>
     <string name="no_calendars_found">No calendars found.\n\nYou must create a calendar to import to/export from. You can install \"Offline Calendar\" to create one.\n\nIf you are using Cyanogenmod: Make sure that Privacy Guard is disabled for this application to  allow calendar read/write.\n\nIf you are using Android 4.3 App Ops: Make sure that you allow calendar read/write access for this application.</string>

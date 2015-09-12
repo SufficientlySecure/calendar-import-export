@@ -391,7 +391,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private class SearchForFiles extends RunnableWithProgress {
         public SearchForFiles(MainActivity activity) {
-            super(activity, false);
+            super(activity, R.string.searching_for_files, false);
         }
 
         private void search(File root, List<CalendarSource> sources, String... extensions) {
@@ -415,7 +415,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         @Override
         protected void run() throws Exception {
-            setMessage(R.string.searching_for_files);
             List<CalendarSource> sources = new ArrayList<>();
             search(Environment.getExternalStorageDirectory(), sources, "ics", "ical", "icalendar");
             getActivity().setSources(sources);
@@ -424,7 +423,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private class LoadFile extends RunnableWithProgress {
         public LoadFile(MainActivity activity) {
-            super(activity, false);
+            super(activity, R.string.reading_file_please_wait, false);
         }
 
         private void setHint(String key, boolean value) {
@@ -433,8 +432,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         @Override
         protected void run() throws Exception {
-            setMessage(R.string.reading_file_please_wait);
-
             setHint(CompatibilityHints.KEY_RELAXED_UNFOLDING, mSettings.getIcal4jUnfoldingRelaxed());
             setHint(CompatibilityHints.KEY_RELAXED_PARSING, mSettings.getIcal4jParsingRelaxed());
             setHint(CompatibilityHints.KEY_RELAXED_VALIDATION, mSettings.getIcal4jValidationRelaxed());
