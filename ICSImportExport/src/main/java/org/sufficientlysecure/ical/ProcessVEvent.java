@@ -196,6 +196,12 @@ public class ProcessVEvent extends RunnableWithProgress {
             }
 
             c.put(Events.CALENDAR_ID, insertCalendarId);
+            if (options.getTestFileSupport()) {
+                processEventTests(e, c);
+                numIns++;
+                continue;
+            }
+
             Uri uri = insertAndLog(resolver, Events.CONTENT_URI, c, "Event");
             if (uri == null)
                 continue;
@@ -496,5 +502,37 @@ public class ProcessVEvent extends RunnableWithProgress {
             b.append(" is null");
 
         return queryEvents(resolver, b, argsList);
+    }
+
+    private void checkTestValue(VEvent e, ContentValues c, String keyValue, String testName) {
+        String key = keyValue.split("=")[0];
+        String expected = keyValue.split("=")[1];
+        String got = c.getAsString(key);
+        if (!expected.equals(got)) {
+            Log.e(TAG, "    " + keyValue + " -> FAILED");
+            String error = "Test " + testName + " FAILED, expected '" + keyValue + "', got '" + got + "'";
+            throw new RuntimeException(error);
+        }
+        Log.i(TAG, "    " + keyValue + " -> PASSED");
+    }
+
+    private boolean processEventTests(VEvent e, ContentValues c) {
+
+        Property testName = e.getProperty("X-TEST-NAME");
+        if (testName == null)
+            return false; // Not a test case
+
+        // This is a test event. Verify it using the embedded meta data.
+        Log.i(TAG, "Processing test case " + testName.getValue() + "...");
+
+        for (Object o : e.getProperties()) {
+            Property p = (Property) o;
+            switch (p.getName()) {
+                case "X-TEST-VALUE":
+                    checkTestValue(e, c, p.getValue(), testName.getValue());
+                break;
+            }
+        }
+        return true;
     }
 }
