@@ -44,7 +44,6 @@ import org.sufficientlysecure.ical.Settings;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
-import org.sufficientlysecure.ical.util.Log;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -109,7 +108,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.main);
 
         mSettings = new Settings(PreferenceManager.getDefaultSharedPreferences(this));
-        Log.setIsUserEnabled(mSettings.getDebugLogging());
+        SettingsActivity.processSettings(mSettings);
 
         // Retrieve views
         mCalendarSpinner = (Spinner) findViewById(R.id.SpinnerChooseCalendar);

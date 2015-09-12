@@ -41,7 +41,6 @@ import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.CalScale;
-import net.fortuna.ical4j.model.property.DateProperty;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
@@ -90,7 +89,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
     private final AndroidCalendar mAndroidCalendar;
     private final PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
-    private final TimeZoneRegistry mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
+    private TimeZoneRegistry mTzRegistry;
     private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
 
     private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELLED");
@@ -423,6 +422,8 @@ public class SaveCalendar extends RunnableWithProgress {
 
         if (!isUtc) {
             Log.d(TAG, "getDateTime non-UTC tz: '" + tz + "'");
+            if (mTzRegistry == null)
+                mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
             TimeZone t = mTzRegistry.getTimeZone(tz);
             Log.d(TAG, "getDateTime tz: " + t.getDisplayName());
             dt.setTimeZone(t);

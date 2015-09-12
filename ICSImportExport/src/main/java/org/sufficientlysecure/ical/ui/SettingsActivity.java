@@ -24,20 +24,34 @@ import android.content.SharedPreferences;
 
 public class SettingsActivity extends SettingsActivityBase {
 
+    public SettingsActivity() {
+        super();
+    }
+
     @Override
     public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
         super.onSharedPreferenceChanged(prefs, key);
 
-        if (key.equals(Settings.PREF_SAVE_PASSWORDS)) {
-            // Blank any stored password when this setting is changed
-            new Settings(prefs).putString(Settings.PREF_LASTURLPASSWORD, "");
-        } else if (key.equals(Settings.PREF_DEBUG_LOGGING)) {
-            // Enable or disable debug logging in release builds
-            Log.setIsUserEnabled(new Settings(prefs).getDebugLogging());
+        switch (key) {
+            case Settings.PREF_SAVE_PASSWORDS:
+                // Blank any stored password when this setting is changed
+                new Settings(prefs).putString(Settings.PREF_LASTURLPASSWORD, "");
+                break;
+
+            case Settings.PREF_DEBUG_LOGGING:
+            case Settings.PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED:
+                processSettings(new Settings(prefs));
+                break;
         }
     }
 
-    public SettingsActivity() {
-        super();
+    public static void processSettings(Settings settings) {
+
+        // Enable or disable debug logging in release builds
+        Log.setIsUserEnabled(settings.getDebugLogging());
+
+        // Turn TimeZone updates on or off
+        String v = settings.getNetFortunaIcal4jTimezoneUpdateEnabled() ? "true" : "false";
+        System.setProperty(Settings.PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED, v);
     }
 }

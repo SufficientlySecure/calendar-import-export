@@ -21,6 +21,7 @@ public class Settings {
     public static final String PREF_LASTURL = "lastUrl";
     public static final String PREF_LASTURLPASSWORD = "lastUrlPassword";
     public static final String PREF_LASTURLUSERNAME = "lastUrlUsername";
+    public static final String PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
     public static final String PREF_SAVE_PASSWORDS = "save_passwords";
     public static final String PREF_UIDPID = "uidPid";
     public enum DuplicateHandlingEnum {
@@ -89,6 +90,14 @@ public class Settings {
 
     public void setSavePasswords(boolean value) {
         putBoolean(PREF_SAVE_PASSWORDS, value);
+    }
+
+    public boolean getNetFortunaIcal4jTimezoneUpdateEnabled() {
+        return getBoolean(PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED, false);
+    }
+
+    public void setNetFortunaIcal4jTimezoneUpdateEnabled(boolean value) {
+        putBoolean(PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED, value);
     }
 
     public boolean getDebugLogging() {

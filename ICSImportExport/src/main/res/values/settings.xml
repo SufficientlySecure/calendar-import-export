@@ -12,6 +12,7 @@
     <string name="default_reminders">Default reminders</string>
     <string name="do_not_import_reminders">Do not import reminders</string>
     <string name="do_not_save_passwords">Do not save passwords</string>
+    <string name="do_not_update_timezone_data">Do not update timezone data</string>
     <string name="duplicate_handling">Duplicate handling</string>
     <string name="enforce_rfc_compliant_input">Enforce RFC compliant input</string>
     <string name="enforce_rfc_compliant_line_wrapping">Enforce RFC compliant line wrapping</string>
@@ -40,6 +41,8 @@
     <string name="support_calendars_exported_by_microsoft174">Support calendars exported by Microsoft&#174; Outlook&#174; and Microsoft&#174; Exchange&#8482;</string>
     <string name="support_common_incorrect_quirks">Support common incorrect quirks</string>
     <string name="support_events_in_vcard_format">Support events in vCard format</string>
+    <string name="timezone_updates">Timezone Updates</string>
+    <string name="update_timezone_data_over_the">Update timezone data over the network</string>
     <string name="validate_the_output_file">Validate the output file</string>
     <string name="vcard_compatible">vCard compatible</string>
     <string-array name="duplicate_handling_array">

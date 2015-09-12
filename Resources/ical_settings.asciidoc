@@ -24,6 +24,18 @@ when you next choose to import a URL again.
 WARNING: The password is _not_ encrypted and so on a compromised or rooted
 device the password could be stolen. *Enable only with care*.
 
+==== Timezone Updates (Y/N)
+
+Update timezone data over the network/Do not update timezone data.
+
+:key: net.fortuna.ical4j.timezone.update.enabled
+
+When enabled, timezone updates will be requested on demand
+from http://tzurl.org/. Unless timezones that you use have recently
+changed this is most likely not required. Even if your timezone has
+changed, most aqpplications ignore all timezone information in iCalendar
+files except for the name.
+
 ==== Debug logging (Y/N)
 
 Extra logging for debugging/Normal logging.

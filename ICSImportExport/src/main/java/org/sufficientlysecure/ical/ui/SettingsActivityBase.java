@@ -43,7 +43,7 @@ public class SettingsActivityBase extends android.preference.PreferenceActivity
                 default:
                     return;
             }
-            CharSequence choice = ((android.preference.ListPreference)p).getEntry();
+            CharSequence choice = ((android.preference.ListPreference) p).getEntry();
             p.setSummary(createPreferenceText(resId, choice));
         }
     }
