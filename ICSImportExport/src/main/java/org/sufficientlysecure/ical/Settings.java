@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 public class Settings {
     public static final String PREF_DEBUG_LOGGING = "debug_logging";
     public static final String PREF_DEFAULT_REMINDERS = "default_reminders";
+    public static final String PREF_DEVELOPER_MODE = "developer_mode";
     public static final String PREF_DUPLICATE_HANDLING = "duplicate_handling";
     public static final String PREF_GLOBAL_UIDS = "global_uids";
     public static final String PREF_ICAL4J_COMPATIBILITY_NOTES = "ical4j.compatibility.notes";
@@ -24,6 +25,7 @@ public class Settings {
     public static final String PREF_MICROSOFT_EXTENSIONS = "microsoft_extensions";
     public static final String PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
     public static final String PREF_SAVE_PASSWORDS = "save_passwords";
+    public static final String PREF_TEST_FILE_SUPPORT = "test_file_support";
     public static final String PREF_UIDPID = "uidPid";
     public enum DuplicateHandlingEnum {
         DUP_REPLACE,
@@ -99,14 +101,6 @@ public class Settings {
 
     public void setNetFortunaIcal4jTimezoneUpdateEnabled(boolean value) {
         putBoolean(PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED, value);
-    }
-
-    public boolean getDebugLogging() {
-        return getBoolean(PREF_DEBUG_LOGGING, false);
-    }
-
-    public void setDebugLogging(boolean value) {
-        putBoolean(PREF_DEBUG_LOGGING, value);
     }
 
     public DuplicateHandlingEnum getDuplicateHandling() {
@@ -195,6 +189,30 @@ public class Settings {
 
     public void setMicrosoftExtensions(boolean value) {
         putBoolean(PREF_MICROSOFT_EXTENSIONS, value);
+    }
+
+    public boolean getDeveloperMode() {
+        return getBoolean(PREF_DEVELOPER_MODE, false);
+    }
+
+    public void setDeveloperMode(boolean value) {
+        putBoolean(PREF_DEVELOPER_MODE, value);
+    }
+
+    public boolean getDebugLogging() {
+        return getBoolean(PREF_DEBUG_LOGGING, false);
+    }
+
+    public void setDebugLogging(boolean value) {
+        putBoolean(PREF_DEBUG_LOGGING, value);
+    }
+
+    public boolean getTestFileSupport() {
+        return getBoolean(PREF_TEST_FILE_SUPPORT, false);
+    }
+
+    public void setTestFileSupport(boolean value) {
+        putBoolean(PREF_TEST_FILE_SUPPORT, value);
     }
 
 }

@@ -11,10 +11,14 @@
     <string name="compatibility">Compatibility</string>
     <string name="debug_logging">Debug logging</string>
     <string name="default_reminders">Default reminders</string>
+    <string name="developer_mode">Developer mode</string>
+    <string name="developer_tools">Developer tools</string>
+    <string name="disabled">Disabled</string>
     <string name="do_not_import_reminders">Do not import reminders</string>
     <string name="do_not_save_passwords">Do not save passwords</string>
     <string name="do_not_update_timezone_data">Do not update timezone data</string>
     <string name="duplicate_handling">Duplicate handling</string>
+    <string name="enable_developer_features">Enable developer features</string>
     <string name="enforce_rfc_compliant_input">Enforce RFC compliant input</string>
     <string name="enforce_rfc_compliant_line_wrapping">Enforce RFC compliant line wrapping</string>
     <string name="extra_logging_for_debugging">Extra logging for debugging</string>
@@ -32,10 +36,10 @@
     <string name="no_microsoft174_calendar_extensions">No Microsoft&#174; calendar extensions</string>
     <string name="no_microsoft174_calendar_support">No Microsoft&#174; calendar support</string>
     <string name="no_vcard_support">No vCard support</string>
-    <string name="normal_logging">Normal logging</string>
     <string name="notes_compatible">Notes compatible</string>
     <string name="permissive_export">Permissive export</string>
     <string name="permissive_parsing">Permissive parsing</string>
+    <string name="process_test_file_directives">Process test file directives</string>
     <string name="reminders">Reminders</string>
     <string name="save_passwords">Save passwords</string>
     <string name="save_passwords_in_insecure_local">Save passwords in insecure local storage</string>
@@ -44,6 +48,7 @@
     <string name="support_calendars_exported_by_outlook174">Support calendars exported by Outlook&#174; and Exchange&#8482;</string>
     <string name="support_common_incorrect_quirks">Support common incorrect quirks</string>
     <string name="support_events_in_vcard_format">Support events in vCard format</string>
+    <string name="test_file_support">Test file support</string>
     <string name="timezone_updates">Timezone Updates</string>
     <string name="update_timezone_data_over_the">Update timezone data over the network</string>
     <string name="validate_the_output_file">Validate the output file</string>

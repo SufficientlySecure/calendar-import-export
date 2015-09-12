@@ -19,13 +19,6 @@
             android:summaryOff="@string/do_not_update_timezone_data"
             android:defaultValue="false" />
 
-        <CheckBoxPreference
-            android:key="debug_logging"
-            android:title="@string/debug_logging"
-            android:summaryOn="@string/extra_logging_for_debugging"
-            android:summaryOff="@string/normal_logging"
-            android:defaultValue="false" />
-
     </PreferenceCategory>
 
     <PreferenceCategory
@@ -129,6 +122,34 @@
             android:summaryOn="@string/add_outlook174_and_exchange8482_extensions"
             android:summaryOff="@string/no_microsoft174_calendar_extensions"
             android:defaultValue="true" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="@string/developer_tools" >
+
+        <CheckBoxPreference
+            android:key="developer_mode"
+            android:title="@string/developer_mode"
+            android:summaryOn="@string/enable_developer_features"
+            android:summaryOff="@string/disabled"
+            android:defaultValue="false" />
+
+        <CheckBoxPreference
+            android:key="debug_logging"
+            android:title="@string/debug_logging"
+            android:summaryOn="@string/extra_logging_for_debugging"
+            android:summaryOff="@string/disabled"
+            android:defaultValue="false"
+            android:dependency="developer_mode" />
+
+        <CheckBoxPreference
+            android:key="test_file_support"
+            android:title="@string/test_file_support"
+            android:summaryOn="@string/process_test_file_directives"
+            android:summaryOff="@string/disabled"
+            android:defaultValue="false"
+            android:dependency="developer_mode" />
 
     </PreferenceCategory>
 

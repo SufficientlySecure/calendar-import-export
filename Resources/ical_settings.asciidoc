@@ -36,14 +36,6 @@ changed this is most likely not required. Even if your timezone has
 changed, most aqpplications ignore all timezone information in iCalendar
 files except for the name.
 
-==== Debug logging (Y/N)
-
-Extra logging for debugging/Normal logging.
-
-When enabled, more information will be logged about the activity of the
-application while it runs. You may be asked to enable this setting to
-help the developers fix a bug you have reported.
-
 === Import
 
 These settings apply only when importing iCalendar files. You may wish
@@ -193,6 +185,32 @@ Add Outlook&#174; and Exchange&#8482; extensions to exported calendars/No
 Microsoft&#174; calendar extensions.
 
 :defaultValue: true
+
+=== Developer tools
+
+These settings are for developers of the application only. They will not
+typically be useful for users. You may be asked to enable one or more of
+these settings in order to help the developers fix a bug you have reported.
+
+==== Developer mode (Y/N)
+
+Enable developer features/Disabled.
+
+==== Debug logging (Y/N)
+
+Extra logging for debugging/Disabled.
+
+When enabled, more information will be logged about the actions of the
+application while it runs.
+
+:dependency: developer_mode
+
+==== Test file support (Y/N)
+
+Process test file directives/Disabled.
+
+:dependency: developer_mode
+
 
 ///////////////////////////////////////////
 The following keys are used internally only
