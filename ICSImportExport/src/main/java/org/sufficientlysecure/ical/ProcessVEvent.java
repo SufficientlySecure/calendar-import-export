@@ -505,9 +505,12 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private void checkTestValue(VEvent e, ContentValues c, String keyValue, String testName) {
-        String key = keyValue.split("=")[0];
-        String expected = keyValue.split("=")[1];
+        String[] parts = keyValue.split("=");
+        String key = parts[0];
+        String expected = parts.length > 1 ? parts[1] : "";
         String got = c.getAsString(key);
+        if (got == null)
+            got = "<null>"; // Sentinel for testing not present values
         if (!expected.equals(got)) {
             Log.e(TAG, "    " + keyValue + " -> FAILED");
             String error = "Test " + testName + " FAILED, expected '" + keyValue + "', got '" + got + "'";
