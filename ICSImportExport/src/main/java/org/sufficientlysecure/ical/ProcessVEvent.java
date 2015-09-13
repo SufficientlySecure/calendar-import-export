@@ -197,7 +197,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
             c.put(Events.CALENDAR_ID, insertCalendarId);
             if (options.getTestFileSupport()) {
-                processEventTests(e, c);
+                processEventTests(e, c, reminders);
                 numIns++;
                 continue;
             }
@@ -516,7 +516,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         Log.i(TAG, "    " + keyValue + " -> PASSED");
     }
 
-    private boolean processEventTests(VEvent e, ContentValues c) {
+    private boolean processEventTests(VEvent e, ContentValues c, List<Integer> reminders) {
 
         Property testName = e.getProperty("X-TEST-NAME");
         if (testName == null)
@@ -524,6 +524,14 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         // This is a test event. Verify it using the embedded meta data.
         Log.i(TAG, "Processing test case " + testName.getValue() + "...");
+
+        String reminderValues = "";
+        String sep = "";
+        for (Integer i : reminders) {
+            reminderValues += sep + i;
+            sep = ",";
+        }
+        c.put("reminders", reminderValues);
 
         for (Object o : e.getProperties()) {
             Property p = (Property) o;
