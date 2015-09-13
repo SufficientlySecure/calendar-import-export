@@ -374,18 +374,20 @@ public class ProcessVEvent extends RunnableWithProgress {
                 continue; // Ignore email and procedure alarms
 
             Trigger t = a.getTrigger();
-            long startMs = e.getStartDate().getDate().getTime();
+            final long startMs = e.getStartDate().getDate().getTime();
+            long alarmStartMs = startMs;
             long alarmMs;
 
+            // FIXME: - Support for repeating alarms
+            //        - Check the calendars max number of alarms
             if (t.getDateTime() != null)
                 alarmMs = t.getDateTime().getTime(); // Absolute
             else if (t.getDuration() != null && t.getDuration().isNegative()) {
                 Related rel = (Related) t.getParameter(Parameter.RELATED);
                 if (rel != null && rel == Related.END)
-                    startMs = e.getEndDate().getDate().getTime();
-                alarmMs = startMs - durationToMs(t.getDuration()); // Relative
+                    alarmStartMs = e.getEndDate().getDate().getTime();
+                alarmMs = alarmStartMs - durationToMs(t.getDuration()); // Relative
             } else {
-                Log.w(TAG, "Ignoring unsupported alarm"); // FIXME: Add support
                 continue;
             }
 
