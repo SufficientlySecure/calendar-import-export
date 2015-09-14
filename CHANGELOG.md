@@ -1,5 +1,5 @@
 ## 2.0
-
+  * First released version of Calendar Import/Export, mostly rewritten by Jon Griffiths
 
 
 ## 1.5
