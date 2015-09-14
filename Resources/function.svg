@@ -20,7 +20,7 @@
    width="1024"
    version="1.1"
    sodipodi:docname="function.svg"
-   inkscape:export-filename="/home/schuerm/Projekte/ical-import-export/Resources/function.png">
+   inkscape:export-filename="/home/schuerm/Projekte/calendar-import-export/Resources/function.png">
   <defs
      id="defs4">
     <linearGradient
@@ -747,7 +747,7 @@
      borderopacity="1.0"
      id="base"
      inkscape:current-layer="layer1"
-     inkscape:cx="596.42942"
+     inkscape:cx="599.1523"
      inkscape:cy="159.60623"
      inkscape:document-units="px"
      inkscape:guide-bbox="true"
@@ -846,7 +846,7 @@
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"
        x="517.7251"
-       y="652.74725"
+       y="624.15704"
        id="text3296"
        sodipodi:linespacing="125%"
        inkscape:export-filename="/home/ds1/Projekte/Local Calendar/Resources/banner.png"
@@ -854,9 +854,14 @@
        inkscape:export-ydpi="90"><tspan
          sodipodi:role="line"
          x="517.7251"
-         y="652.74725"
-         style="font-size:70px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
-         id="tspan3300">Import/Export iCal files</tspan></text>
+         y="624.15704"
+         style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+         id="tspan3300">Import/Export &amp; Backup calendars</tspan><tspan
+         sodipodi:role="line"
+         x="517.7251"
+         y="694.15704"
+         style="font-size:56px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;text-align:center;text-anchor:middle;fill:#ffffff;font-family:Droid Sans;-inkscape-font-specification:Droid Sans"
+         id="tspan3161">using ics files</tspan></text>
     <text
        xml:space="preserve"
        style="font-size:40px;font-style:normal;font-weight:normal;line-height:125%;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;font-family:Sans"

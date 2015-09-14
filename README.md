@@ -1,8 +1,10 @@
-# ICS Import/Export
+# Calendar Import/Export
 
-This app allows you to import ics files to your calender without using Google synchronization services.
+This app allows you to import/export your calenders using ics files without using Google synchronization services.
 
 For more information, see http://sufficientlysecure.org/android/.
+
+| [Google Play](https://play.google.com/store/apps/details?id=org.sufficientlysecure.ical) | [F-Droid](https://f-droid.org/app/org.sufficientlysecure.ical) |
 
 # Build
 
@@ -20,9 +22,9 @@ For more information, see http://sufficientlysecure.org/android/.
 
 1. Run the Gradle wrapper (shell commands ``./gradlew build``, ``./gradlew clean`` etc)
 2. Run ``./gradlew --help`` for help and ``./gradlew tasks`` for a list of available build tasks
-3. If needed, edit "ICSImportExport/build.gradle" to change the "compileSdkVersion"
+3. If needed, edit "CalendarImportExport/build.gradle" to change the "compileSdkVersion"
    and/or "buildToolsVersion" numbers to match what you installed using the SDK Manager
-4. If needed, edit "ICSImportExport/build.gradle" to change the "com.android.support:support-v4"
+4. If needed, edit "CalendarImportExport/build.gradle" to change the "com.android.support:support-v4"
    version number to match the version of "Android Support Library" you installed
    using the SDK Manager
 
@@ -39,11 +41,11 @@ Fork the git repository, make changes and submit a pull request with the details
 
 ## Bugs
 
-Bugs can be raised at http://sufficientlysecure.org/android/.
+Bugs can be raised at [Github](https://github.com/SufficientlySecure/calendar-import-export/issues).
 
 ## Translations
 
-Translations can be submitted at http://sufficientlysecure.org/android/.
+Translations can be submitted at [Transifex](https://www.transifex.com/sufficientlysecure/calendar-import-export/).
 
 # Coding Style
 
@@ -64,22 +66,22 @@ See http://source.android.com/source/code-style.html
 See http://www.androidpolice.com/2009/11/04/auto-formatting-android-xml-files-with-eclipse/
 
 # Licenses
-ICS Import/Export is licensed under the GPL v3+.
+Calendar Import/Export is licensed under the GPL v3+.
 The file LICENSE includes the full license text.
 
 ## Details
-ICS Import/Export is free software: you can redistribute it and/or modify
+Calendar Import/Export is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
 
-ICS Import/Export is distributed in the hope that it will be useful,
+Calendar Import/Export is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with ICS Import/Export.  If not, see <http://www.gnu.org/licenses/>.
+along with Calendar Import/Export.  If not, see <http://www.gnu.org/licenses/>.
 
 ## Libraries
 

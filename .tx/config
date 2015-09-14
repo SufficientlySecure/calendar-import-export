@@ -2,12 +2,12 @@
 host = https://www.transifex.com
 lang_map = he: iw, zh_TW: zh-rTW
 
-[ics-import-export.strings-xml]
-file_filter = ICSImportExport/src/main/res/values-<lang>/strings.xml
-source_file = ICSImportExport/src/main/res/values/strings.xml
+[calendar-import-export.strings-xml]
+file_filter = CalendarImportExport/src/main/res/values-<lang>/strings.xml
+source_file = CalendarImportExport/src/main/res/values/strings.xml
 source_lang = en
 
-[ics-import-export.settings-xml]
-file_filter = ICSImportExport/src/main/res/values-<lang>/settings.xml
-source_file = ICSImportExport/src/main/res/values/settings.xml
+[calendar-import-export.settings-xml]
+file_filter = CalendarImportExport/src/main/res/values-<lang>/settings.xml
+source_file = CalendarImportExport/src/main/res/values/settings.xml
 source_lang = en

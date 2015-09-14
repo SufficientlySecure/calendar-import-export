@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="legal_notices_html">
+<![CDATA[
+<html>
+<body>
+<p><b><h1>Calendar Import/Export</h1></b></p>
+
+<p><tt>Copyright &#169; 2015 Jon Griffiths<br>
+Copyright &#169; 2013 Dominik Schürmann<br>
+Copyright &#169; 2010, 2011 Lukas Aichbauer</tt></p>
+
+<p>Please see the <a href="https://github.com/sufficientlysecure/calendar-import-export">project page</a>
+for full details and source code.</p>
+
+<p>Based on <a href="https://code.google.com/p/ical-import-export/">ical-import-export</a> by Lukas
+Aichbauer.  Includes <a href="https://github.com/ical4j/ical4j/>iCal4j</a> for iCalendar parsing.
+Uses code from <a href="https://source.android.com/">The Android open source project</a> and
+<a href="http://backport-jsr166.sourceforge.net/">backport-util-concurrent</a> in addition to
+the apache project libraries <a href="https://commons.apache.org/proper/commons-codec/">commons-codec</a>,
+<a href="https://commons.apache.org/proper/commons-lang/">commons-lang</a> and
+<a href="https://commons.apache.org/proper/commons-logging/">commons-logging</a>.</p>
+
+<p><b><h2>License</h2></b></p>
+
+<p><tt>Calendar Import/Export is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</tt></p>
+
+<p><tt>Calendar Import/Export is distributed in the hope that it will be useful,
+but <b>WITHOUT ANY WARRANTY</b>; without even the implied warranty of
+<b>MERCHANTABILITY</b> or <b>FITNESS FOR A PARTICULAR PURPOSE</b>.  See the
+GNU General Public License for more details.</tt></p>
+
+<p><tt>You should have received a copy of the GNU General Public License
+along with Calendar Import/Export.  If not, see
+<a href="http://www.gnu.org/licenses/>"http://www.gnu.org/licenses/</a>.</tt></p>
+
+<p><b><h2>iCal4j license</h2></b></p>
+
+<p><tt>Copyright &#169; 2013, Ben Fortuna</tt></p>
+<p><tt>All rights reserved.</tt></p>
+
+<p><tt>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:</tt></p>
+
+<p><tt>\to Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.</tt></p>
+
+<p><tt>\to Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.</tt></p>
+
+<p><tt>\to Neither the name of Ben Fortuna nor the names of any other contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.</tt></p>
+
+<p><tt>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+\"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</tt></p>
+
+<p><b><h2>AOSP and Apache library license</h2></b></p>
+
+<p><tt>Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</tt></p>
+
+<p><tt>\t<a href="http://www.apache.org/licenses/LICENSE-2.0">
+http://www.apache.org/licenses/LICENSE-2.0</a></tt></p>
+
+<p><tt>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an <b>\"AS IS\" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND</b>, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</tt></p>
+
+<p><b><h2>backport-util-concurrent license</h2></b></p>
+
+<p><tt>This software is released to the public domain, in the spirit of the original
+code written by Doug Lea. The code can be used for any purpose, modified, and redistributed
+without acknowledgment. No warranty is provided, either express or implied.</tt></p>
+
+</body>
+</html>
+]]>
+</string>
+</resources>

@@ -1,1 +1,1 @@
-include ':ICSImportExport'
+include ':CalendarImportExport'

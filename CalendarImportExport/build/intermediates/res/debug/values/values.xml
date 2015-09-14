@@ -1,0 +1,383 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string-array name="duplicate_handling_array">
+        <item>Replace with the imported event if in the same calendar</item>
+        <item>Replace with the imported event regardless of calendar</item>
+        <item>Keep the existing event and ignore the imported event</item>
+        <item>Don\'t check for duplicates at all, always insert all imported events</item>
+    </string-array>
+    <string-array name="duplicate_handling_array_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+    </string-array>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string-array name="reminder_time_values">
+        <item>5 minutes</item>
+        <item>10 minutes</item>
+        <item>15 minutes</item>
+        <item>30 minutes</item>
+        <item>45 minutes</item>
+        <item>1 hour</item>
+        <item>2 hours</item>
+        <item>4 hours</item>
+        <item>8 hours</item>
+        <item>12 hours</item>
+        <item>24 hours</item>
+        <item>48 hours</item>
+        <item>3 days</item>
+        <item>4 days</item>
+        <item>5 days</item>
+        <item>6 days</item>
+        <item>1 week</item>
+        <item>2 weeks</item>
+        <item>3 weeks</item>
+        <item>1 month</item>
+    </string-array>
+    <plurals name="delete_n_entries">
+         <item quantity="one">Delete %d entry</item>
+         <item quantity="other">Delete %d entries</item>
+    </plurals>
+    <plurals name="found_n_duplicates">
+         <item quantity="one">Found %d duplicate entry.</item>
+         <item quantity="other">Found %d duplicate entries.</item>
+    </plurals>
+    <plurals name="insert_n_entries">
+         <item quantity="one">Insert %d entry</item>
+         <item quantity="other">Insert %d entries</item>
+    </plurals>
+    <plurals name="processed_n_entries">
+         <item quantity="one">Processed %d entry.</item>
+         <item quantity="other">Processed %d entries.</item>
+    </plurals>
+    <plurals name="wrote_n_events_to">
+         <item quantity="one">Wrote %1$d event to %2$s</item>
+         <item quantity="other">Wrote %1$d events to %2$s</item>
+    </plurals>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="_export_">Export</string>
+    <string name="_import_">Import</string>
+    <string name="_no_notes174_calendar_support"> No Notes® calendar support</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="account_name">Account Name</string>
+    <string name="account_type">Account Type</string>
+    <string name="actions">ACTIONS</string>
+    <string name="active">Active</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="add_outlook174_and_exchange8482_extensions">Add Outlook® and Exchange™ extensions to exported calendars</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="add_reminder">Add Reminder</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="allow_different_line_endings">Allow different line endings</string>
+    <string name="allow_various_line_wrapping_schemes">Allow various line wrapping schemes</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="app_name">Calendar Import/Export</string>
+    <string name="calendar_selection">CALENDAR SELECTION</string>
+    <string name="calendar_url">Calendar URL</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="choose_the_reminders_to_apply">Choose the reminders to apply to imported events</string>
+    <string name="compatibility">Compatibility</string>
+    <string name="debug_logging">Debug logging</string>
+    <string name="default_reminders">Default reminders</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="delete">Delete</string>
+    <string name="delete_entries">Delete entries</string>
+    <string name="destination_filename">Destination Filename</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="developer_mode">Developer mode</string>
+    <string name="developer_tools">Developer tools</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="did_not_check_for_dupes">Did not check for duplicates.</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="disabled">Disabled</string>
+    <string name="do_not_import_reminders">Do not import reminders</string>
+    <string name="do_not_save_passwords">Do not save passwords</string>
+    <string name="do_not_update_timezone_data">Do not update timezone data</string>
+    <string name="duplicate_handling">Duplicate handling</string>
+    <string name="enable_developer_features">Enable developer features</string>
+    <string name="enforce_rfc_compliant_input">Enforce RFC compliant input</string>
+    <string name="enforce_rfc_compliant_line_wrapping">Enforce RFC compliant line wrapping</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="enter_destination_filename">Enter Destination Filename</string>
+    <string name="enter_source_url">Enter Source URL</string>
+    <string name="error">Error</string>
+    <string name="events">Events</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="extra_logging_for_debugging">Extra logging for debugging</string>
+    <string name="general">General</string>
+    <string name="generate_new_identifiers_for_imported">Generate new identifiers for imported events</string>
+    <string name="global_uids">Global UIDs</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="help">Help</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/help.xml -->
+    <eat-comment/>
+    <string name="help_html">
+<![CDATA[
+<html>
+<body>
+<p><b><h1>Calendar Import/Export</h1></b></p>
+
+<p><h2>Importing</h2></p>
+<p>Select the <u>destination calendar</u> from the drop down list at the top of the screen.<p>
+<br>
+<p>Click <i>Import File</i> or <i>Import URL</i> and choose the file/URL to load. You may enter login details for URLs that require them.<p>
+<br>
+<p>For <i>Import File</i>, ensure the file you wish to import is selected from the drop down list that appears.</p>
+<br>
+<p>Click the <i>Load</i> button to load the events from the file.</p>
+<br>
+<p>Click <i>Insert entries</i> to import the events into the <u>destination calendar</u>.</p>
+<br>
+<p>Click <i>Delete entries</i> to remove the events in the file from the <u>destination calendar</u>.</p>
+<br>
+<hr>
+
+<p><h2>Exporting</h2></p>
+<p>Select the <u>source calendar</u> from the drop down list at the top of the screen.<p>
+<br>
+<p>Click <i>Export</i> and enter the file name to save. Note that if the calendar is empty,
+the <i>Export</i> button will not be enabled.</p>
+<br>
+<p>Click <i>OK</i> to complete the export.</p>
+<br>
+
+<p><h2>Support and Development</h2></p>
+<p>You can help development by translating, reporting bugs or submitting changes at
+<a href="http://www.sufficientlysecure.org/android">www.sufficientlysecure.org</a>.
+If you have problems importing a specific iCalendar file, please provide it when reporting
+a bug.</p>
+
+</body>
+</html>
+]]>
+</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="how_to_handle_duplicate_events">How to handle duplicate events while importing</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="id">id</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="identifiers_are_globally_unique">Identifiers are globally unique</string>
+    <string name="identifiers_are_unique_only_within">Identifiers are unique only within a calendar</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="import_file">Import File</string>
+    <string name="import_network">Import URL</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="import_reminders">Import reminders</string>
+    <string name="import_unique_identifiers_to_identify">Import unique identifiers to identify events</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="inactive">Inactive</string>
+    <string name="information">Information</string>
+    <string name="insert_entries">Insert entries</string>
+    <string name="invalid_url">Invalid URL</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="keep_uids">Keep UIDs</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="legal_notices">Legal Notices</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/legal.xml -->
+    <eat-comment/>
+    <string name="legal_notices_html">
+<![CDATA[
+<html>
+<body>
+<p><b><h1>Calendar Import/Export</h1></b></p>
+
+<p><tt>Copyright &#169; 2015 Jon Griffiths<br>
+Copyright &#169; 2013 Dominik Schürmann<br>
+Copyright &#169; 2010, 2011 Lukas Aichbauer</tt></p>
+
+<p>Please see the <a href="https://github.com/sufficientlysecure/calendar-import-export">project page</a>
+for full details and source code.</p>
+
+<p>Based on <a href="https://code.google.com/p/ical-import-export/">ical-import-export</a> by Lukas
+Aichbauer.  Includes <a href="https://github.com/ical4j/ical4j/>iCal4j</a> for iCalendar parsing.
+Uses code from <a href="https://source.android.com/">The Android open source project</a> and
+<a href="http://backport-jsr166.sourceforge.net/">backport-util-concurrent</a> in addition to
+the apache project libraries <a href="https://commons.apache.org/proper/commons-codec/">commons-codec</a>,
+<a href="https://commons.apache.org/proper/commons-lang/">commons-lang</a> and
+<a href="https://commons.apache.org/proper/commons-logging/">commons-logging</a>.</p>
+
+<p><b><h2>License</h2></b></p>
+
+<p><tt>Calendar Import/Export is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.</tt></p>
+
+<p><tt>Calendar Import/Export is distributed in the hope that it will be useful,
+but <b>WITHOUT ANY WARRANTY</b>; without even the implied warranty of
+<b>MERCHANTABILITY</b> or <b>FITNESS FOR A PARTICULAR PURPOSE</b>.  See the
+GNU General Public License for more details.</tt></p>
+
+<p><tt>You should have received a copy of the GNU General Public License
+along with Calendar Import/Export.  If not, see
+<a href="http://www.gnu.org/licenses/>"http://www.gnu.org/licenses/</a>.</tt></p>
+
+<p><b><h2>iCal4j license</h2></b></p>
+
+<p><tt>Copyright &#169; 2013, Ben Fortuna</tt></p>
+<p><tt>All rights reserved.</tt></p>
+
+<p><tt>Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:</tt></p>
+
+<p><tt>\to Redistributions of source code must retain the above copyright
+notice, this list of conditions and the following disclaimer.</tt></p>
+
+<p><tt>\to Redistributions in binary form must reproduce the above copyright
+notice, this list of conditions and the following disclaimer in the
+documentation and/or other materials provided with the distribution.</tt></p>
+
+<p><tt>\to Neither the name of Ben Fortuna nor the names of any other contributors
+may be used to endorse or promote products derived from this software
+without specific prior written permission.</tt></p>
+
+<p><tt>THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+\"AS IS\" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+A PARTICULAR PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</tt></p>
+
+<p><b><h2>AOSP and Apache library license</h2></b></p>
+
+<p><tt>Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at</tt></p>
+
+<p><tt>\t<a href="http://www.apache.org/licenses/LICENSE-2.0">
+http://www.apache.org/licenses/LICENSE-2.0</a></tt></p>
+
+<p><tt>Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an <b>\"AS IS\" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND</b>, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.</tt></p>
+
+<p><b><h2>backport-util-concurrent license</h2></b></p>
+
+<p><tt>This software is released to the public domain, in the spirit of the original
+code written by Doug Lea. The code can be used for any purpose, modified, and redistributed
+without acknowledgment. No warranty is provided, either express or implied.</tt></p>
+
+</body>
+</html>
+]]>
+</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="load_calendar">Load</string>
+    <string name="login_required">Login Required</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="microsoft_compatible">Microsoft compatible</string>
+    <string name="microsoft_extensions">Microsoft extensions</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="name">Name</string>
+    <string name="no_calendars_found">No calendars found.\n\nYou must create a calendar to import to/export from. You can install \"Offline Calendar\" to create one.\n\nIf you are using Cyanogenmod: Make sure that Privacy Guard is disabled for this application to  allow calendar read/write.\n\nIf you are using Android 4.3 App Ops: Make sure that you allow calendar read/write access for this application.</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="no_microsoft174_calendar_extensions">No Microsoft® calendar extensions</string>
+    <string name="no_microsoft174_calendar_support">No Microsoft® calendar support</string>
+    <string name="no_vcard_support">No vCard support</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="not_applicable">N/A</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="notes_compatible">Notes compatible</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="owner">Owner</string>
+    <string name="password">Password</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="permissive_export">Permissive export</string>
+    <string name="permissive_parsing">Permissive parsing</string>
+    <string name="process_test_file_directives">Process test file directives</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="processing_entries">Processing entries…</string>
+    <string name="reading_file_please_wait">Reading file, please wait…</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="reminders">Reminders</string>
+    <string name="save_passwords">Save passwords</string>
+    <string name="save_passwords_in_insecure_local">Save passwords in insecure local storage</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="searching_for_files">Searching for iCalendar files…</string>
+    <string name="select_a_calendar">Select a calendar</string>
+    <string name="settings">Settings</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="skip_extensive_validation_of_the">Skip extensive validation of the output file</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="space"> </string>
+    <string name="state">State</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="support_calendars_exported_by_ibm174">Support calendars exported by IBM® (Formerly Lotus) Notes®</string>
+    <string name="support_calendars_exported_by_outlook174">Support calendars exported by Outlook® and Exchange™</string>
+    <string name="support_common_incorrect_quirks">Support common incorrect quirks</string>
+    <string name="support_events_in_vcard_format">Support events in vCard format</string>
+    <string name="test_file_support">Test file support</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="timezone">Timezone</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="timezone_updates">Timezone Updates</string>
+    <string name="update_timezone_data_over_the">Update timezone data over the network</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="username">Username</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/settings.xml -->
+    <eat-comment/>
+    <string name="validate_the_output_file">Validate the output file</string>
+    <string name="vcard_compatible">vCard compatible</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/strings.xml -->
+    <eat-comment/>
+    <string name="writing_calendar_to_file">Writing calendar to file…</string>
+    <!-- From: file:/home/schuerm/Projekte/calendar-import-export/CalendarImportExport/src/main/res/values/styles.xml -->
+    <eat-comment/>
+    <style name="divider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:background">?android:attr/listDivider</item>
+    </style>
+</resources>

@@ -1,6 +1,6 @@
-= iCal Import/Export Settings
+= Calendar Import/Export Settings
 
-This document describes the settings for iCal Import/Export.
+This document describes the settings for Calendar Import/Export.
 
 == Introduction
 
