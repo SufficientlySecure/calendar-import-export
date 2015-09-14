@@ -515,17 +515,18 @@ public class ProcessVEvent extends RunnableWithProgress {
             got = "<null>"; // Sentinel for testing not present values
         if (!expected.equals(got)) {
             Log.e(TAG, "    " + keyValue + " -> FAILED");
+            Log.e(TAG, "    values: " + c);
             String error = "Test " + testName + " FAILED, expected '" + keyValue + "', got '" + got + "'";
             throw new RuntimeException(error);
         }
         Log.i(TAG, "    " + keyValue + " -> PASSED");
     }
 
-    private boolean processEventTests(VEvent e, ContentValues c, List<Integer> reminders) {
+    private void processEventTests(VEvent e, ContentValues c, List<Integer> reminders) {
 
         Property testName = e.getProperty("X-TEST-NAME");
         if (testName == null)
-            return false; // Not a test case
+            return; // Not a test case
 
         // This is a test event. Verify it using the embedded meta data.
         Log.i(TAG, "Processing test case " + testName.getValue() + "...");
@@ -543,9 +544,15 @@ public class ProcessVEvent extends RunnableWithProgress {
             switch (p.getName()) {
                 case "X-TEST-VALUE":
                     checkTestValue(e, c, p.getValue(), testName.getValue());
+                    break;
+                case "X-TEST-MIN-VERSION":
+                    final int ver = Integer.parseInt(p.getValue());
+                    if (android.os.Build.VERSION.SDK_INT < ver) {
+                        Log.e(TAG, "    -> SKIPPED (MIN-VERSION < " + ver + ")");
+                        return;
+                    }
                 break;
             }
         }
-        return true;
     }
 }
