@@ -11,8 +11,9 @@
     <string name="calendar_url">Calendar URL</string>
     <string name="delete">Delete</string>
     <string name="delete_entries">Delete entries</string>
+    <string name="destination_filename">Destination Filename</string>
     <string name="did_not_check_for_dupes">Did not check for duplicates.</string>
-    <string name="enter_filename">Enter filename</string>
+    <string name="enter_destination_filename">Enter Destination Filename</string>
     <string name="enter_source_url">Enter Source URL</string>
     <string name="error">Error</string>
     <string name="events">Events</string>
@@ -32,7 +33,6 @@
     <string name="not_applicable">N/A</string>
     <string name="owner">Owner</string>
     <string name="password">Password</string>
-    <string name="please_enter_filename">Please enter the filename to save to.</string>
     <string name="processing_entries">Processing entries&#8230;</string>
     <string name="reading_file_please_wait">Reading file, please wait&#8230;</string>
     <string name="searching_for_files">Searching for iCalendar files&#8230;</string>

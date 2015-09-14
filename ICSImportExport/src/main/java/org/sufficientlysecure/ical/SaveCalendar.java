@@ -191,14 +191,15 @@ public class SaveCalendar extends RunnableWithProgress {
     private void getFileImpl(final String previousFile, final String[] result) {
 
         final EditText input = new EditText(getActivity());
+        input.setHint(R.string.destination_filename);
         input.setText(previousFile);
         input.selectAll();
 
         final int ok = android.R.string.ok;
         final int cancel = android.R.string.cancel;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        AlertDialog dlg = builder.setTitle(R.string.enter_filename)
-                                 .setMessage(R.string.please_enter_filename)
+        AlertDialog dlg = builder.setIcon(R.mipmap.ic_launcher)
+                                 .setTitle(R.string.enter_destination_filename)
                                  .setView(input)
                                  .setPositiveButton(ok, new DialogInterface.OnClickListener() {
                                                      public void onClick(DialogInterface iface, int id) {
