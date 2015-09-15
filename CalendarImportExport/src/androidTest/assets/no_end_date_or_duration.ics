@@ -2,89 +2,126 @@ BEGIN:VCALENDAR
 CALSCALE:GREGORIAN
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.1
-DESCRIPTION: Start Date=Date/No End Date/Recurring. Should be all day and marked busy.
-COMMENT: Where a start date and no end or duration is given, the even is 24 hours and busy.
+X-TEST-NAME: Start Date=Date/No End Date/Recurring
+X-TEST-NOTE: Where a start date and no end or duration is given, a recurring
+X-TEST-NOTE: event is 24 hours (all day) and marked busy.
+X-TEST-VALUE:allDay=1
+X-TEST-VALUE:duration=P1D
+X-TEST-VALUE:availability=0
+DTSTAMP:20000000T000000Z
 DTSTART;VALUE=DATE:20150901
 RRULE:FREQ=MONTHLY;COUNT=2
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.2
-DESCRIPTION: Start Date=Date Format/No End Date/Recurring. Should be zero time and marked free.
-COMMENT: As per 1.1 but the date is not in canonical date format and so is treated as a time like 1.4.
-DTSTART:20150902
+X-TEST-NAME: Start Date=DateTime/No End Date/Recurring
+X-TEST-NOTE: Where the start is a datetime and no end or duration is given,
+X-TEST-NOTE: a recurring event is zero time and marked free.
+X-TEST-VALUE:allDay=<null>
+X-TEST-VALUE:duration=PT0S
+X-TEST-VALUE:dtend=<null>
+X-TEST-VALUE:availability=1
+DTSTAMP:20000000T000000Z
+DTSTART:20150901T010000Z
 RRULE:FREQ=MONTHLY;COUNT=2
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.3
-DESCRIPTION: Start Date=Time/No End Date/Recurring. Should be zero time and marked free.
-COMMENT: Where a start time and no end or duration is given, the event is zero time and transparent.
-DTSTART:20150903T123000
+X-TEST-NAME: Start Date=Date Format/No End Date/Recurring
+X-TEST-NOTE: iCal4j parses this date (20150901) as a datetime.
+X-TEST-NOTE: Where the start is a datetime and no end or duration is given,
+X-TEST-NOTE: a recurring event is zero time and marked free.
+X-TEST-NOTE: In this case this is probably not what people expect!
+X-TEST-VALUE:allDay=<null>
+X-TEST-VALUE:duration=PT0S
+X-TEST-VALUE:availability=1
+DTSTAMP:20000000T000000Z
+DTSTART:20150901
 RRULE:FREQ=MONTHLY;COUNT=2
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.4
-DESCRIPTION: Start Date=Midnight Time/No End Date/Recurring. Should be zero time and marked free.
-COMMENT: As per 1.1 but the date is a time that just happens to be midnight so behaves like 1.3.
-DTSTART:20150904T000000Z
+X-TEST-NAME: Start Date=Midnight DateTime/No End Date/Recurring
+X-TEST-NOTE: Where the start is a datetime and no end or duration is given,
+X-TEST-NOTE: a recurring event is zero time and marked free.
+X-TEST-NOTE: In this case this is what is expected. This shows that we
+X-TEST-NOTE: can't just treat midnight times as dates (which is what the
+X-TEST-NOTE: 'obvious' fix to the case immediately above would be).
+X-TEST-VALUE:allDay=<null>
+X-TEST-VALUE:duration=PT0S
+X-TEST-VALUE:availability=1
+DTSTAMP:20000000T000000Z
+DTSTART:20150901T000000Z
 RRULE:FREQ=MONTHLY;COUNT=2
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.5
-DESCRIPTION: Start Date=Date/No End Date/Recurring/Transparent. Should be all day and marked free.
-COMMENT: As per 1.1 but we explicitly set the event as free using TRANSP.
-DTSTART;VALUE=DATE:20150905
+X-TEST-NAME: Start Date=Date/No End Date/Recurring/Transparent
+X-TEST-NOTE: Where a start date and no end or duration is given, a recurring
+X-TEST-NOTE: event is 24 hours (all day) and would be marked busy but our
+X-TEST-NOTE: use of TRANSP overrides this to free time.
+X-TEST-VALUE:allDay=1
+X-TEST-VALUE:duration=P1D
+X-TEST-VALUE:availability=1
+DTSTAMP:20000000T000000Z
+DTSTART;VALUE=DATE:20150901
 RRULE:FREQ=MONTHLY;COUNT=2
 TRANSP:TRANSPARENT
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.6
-DESCRIPTION: Start Date=Date/No End Date/Non-Recurring. Should be all day and marked busy.
-COMMENT: As per 1.1 but non-recurring.
-DTSTART;VALUE=DATE:20150906
+X-TEST-NAME: Start Date=Date/No End Date/Non-Recurring
+X-TEST-NOTE: Where a start date and no end or duration is given, a
+X-TEST-NOTE: non-recurring event is 24 hours (all day) and marked busy. Unlike
+X-TEST-NOTE: the repeating case end date is stored instead of a 1 day duration.
+X-TEST-VALUE:allDay=1
+X-TEST-VALUE:duration=<null>
+X-TEST-VALUE:dtend=<non-null>
+X-TEST-VALUE:availability=0
+DTSTAMP:20000000T000000Z
+DTSTART;VALUE=DATE:20150901
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.7
-DESCRIPTION: Start Date=Date Format/No End Date/Non-Recurring. Should be zero time and marked free.
-COMMENT: As per 1.2 but non-recurring.
-DTSTART:20150907
+X-TEST-NAME: Start Date=Date Format/No End Date/Non-Recurring
+X-TEST-NOTE: iCal4j parses this date (20150901) as a datetime.
+X-TEST-NOTE: Where the start is a datetime and no end or duration is given,
+X-TEST-NOTE: a non-recurring event is zero time and marked free.
+X-TEST-NOTE: Zero time in this case is marked as the same start and end times.
+X-TEST-NOTE: In this case this is probably not what people expect!
+X-TEST-VALUE:allDay=<null>
+X-TEST-VALUE:duration=<null>
+X-TEST-VALUE:dtend=<non-null>
+X-TEST-VALUE:availability=1
+DTSTAMP:20000000T000000Z
+DTSTART:20150901
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.8
-DESCRIPTION: Start Date=Time/No End Date/Non-Recurring. Should be zero time and marked free.
-COMMENT: As per 1.3 but non-recurring.
-DTSTART:20150908T123000
+X-TEST-NAME: Start Date=DateTime/No End Date/Non-Recurring
+X-TEST-NOTE: Where the start is a datetime and no end or duration is given,
+X-TEST-NOTE: a non-recurring event is zero time and marked free.
+X-TEST-NOTE: Zero time in this case is marked as the same start and end times.
+X-TEST-VALUE:allDay=<null>
+X-TEST-VALUE:duration=<null>
+X-TEST-VALUE:dtend=<non-null>
+X-TEST-VALUE:availability=1
+DTSTAMP:20000000T000000Z
+DTSTART:20150901TT000000Z
 END:VEVENT
 
 BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.8
-DESCRIPTION: Start Date=Midnight Time/No End Date/Non-Recurring. Should be zero time and marked free.
-COMMENT: As per 1.4 but non-recurring.
-DTSTART:20150909T000000Z
-END:VEVENT
-
-BEGIN:VEVENT
-DTSTAMP:20141231T173501Z
-SUMMARY:Case 1.10
-DESCRIPTION: Start Date=Date/No End Date/Non-Recurring/Transparent. Should be all day and marked free.
-COMMENT: As per 1.5 but non-recurring.
-DTSTART;VALUE=DATE:20150910
+X-TEST-NAME: Start Date=Date/No End Date/Non-Recurring/Transparent
+X-TEST-NOTE: Where a start date and no end or duration is given, a
+X-TEST-NOTE: non-recurring event is 24 hours (all day) and would be marked
+X-TEST-NOTE: busy but our use of TRANSP overrides this to free time. Unlike
+X-TEST-NOTE: the repeating case end date is stored instead of a 1 day duration.
+X-TEST-VALUE:allDay=1
+X-TEST-VALUE:duration=<null>
+X-TEST-VALUE:dtend=<non-null>
+X-TEST-VALUE:availability=1
+DTSTAMP:20000000T000000Z
+DTSTART;VALUE=DATE:20150901
 TRANSP:TRANSPARENT
 END:VEVENT
 
