@@ -511,8 +511,12 @@ public class ProcessVEvent extends RunnableWithProgress {
         String key = parts[0];
         String expected = parts.length > 1 ? parts[1] : "";
         String got = c.getAsString(key);
+
+        if (expected.equals("<non-null>") && got != null)
+            got = "<non-null>"; // Sentinel for testing present and non-null
         if (got == null)
             got = "<null>"; // Sentinel for testing not present values
+
         if (!expected.equals(got)) {
             Log.e(TAG, "    " + keyValue + " -> FAILED");
             Log.e(TAG, "    values: " + c);
