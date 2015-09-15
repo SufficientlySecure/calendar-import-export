@@ -1,6 +1,6 @@
 # Calendar Import/Export
 
-This app allows you to import/export your calenders using ics files without using Google synchronization services.
+This app allows you to import/export your calendars using ics files without using Google synchronization services.
 
 For more information, see http://sufficientlysecure.org/android/.
 
