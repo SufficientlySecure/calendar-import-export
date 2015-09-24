@@ -1,15 +1,9 @@
-BEGIN:VCALENDAR
-CALSCALE:GREGORIAN
-
 BEGIN:VEVENT
 X-TEST-NAME: Accent character support
 X-TEST-NOTE: Without support for unicode escapes in X-TEST-VALUE strings,
 X-TEST-NOTE: This test isn't adding a great deal of value. FIXME.
 X-TEST-VALUE:title=Märchenerzähler
-DTSTAMP:20000000T000000Z
 DTSTART:20150901T123000Z
 DTEND:20150901T130000Z
 SUMMARY:Märchenerzähler
 END:VEVENT
-
-END:VCALENDAR
