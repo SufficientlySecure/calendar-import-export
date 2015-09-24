@@ -1,0 +1,8 @@
+BEGIN:VEVENT
+X-TEST-NAME: Organizer parsing
+X-TEST-NOTE: Verifies that the email is correctly read from ORGANIZER peoperties.
+X-TEST-VALUE:organizer=foo@bar.com
+DTSTART:20150901T123000Z
+DTEND:20150901T130000Z
+ORGANIZER;CN=FooBar:mailto:foo@bar.com
+END:VEVENT

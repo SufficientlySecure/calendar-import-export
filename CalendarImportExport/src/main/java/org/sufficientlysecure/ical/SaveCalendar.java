@@ -48,6 +48,7 @@ import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
 import net.fortuna.ical4j.model.property.FreeBusy;
 import net.fortuna.ical4j.model.property.Method;
+import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Transp;
 import net.fortuna.ical4j.model.property.Uid;
@@ -252,7 +253,20 @@ public class SaveCalendar extends RunnableWithProgress {
 
         String summary = copyProperty(l, Property.SUMMARY, cur, Events.TITLE);
         String description = copyProperty(l, Property.DESCRIPTION, cur, Events.DESCRIPTION);
-        copyProperty(l, Property.ORGANIZER, cur, Events.ORGANIZER);
+
+        String organizer = getString(cur, Events.ORGANIZER);
+        if (!TextUtils.isEmpty(organizer)) {
+            // The check for mailto: here handles early versions of this code which
+            // incorrectly left it in the organizer column.
+            if (!organizer.startsWith("mailto:"))
+                organizer = "mailto:" + organizer;
+            try {
+                l.add(new Organizer(organizer));
+            } catch (URISyntaxException ignored) {
+                Log.e(TAG, "Failed to create mailTo for organizer " + organizer);
+            }
+        }
+
         copyProperty(l, Property.LOCATION, cur, Events.EVENT_LOCATION);
         copyEnumProperty(l, Property.STATUS, cur, Events.STATUS, STATUS_ENUM);
 

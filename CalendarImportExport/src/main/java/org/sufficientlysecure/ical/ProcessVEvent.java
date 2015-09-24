@@ -19,6 +19,7 @@
 
 package org.sufficientlysecure.ical;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -49,6 +50,8 @@ import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.net.MailTo;
+import android.net.ParseException;
 import android.net.Uri;
 import android.provider.CalendarContractWrapper.Events;
 import android.provider.CalendarContractWrapper.Reminders;
@@ -289,9 +292,15 @@ public class ProcessVEvent extends RunnableWithProgress {
         copyProperty(c, Events.TITLE, e, Property.SUMMARY);
         copyProperty(c, Events.DESCRIPTION, e, Property.DESCRIPTION);
 
-        if (hasProperty(e, Property.ORGANIZER)) {
-            copyProperty(c, Events.ORGANIZER, e, Property.ORGANIZER);
-            c.put(Events.GUESTS_CAN_MODIFY, 1); // Ensure we can edit the item if not the organiser
+        if (e.getOrganizer() != null) {
+            URI uri = e.getOrganizer().getCalAddress();
+            try {
+                MailTo mailTo = MailTo.parse(uri.toString());
+                c.put(Events.ORGANIZER, mailTo.getTo());
+                c.put(Events.GUESTS_CAN_MODIFY, 1); // Ensure we can edit if not the organiser
+            } catch (ParseException ignored) {
+                Log.e(TAG, "Failed to parse Organiser URI " + uri.toString());
+            }
         }
 
         copyProperty(c, Events.EVENT_LOCATION, e, Property.LOCATION);
