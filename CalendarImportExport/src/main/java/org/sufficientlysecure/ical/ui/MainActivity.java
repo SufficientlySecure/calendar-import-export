@@ -64,6 +64,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.ScrollView;
 import android.widget.Toast;
 import android.widget.TextView;
 
@@ -99,6 +100,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     // Values
     private List<AndroidCalendar> mCalendars;
+    private ScrollView mScrollViewMain;
     private LinearLayout mInsertDeleteLayout;
 
     @Override
@@ -153,6 +155,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mInsertButton = setupButton(R.id.InsertButton);
         mDeleteButton = setupButton(R.id.DeleteButton);
         mExportButton = setupButton(R.id.SaveButton);
+        mScrollViewMain = (ScrollView) findViewById(R.id.ScrollViewMain);
         mInsertDeleteLayout = (LinearLayout) findViewById(R.id.InsertDeleteLayout);
         setupButton(R.id.SetUrlButton);
 
@@ -458,6 +461,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                                   mInsertButton.setText(get(res, R.plurals.insert_n_entries, n));
                                   mDeleteButton.setText(get(res, R.plurals.delete_n_entries, n));
                                   mInsertDeleteLayout.setVisibility(View.VISIBLE);
+                                  mScrollViewMain.post(new Runnable() {
+                                                           @Override
+                                                           public void run() {
+                                                               mScrollViewMain.fullScroll(ScrollView.FOCUS_DOWN);
+                                                           }
+                                  });
                               }
                               private String get(Resources res, int id, int n) {
                                   return res.getQuantityString(id, n, n);
