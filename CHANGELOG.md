@@ -1,3 +1,8 @@
+## 2.1
+  * Fix organizer handling
+  * Scroll view automatically to show buttons
+  * Use minus instead of slash in app name to improve interoperability with backup apps
+
 ## 2.0
   * First released version of Calendar Import/Export, mostly rewritten by Jon Griffiths
 
