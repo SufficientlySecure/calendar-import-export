@@ -14,9 +14,9 @@
             android:layout_height="16dp" />
 
         <TextView
+            style="@android:style/TextAppearance.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@android:style/TextAppearance.Small"
             android:text="@string/calendar_selection" />
 
         <View
@@ -28,9 +28,9 @@
 
         <Spinner
             android:id="@+id/SpinnerChooseCalendar"
+            style="@android:style/TextAppearance.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@android:style/TextAppearance.Medium"
             android:prompt="@string/select_a_calendar" />
 
         <View
@@ -50,60 +50,60 @@
                 android:orientation="vertical" >
 
                 <TextView
+                    style="@android:style/TextAppearance.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Small"
-                    android:textStyle="italic"
+                    android:text="@string/account_name"
                     android:textColor="#FF888888"
-                    android:text="@string/account_name" />
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/TextCalAccountName"
+                    style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Medium" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
+                    style="@android:style/TextAppearance.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Small"
-                    android:textStyle="italic"
+                    android:text="@string/name"
                     android:textColor="#FF888888"
-                    android:text="@string/name" />
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/TextCalName"
+                    style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Medium" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
+                    style="@android:style/TextAppearance.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Small"
-                    android:textStyle="italic"
+                    android:text="@string/owner"
                     android:textColor="#FF888888"
-                    android:text="@string/owner" />
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/TextCalOwner"
+                    style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Medium" />
+                    android:layout_height="wrap_content" />
 
                 <TextView
+                    style="@android:style/TextAppearance.Small"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Small"
-                    android:textStyle="italic"
+                    android:text="@string/state"
                     android:textColor="#FF888888"
-                    android:text="@string/state" />
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/TextCalState"
+                    style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Medium" />
+                    android:layout_height="wrap_content" />
             </LinearLayout>
 
             <LinearLayout
@@ -113,60 +113,60 @@
                 android:orientation="vertical" >
 
                     <TextView
+                        style="@android:style/TextAppearance.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Small"
-                        android:textStyle="italic"
+                        android:text="@string/account_type"
                         android:textColor="#FF888888"
-                        android:text="@string/account_type" />
+                        android:textStyle="italic" />
 
                     <TextView
                         android:id="@+id/TextCalAccountType"
+                        style="@android:style/TextAppearance.Medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Medium" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
+                        style="@android:style/TextAppearance.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Small"
-                        android:textStyle="italic"
+                        android:text="@string/id"
                         android:textColor="#FF888888"
-                        android:text="@string/id" />
+                        android:textStyle="italic" />
 
                     <TextView
                         android:id="@+id/TextCalId"
+                        style="@android:style/TextAppearance.Medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Medium" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
+                        style="@android:style/TextAppearance.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Small"
-                        android:textStyle="italic"
+                        android:text="@string/timezone"
                         android:textColor="#FF888888"
-                        android:text="@string/timezone" />
+                        android:textStyle="italic" />
 
                     <TextView
                         android:id="@+id/TextCalTimezone"
+                        style="@android:style/TextAppearance.Medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Medium" />
+                        android:layout_height="wrap_content" />
 
                     <TextView
+                        style="@android:style/TextAppearance.Small"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Small"
-                        android:textStyle="italic"
+                        android:text="@string/events"
                         android:textColor="#FF888888"
-                        android:text="@string/events" />
+                        android:textStyle="italic" />
 
                     <TextView
                         android:id="@+id/TextCalSize"
+                        style="@android:style/TextAppearance.Medium"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Medium" />
+                        android:layout_height="wrap_content" />
             </LinearLayout>
         </LinearLayout>
 
@@ -175,9 +175,9 @@
             android:layout_height="32dp" />
 
         <TextView
+            style="@android:style/TextAppearance.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@android:style/TextAppearance.Small"
             android:text="@string/actions" />
 
         <View
@@ -186,6 +186,13 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="16dp" />
+
+        <Button
+            android:id="@+id/ClearButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/clear_calendar" />
 
         <Button
             android:id="@+id/SaveButton"
@@ -216,14 +223,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/load_calendar"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
             android:id="@+id/InsertDeleteLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:visibility="gone" >
+            android:visibility="visible">
 
             <Button
                 android:id="@+id/InsertButton"

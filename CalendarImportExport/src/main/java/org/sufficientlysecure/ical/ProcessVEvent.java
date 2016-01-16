@@ -70,27 +70,29 @@ public class ProcessVEvent extends RunnableWithProgress {
     private static final int EVENT_QUERY_ID_COL = 1;
 
     private final Calendar mICalCalendar;
+
     private final boolean mIsInserter;
-
-    private final class Options extends Settings {
-        private final List<Integer> mDefaultReminders;
-
-        public Options(MainActivity activity) {
-            super(activity.getSettings().getPreferences());
-            mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes(this);
-        }
-
-        public List<Integer> getReminders(List<Integer> eventReminders) {
-            if (eventReminders.size() > 0 && getImportReminders())
-                return eventReminders;
-            return mDefaultReminders;
-        }
-    }
 
     public ProcessVEvent(MainActivity activity, Calendar iCalCalendar, boolean isInserter) {
         super(activity, R.string.processing_entries, true);
         mICalCalendar = iCalCalendar;
         mIsInserter = isInserter;
+    }
+
+    private static Duration createDuration(String value) {
+        Duration d = new Duration();
+        d.setValue(value);
+        return d;
+    }
+
+    private static long durationToMs(Dur d) {
+        long ms = 0;
+        ms += d.getSeconds() * DateUtils.SECOND_IN_MILLIS;
+        ms += d.getMinutes() * DateUtils.MINUTE_IN_MILLIS;
+        ms += d.getHours() * DateUtils.HOUR_IN_MILLIS;
+        ms += d.getDays() * DateUtils.DAY_IN_MILLIS;
+        ms += d.getWeeks() * DateUtils.WEEK_IN_MILLIS;
+        return ms;
     }
 
     @Override
@@ -412,22 +414,6 @@ public class ProcessVEvent extends RunnableWithProgress {
         return c;
     }
 
-    private static Duration createDuration(String value) {
-        Duration d = new Duration();
-        d.setValue(value);
-        return d;
-    }
-
-    private static long durationToMs(Dur d) {
-        long ms = 0;
-        ms += d.getSeconds() * DateUtils.SECOND_IN_MILLIS;
-        ms += d.getMinutes() * DateUtils.MINUTE_IN_MILLIS;
-        ms += d.getHours()   * DateUtils.HOUR_IN_MILLIS;
-        ms += d.getDays()    * DateUtils.DAY_IN_MILLIS;
-        ms += d.getWeeks()   * DateUtils.WEEK_IN_MILLIS;
-        return ms;
-    }
-
     private boolean hasProperty(VEvent e, String name) {
         return e.getProperty(name) != null;
     }
@@ -564,8 +550,23 @@ public class ProcessVEvent extends RunnableWithProgress {
                         Log.e(TAG, "    -> SKIPPED (MIN-VERSION < " + ver + ")");
                         return;
                     }
-                break;
+                    break;
             }
+        }
+    }
+
+    private final class Options extends Settings {
+        private final List<Integer> mDefaultReminders;
+
+        public Options(MainActivity activity) {
+            super(activity.getSettings().getPreferences());
+            mDefaultReminders = RemindersDialog.getSavedRemindersInMinutes(this);
+        }
+
+        public List<Integer> getReminders(List<Integer> eventReminders) {
+            if (eventReminders.size() > 0 && getImportReminders())
+                return eventReminders;
+            return mDefaultReminders;
         }
     }
 }

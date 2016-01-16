@@ -43,6 +43,10 @@
     <string name="timezone">Timezone</string>
     <string name="username">Username</string>
     <string name="writing_calendar_to_file">Writing calendar to file&#8230;</string>
+    <string name="clear_calendar">Clear Calendar</string>
+    <string name="clear_warning">Warning this action will erase the calendar.\nAre you ok?</string>
+    <string name="warning">Warning !</string>
+    <string name="erasing_data">Erasing data please wait</string>
 
     <plurals name="delete_n_entries">
          <item quantity="one">Delete %d entry</item>
