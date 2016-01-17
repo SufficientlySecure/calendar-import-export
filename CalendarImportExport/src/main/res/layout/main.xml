@@ -94,12 +94,6 @@
                     android:layout_height="wrap_content"
                     android:text="NA" />
 
-                <Button
-                    android:id="@+id/InfoCalendarButton"
-                    android:layout_width="fill_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:text="@string/more_info_calendar" />
             </LinearLayout>
 
             <LinearLayout
@@ -179,7 +173,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/load_calendar"
-            android:visibility="visible" />
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -190,7 +184,7 @@
             <LinearLayout
                 android:layout_width="fill_parent"
                 android:layout_height="match_parent"
-                android:layout_weight="2"
+                android:layout_weight="1"
                 android:orientation="vertical">
 
                 <Button
@@ -200,12 +194,51 @@
                     android:layout_weight="1"
                     android:text="@string/insert_entries" />
 
-                <Button
-                    android:id="@+id/DeleteButton"
-                    android:layout_width="fill_parent"
+                <LinearLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ToggleButton
+                        android:id="@+id/toggleErasePreviousCalendar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="New ToggleButton" />
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        style="@android:style/TextAppearance.Small"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="@string/erase_previous_calendar" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
                     android:layout_weight="1"
-                    android:text="@string/delete_entries" />
+                    android:orientation="horizontal">
+
+                    <ToggleButton
+                        android:id="@+id/toggleEraseImportedReminder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="1"
+                        android:text="New ToggleButton" />
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        style="@android:style/TextAppearance.Small"
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="6"
+                        android:text="@string/erase_imported_reminder" />
+                </LinearLayout>
 
             </LinearLayout>
 
@@ -228,7 +261,7 @@
                     style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NA" />
+                    android:text="@string/not_available" />
 
                 <TextView
                     style="@android:style/TextAppearance.Small"
@@ -243,7 +276,7 @@
                     style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NA" />
+                    android:text="@string/not_available" />
 
                 <TextView
                     style="@android:style/TextAppearance.Small"
@@ -258,7 +291,7 @@
                     style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NA" />
+                    android:text="@string/not_available" />
 
             </LinearLayout>
 

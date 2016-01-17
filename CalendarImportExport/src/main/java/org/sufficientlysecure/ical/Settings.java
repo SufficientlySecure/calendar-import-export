@@ -28,6 +28,8 @@ public class Settings {
     public static final String PREF_TEST_FILE_SUPPORT = "test_file_support";
     public static final String PREF_UIDPID = "uidPid";
     public static final String PREF_CALENDAR = "last_calendar_id";
+    public static final String PREF_IS_ERASE_PREVIOUS_CALENDAR = "is_erase_previous_calendar";
+    public static final String PREF_IS_ERASE_REMINDER = "is_erase_reminder";
     private final SharedPreferences mPreferences;
 
     public Settings(SharedPreferences preferences) {

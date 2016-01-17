@@ -69,11 +69,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
@@ -117,6 +119,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     //private LinearLayout mInsertDeleteLayout;
 
     //preferences
+    private boolean isErasePreviousCalendar;
+    private boolean istoggleEraseImportedReminder;
+
     private MainActivity mMainActivity;
 
     @Override
@@ -163,8 +168,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fileListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                //todo insert load function here
-                //mInsertDeleteLayout.setVisibility(View.GONE);
+                new LoadFile(mMainActivity).start();
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -196,6 +200,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mtextIcsFirstDate = (TextView) findViewById(R.id.textIcsFirstDate);
         mtextIcsLastDate = (TextView) findViewById(R.id.textIcsLastDate);
 
+        //toggle for export
+        ToggleButton toggleErasePreviousCalendar = (ToggleButton) findViewById(R.id.toggleErasePreviousCalendar);
+        toggleErasePreviousCalendar.setChecked(mSettings.getBoolean(Settings.PREF_IS_ERASE_PREVIOUS_CALENDAR));
+        toggleErasePreviousCalendar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSettings.putBoolean(Settings.PREF_IS_ERASE_PREVIOUS_CALENDAR, isChecked);
+                isErasePreviousCalendar = isChecked;
+            }
+        });
+
+        ToggleButton toggleEraseImportedReminder = (ToggleButton) findViewById(R.id.toggleEraseImportedReminder);
+        toggleEraseImportedReminder.setChecked(mSettings.getBoolean(Settings.PREF_IS_ERASE_REMINDER));
+        toggleEraseImportedReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSettings.putBoolean(Settings.PREF_IS_ERASE_REMINDER, isChecked);
+                istoggleEraseImportedReminder = isChecked;
+            }
+        });
+
+        //intent gestion and preload stuff
         Intent intent = getIntent();
         if (intent == null)
             return;

@@ -53,6 +53,8 @@
     <string name="first_event">First event</string>
     <string name="last_event">Last event</string>
     <string name="not_available">NA</string>
+    <string name="erase_previous_calendar">Erase Previous Calendar</string>
+    <string name="erase_imported_reminder">Erase imported reminder</string>
 
     <plurals name="delete_n_entries">
          <item quantity="one">Delete %d entry</item>
