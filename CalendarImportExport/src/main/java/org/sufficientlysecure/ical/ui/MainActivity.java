@@ -23,7 +23,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
@@ -33,6 +32,8 @@ import java.util.UUID;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -59,8 +60,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.provider.CalendarContract;
-import android.provider.CalendarContractWrapper;
 import android.support.v4.app.FragmentActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -96,20 +95,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private Button mInsertButton;
     private Button mDeleteButton;
     private Button mExportButton;
+    private Button mClearEventButton;
+    private Button mClearReminderButton;
 
-    private TextView mTextCalName;
+    /*private TextView mTextCalName;
     private TextView mTextCalAccountName;
     private TextView mTextCalAccountType;
     private TextView mTextCalOwner;
-    private TextView mTextCalState;
     private TextView mTextCalId;
+    */
     private TextView mTextCalTimezone;
     private TextView mTextCalSize;
+    private TextView mTextCalState;
+    private TextView mtextIcsNbEntries;
+    private TextView mtextIcsFirstDate;
+    private TextView mtextIcsLastDate;
 
     // Values
     private List<AndroidCalendar> mCalendars;
     private ScrollView mScrollViewMain;
-    private LinearLayout mInsertDeleteLayout;
+    //private LinearLayout mInsertDeleteLayout;
 
     //preferences
     private MainActivity mMainActivity;
@@ -132,12 +137,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 AndroidCalendar calendar = mCalendars.get(pos);
-                mTextCalName.setText(calendar.mName);
+                /*mTextCalName.setText(calendar.mName);
                 mTextCalAccountName.setText(calendar.mAccountName);
                 mTextCalAccountType.setText(calendar.mAccountType);
                 mTextCalOwner.setText(calendar.mOwner);
-                mTextCalState.setText(calendar.mIsActive ? R.string.active : R.string.inactive);
                 mTextCalId.setText(calendar.mIdStr);
+                */
+                mTextCalState.setText(calendar.mIsActive ? R.string.active : R.string.inactive);
                 mSettings.putLong(Settings.PREF_CALENDAR, calendar.mId);
                 if (calendar.mTimezone == null)
                     mTextCalTimezone.setText(R.string.not_applicable);
@@ -157,7 +163,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         fileListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                mInsertDeleteLayout.setVisibility(View.GONE);
+                //todo insert load function here
+                //mInsertDeleteLayout.setVisibility(View.GONE);
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -166,23 +173,28 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mFileSpinner.setOnItemSelectedListener(fileListener);
 
         setupButton(R.id.SearchButton);
-        setupButton(R.id.ClearButton);
+        mClearEventButton = setupButton(R.id.ClearEventButton);
+        mClearReminderButton = setupButton(R.id.ClearReminderButton);
         mLoadButton = setupButton(R.id.LoadButton);
         mInsertButton = setupButton(R.id.InsertButton);
         mDeleteButton = setupButton(R.id.DeleteButton);
         mExportButton = setupButton(R.id.SaveButton);
         mScrollViewMain = (ScrollView) findViewById(R.id.ScrollViewMain);
-        mInsertDeleteLayout = (LinearLayout) findViewById(R.id.InsertDeleteLayout);
+        //mInsertDeleteLayout = (LinearLayout) findViewById(R.id.InsertDeleteLayout);
         setupButton(R.id.SetUrlButton);
 
-        mTextCalName = (TextView) findViewById(R.id.TextCalName);
+        /*mTextCalName = (TextView) findViewById(R.id.TextCalName);
         mTextCalAccountName = (TextView) findViewById(R.id.TextCalAccountName);
         mTextCalAccountType = (TextView) findViewById(R.id.TextCalAccountType);
         mTextCalOwner = (TextView) findViewById(R.id.TextCalOwner);
-        mTextCalState = (TextView) findViewById(R.id.TextCalState);
         mTextCalId = (TextView) findViewById(R.id.TextCalId);
+*/
+        mTextCalState = (TextView) findViewById(R.id.TextCalState);
         mTextCalTimezone = (TextView) findViewById(R.id.TextCalTimezone);
         mTextCalSize = (TextView) findViewById(R.id.TextCalSize);
+        mtextIcsNbEntries = (TextView) findViewById(R.id.textIcsNbEntries);
+        mtextIcsFirstDate = (TextView) findViewById(R.id.textIcsFirstDate);
+        mtextIcsLastDate = (TextView) findViewById(R.id.textIcsLastDate);
 
         Intent intent = getIntent();
         if (intent == null)
@@ -267,7 +279,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             public void run() {
                 mTextCalSize.setText(Integer.toString(entries));
                 mExportButton.setEnabled(entries > 0);
-                mInsertDeleteLayout.setVisibility(View.GONE);
+                mClearEventButton.setEnabled(entries > 0);
+                mClearReminderButton.setEnabled(entries > 0);
+                //mInsertDeleteLayout.setVisibility(View.GONE);
             }
         });
     }
@@ -395,14 +409,36 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     @Override
     public void onClick(View view) {
+        AlertDialog.Builder builder;
         switch (view.getId()) {
-            case R.id.ClearButton:
-                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            case R.id.ClearEventButton:
+                builder = new AlertDialog.Builder(this);
                 //builder.setMessage("Message above the image");
                 builder.setPositiveButton("Ok ", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        new ClearAll(mMainActivity).start();
+                        new ClearCalendar(mMainActivity, true, false).start();
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setMessage(R.string.clear_warning);
+                builder.setIcon(R.mipmap.ic_launcher);
+                builder.setTitle(R.string.warning);
+                builder.create().show();
+                break;
+            case R.id.ClearReminderButton:
+                builder = new AlertDialog.Builder(this);
+                //builder.setMessage("Message above the image");
+                builder.setPositiveButton("Ok ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new ClearCalendar(mMainActivity, false, true).start();
                         dialog.dismiss();
                     }
                 });
@@ -556,18 +592,45 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             //mCalendar = in == null ? null : mCalendarBuilder.build(in);
             mCalendar = mCalendarBuilder.build(getSelectedICSasInputStream());
 
+            //get basic information on ICS calendar (start date end date and nb of event)
+            ComponentList mIcsEventList = mCalendar.getComponents(VEvent.VEVENT);
+            final int n = mIcsEventList.size();
+            Date first = null;
+            Date last = null;
+            for (Object temp : mIcsEventList) {
+                VEvent e = (VEvent) temp;
+                Date current = e.getStartDate().getDate();
+                if (first == null || first.after(current))
+                    first = current;
+                if (last == null || last.before(current))
+                    last = current;
+            }
+            final String strfirst = first.toString().substring(0, 8);
+            final String strlast = last.toString().substring(0, 8);
+            final String numberOfEvent = Integer.toString(n);
+
             runOnUiThread(new Runnable() {
                 public void run() {
+
+
                     if (mCalendar == null) {
-                        mInsertDeleteLayout.setVisibility(View.GONE);
+                        mtextIcsNbEntries.setText(R.string.not_available);
+                        mtextIcsFirstDate.setText(R.string.not_available);
+                        mtextIcsLastDate.setText(R.string.not_available);
+                        //mInsertDeleteLayout.setVisibility(View.GONE);
                         return;
                     }
 
+
                     Resources res = getResources();
-                    final int n = mCalendar.getComponents(VEvent.VEVENT).size();
-                    mInsertButton.setText(get(res, R.plurals.insert_n_entries, n));
-                    mDeleteButton.setText(get(res, R.plurals.delete_n_entries, n));
-                    mInsertDeleteLayout.setVisibility(View.VISIBLE);
+
+                    //mInsertButton.setText(get(res, R.plurals.insert_n_entries, n));
+
+                    mtextIcsNbEntries.setText(numberOfEvent);
+                    mtextIcsFirstDate.setText(strfirst);
+                    mtextIcsLastDate.setText(strlast);
+                    //mDeleteButton.setText(get(res, R.plurals.delete_n_entries, n));
+                    //mInsertDeleteLayout.setVisibility(View.VISIBLE);
                     mScrollViewMain.post(new Runnable() {
                         @Override
                         public void run() {
@@ -583,11 +646,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
-    private class ClearAll extends RunnableWithProgress {
-        MainActivity mMainActivity;
+    private class ClearCalendar extends RunnableWithProgress {
+        private MainActivity mMainActivity;
+        private boolean isClearEvent = false;
+        private boolean isClearReminder = false;
 
-        public ClearAll(MainActivity activity) {
+        public ClearCalendar(MainActivity activity, boolean clearEvent, boolean clearReminder) {
             super(activity, R.string.erasing_data, false);
+            isClearEvent = clearEvent;
+            isClearReminder = clearReminder;
             mMainActivity = activity;
         }
 
@@ -595,6 +662,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         @Override
         protected void run() throws Exception {
             final AndroidCalendar selectedCal = mMainActivity.getSelectedCalendar();
+            ContentResolver contentResolver = getContentResolver();
+
+            Uri reminderUri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+                reminderUri = Uri.parse("content://com.android.calendar/reminders");
+            else
+                reminderUri = Uri.parse("content://calendar/reminders");
 
             Uri eventUri;
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
@@ -602,16 +676,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             else
                 eventUri = Uri.parse("content://calendar/events");
 
+            if (isClearEvent || isClearReminder) {
 
-            ContentResolver contentResolver = getContentResolver();
+                Cursor cursor = contentResolver.query(eventUri, new String[]{"_id"}, "calendar_id = " + selectedCal.mId, null, null); // calendar_id can change in new versions
+                while (cursor.moveToNext()) {
 
-            Cursor cursor = contentResolver.query(eventUri, new String[]{"_id"}, "calendar_id = " + selectedCal.mId, null, null); // calendar_id can change in new versions
-
-            while (cursor.moveToNext()) {
-                Uri deleteUri = ContentUris.withAppendedId(eventUri, cursor.getInt(0));
-                contentResolver.delete(deleteUri, null, null);
+                    if (isClearEvent) {
+                        Uri deleteUri = ContentUris.withAppendedId(eventUri, cursor.getInt(0));
+                        contentResolver.delete(deleteUri, null, null);
+                    } else {
+                        if (isClearReminder) {
+                            Cursor reminderCursor = contentResolver.query(reminderUri, new String[]{"_id"}, "event_id = " + cursor.getInt(0), null, null); // calendar_id can change in new versions
+                            while (reminderCursor.moveToNext()) {
+                                Uri deleteUri = ContentUris.withAppendedId(reminderUri, reminderCursor.getInt(0));
+                                contentResolver.delete(deleteUri, null, null);
+                            }
+                        }
+                    }
+                }
             }
-
         }
     }
 }
