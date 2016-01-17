@@ -43,6 +43,18 @@
     <string name="timezone">Timezone</string>
     <string name="username">Username</string>
     <string name="writing_calendar_to_file">Writing calendar to file&#8230;</string>
+    <string name="clear_calendar">Clear Calendar</string>
+    <string name="clear_warning">Warning this action will erase the calendar.\nAre you ok?</string>
+    <string name="warning">Warning !</string>
+    <string name="erasing_data">Erasing data please wait</string>
+    <string name="ics_data">ICS</string>
+    <string name="more_info_calendar">More Info</string>
+    <string name="clear_reminder">Clear Reminder</string>
+    <string name="first_event">First event</string>
+    <string name="last_event">Last event</string>
+    <string name="not_available">NA</string>
+    <string name="erase_previous_calendar">Erase Previous Calendar</string>
+    <string name="erase_imported_reminder">Erase imported reminder</string>
 
     <plurals name="delete_n_entries">
          <item quantity="one">Delete %d entry</item>

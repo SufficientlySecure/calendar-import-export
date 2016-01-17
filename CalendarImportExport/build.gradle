@@ -5,6 +5,9 @@ android {
     buildToolsVersion '22.0.1'
 
     defaultConfig {
+        //for exporting a temporary version in android studio the line below shoud be deleted in main branches
+        applicationId "fr.dupont.fred.ICSimportexport"
+
         minSdkVersion 8
         targetSdkVersion 22
     }

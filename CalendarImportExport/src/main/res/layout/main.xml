@@ -14,9 +14,9 @@
             android:layout_height="16dp" />
 
         <TextView
+            style="@android:style/TextAppearance.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@android:style/TextAppearance.Small"
             android:text="@string/calendar_selection" />
 
         <View
@@ -28,9 +28,9 @@
 
         <Spinner
             android:id="@+id/SpinnerChooseCalendar"
+            style="@android:style/TextAppearance.Medium"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            style="@android:style/TextAppearance.Medium"
             android:prompt="@string/select_a_calendar" />
 
         <View
@@ -44,129 +44,83 @@
             android:orientation="horizontal" >
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:orientation="vertical" >
 
                 <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
                     style="@android:style/TextAppearance.Small"
-                    android:textStyle="italic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/state"
                     android:textColor="#FF888888"
-                    android:text="@string/account_name" />
-
-                <TextView
-                    android:id="@+id/TextCalAccountName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Small"
-                    android:textStyle="italic"
-                    android:textColor="#FF888888"
-                    android:text="@string/name" />
-
-                <TextView
-                    android:id="@+id/TextCalName"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Small"
-                    android:textStyle="italic"
-                    android:textColor="#FF888888"
-                    android:text="@string/owner" />
-
-                <TextView
-                    android:id="@+id/TextCalOwner"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Medium" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Small"
-                    android:textStyle="italic"
-                    android:textColor="#FF888888"
-                    android:text="@string/state" />
+                    android:textStyle="italic" />
 
                 <TextView
                     android:id="@+id/TextCalState"
+                    style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    style="@android:style/TextAppearance.Medium" />
+                    android:text="@string/not_available" />
+
+                <TextView
+                        style="@android:style/TextAppearance.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/timezone"
+                        android:textColor="#FF888888"
+                        android:textStyle="italic" />
+
+                <TextView
+                        android:id="@+id/TextCalTimezone"
+                        style="@android:style/TextAppearance.Medium"
+                        android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_available" />
+
+                <TextView
+                        style="@android:style/TextAppearance.Small"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/events"
+                        android:textColor="#FF888888"
+                        android:textStyle="italic" />
+
+                <TextView
+                        android:id="@+id/TextCalSize"
+                        style="@android:style/TextAppearance.Medium"
+                        android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_available" />
+
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical" >
+                android:layout_weight="2"
+                android:orientation="vertical">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Small"
-                        android:textStyle="italic"
-                        android:textColor="#FF888888"
-                        android:text="@string/account_type" />
+                <Button
+                    android:id="@+id/SaveButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/_export_" />
 
-                    <TextView
-                        android:id="@+id/TextCalAccountType"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Medium" />
+                <Button
+                    android:id="@+id/ClearEventButton"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/clear_calendar" />
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Small"
-                        android:textStyle="italic"
-                        android:textColor="#FF888888"
-                        android:text="@string/id" />
+                <Button
+                    android:id="@+id/ClearReminderButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:text="@string/clear_reminder" />
 
-                    <TextView
-                        android:id="@+id/TextCalId"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Small"
-                        android:textStyle="italic"
-                        android:textColor="#FF888888"
-                        android:text="@string/timezone" />
-
-                    <TextView
-                        android:id="@+id/TextCalTimezone"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Medium" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Small"
-                        android:textStyle="italic"
-                        android:textColor="#FF888888"
-                        android:text="@string/events" />
-
-                    <TextView
-                        android:id="@+id/TextCalSize"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        style="@android:style/TextAppearance.Medium" />
             </LinearLayout>
         </LinearLayout>
 
@@ -175,10 +129,10 @@
             android:layout_height="32dp" />
 
         <TextView
+            style="@android:style/TextAppearance.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@android:style/TextAppearance.Small"
-            android:text="@string/actions" />
+            android:text="@string/ics_data" />
 
         <View
             style="@style/divider"/>
@@ -187,57 +141,154 @@
             android:layout_width="match_parent"
             android:layout_height="16dp" />
 
-        <Button
-            android:id="@+id/SaveButton"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/_export_" />
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/SearchButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/import_file" />
+            <Button
+                android:id="@+id/SearchButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/import_file" />
 
-        <Button
-            android:id="@+id/SetUrlButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/import_network" />
+            <Button
+                android:id="@+id/SetUrlButton"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/import_network" />
+        </LinearLayout>
 
         <Spinner
             android:id="@+id/SpinnerFile"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/LoadButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/load_calendar"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <LinearLayout
-            android:id="@+id/InsertDeleteLayout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
-            android:visibility="gone" >
+            android:visibility="visible">
 
-            <Button
-                android:id="@+id/InsertButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/insert_entries" />
+                android:orientation="vertical">
 
-            <Button
-                android:id="@+id/DeleteButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                <Button
+                    android:id="@+id/InsertButton"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="@string/insert_entries" />
+
+                <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:orientation="horizontal">
+
+                    <ToggleButton
+                        android:id="@+id/toggleErasePreviousCalendar"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="New ToggleButton" />
+
+                    <TextView
+                        android:id="@+id/textView9"
+                        style="@android:style/TextAppearance.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/erase_previous_calendar" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:orientation="horizontal">
+
+                    <ToggleButton
+                        android:id="@+id/toggleEraseImportedReminder"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_horizontal"
+                        android:layout_weight="2"
+                        android:text="New ToggleButton" />
+
+                    <TextView
+                        android:id="@+id/textView10"
+                        style="@android:style/TextAppearance.Small"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/erase_imported_reminder" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="match_parent"
                 android:layout_weight="1"
-                android:text="@string/delete_entries" />
+                android:orientation="vertical">
+
+                <TextView
+                    style="@android:style/TextAppearance.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/events"
+                    android:textColor="#FF888888"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/textIcsNbEntries"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_available" />
+
+                <TextView
+                    style="@android:style/TextAppearance.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/first_event"
+                    android:textColor="#FF888888"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/textIcsFirstDate"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_available" />
+
+                <TextView
+                    style="@android:style/TextAppearance.Small"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/last_event"
+                    android:textColor="#FF888888"
+                    android:textStyle="italic" />
+
+                <TextView
+                    android:id="@+id/textIcsLastDate"
+                    style="@android:style/TextAppearance.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/not_available" />
+
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 </ScrollView>

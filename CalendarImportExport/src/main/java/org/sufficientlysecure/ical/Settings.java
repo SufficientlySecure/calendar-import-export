@@ -27,12 +27,9 @@ public class Settings {
     public static final String PREF_SAVE_PASSWORDS = "save_passwords";
     public static final String PREF_TEST_FILE_SUPPORT = "test_file_support";
     public static final String PREF_UIDPID = "uidPid";
-    public enum DuplicateHandlingEnum {
-        DUP_REPLACE,
-        DUP_REPLACE_ANY,
-        DUP_IGNORE,
-        DUP_DONT_CHECK,
-    }
+    public static final String PREF_CALENDAR = "last_calendar_id";
+    public static final String PREF_IS_ERASE_PREVIOUS_CALENDAR = "is_erase_previous_calendar";
+    public static final String PREF_IS_ERASE_REMINDER = "is_erase_reminder";
     private final SharedPreferences mPreferences;
 
     public Settings(SharedPreferences preferences) {
@@ -53,6 +50,14 @@ public class Settings {
 
     public void putInt(final String key, final int value) {
         mPreferences.edit().putInt(key, value).commit();
+    }
+
+    public long getLong(final String key) {
+        return mPreferences.getLong(key, 0);
+    }
+
+    public void putLong(final String key, final long value) {
+        mPreferences.edit().putLong(key, value).commit();
     }
 
     public boolean getBoolean(final String key, final boolean def) {
@@ -213,6 +218,13 @@ public class Settings {
 
     public void setTestFileSupport(boolean value) {
         putBoolean(PREF_TEST_FILE_SUPPORT, value);
+    }
+
+    public enum DuplicateHandlingEnum {
+        DUP_REPLACE,
+        DUP_REPLACE_ANY,
+        DUP_IGNORE,
+        DUP_DONT_CHECK,
     }
 
 }

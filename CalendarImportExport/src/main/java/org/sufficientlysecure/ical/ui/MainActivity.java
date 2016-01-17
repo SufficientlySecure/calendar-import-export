@@ -32,6 +32,8 @@ import java.util.UUID;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.Date;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.util.CompatibilityHints;
 
@@ -46,10 +48,15 @@ import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.database.Cursor;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -62,11 +69,13 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.ScrollView;
 import android.widget.Toast;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
@@ -84,28 +93,42 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     // Views
     private Spinner mCalendarSpinner;
     private Spinner mFileSpinner;
-    private Button mLoadButton;
+    //private Button mLoadButton;
     private Button mInsertButton;
-    private Button mDeleteButton;
+    //private Button mDeleteButton;
     private Button mExportButton;
+    private Button mClearEventButton;
+    private Button mClearReminderButton;
 
-    private TextView mTextCalName;
+    /*private TextView mTextCalName;
     private TextView mTextCalAccountName;
     private TextView mTextCalAccountType;
     private TextView mTextCalOwner;
-    private TextView mTextCalState;
     private TextView mTextCalId;
+    */
     private TextView mTextCalTimezone;
     private TextView mTextCalSize;
+    private TextView mTextCalState;
+    private TextView mtextIcsNbEntries;
+    private TextView mtextIcsFirstDate;
+    private TextView mtextIcsLastDate;
 
     // Values
     private List<AndroidCalendar> mCalendars;
     private ScrollView mScrollViewMain;
-    private LinearLayout mInsertDeleteLayout;
+    //private LinearLayout mInsertDeleteLayout;
+
+    //preferences
+    private boolean isErasePreviousCalendar;
+    private boolean istoggleEraseImportedReminder;
+
+    private MainActivity mMainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mMainActivity = this;
 
         setContentView(R.layout.main);
 
@@ -119,12 +142,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
                 AndroidCalendar calendar = mCalendars.get(pos);
-                mTextCalName.setText(calendar.mName);
+                /*mTextCalName.setText(calendar.mName);
                 mTextCalAccountName.setText(calendar.mAccountName);
                 mTextCalAccountType.setText(calendar.mAccountType);
                 mTextCalOwner.setText(calendar.mOwner);
-                mTextCalState.setText(calendar.mIsActive ? R.string.active : R.string.inactive);
                 mTextCalId.setText(calendar.mIdStr);
+                */
+                mTextCalState.setText(calendar.mIsActive ? R.string.active : R.string.inactive);
+                mSettings.putLong(Settings.PREF_CALENDAR, calendar.mId);
                 if (calendar.mTimezone == null)
                     mTextCalTimezone.setText(R.string.not_applicable);
                 else
@@ -137,12 +162,13 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         };
         mCalendarSpinner.setOnItemSelectedListener(calListener);
 
+
         mFileSpinner = (Spinner) findViewById(R.id.SpinnerFile);
         AdapterView.OnItemSelectedListener fileListener;
         fileListener = new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id) {
-                mInsertDeleteLayout.setVisibility(View.GONE);
+                new LoadFile(mMainActivity).start();
             }
             @Override
             public void onNothingSelected(AdapterView<?> arg0) {
@@ -151,23 +177,50 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mFileSpinner.setOnItemSelectedListener(fileListener);
 
         setupButton(R.id.SearchButton);
-        mLoadButton = setupButton(R.id.LoadButton);
+        mClearEventButton = setupButton(R.id.ClearEventButton);
+        mClearReminderButton = setupButton(R.id.ClearReminderButton);
+        //mLoadButton = setupButton(R.id.LoadButton);
         mInsertButton = setupButton(R.id.InsertButton);
-        mDeleteButton = setupButton(R.id.DeleteButton);
         mExportButton = setupButton(R.id.SaveButton);
         mScrollViewMain = (ScrollView) findViewById(R.id.ScrollViewMain);
-        mInsertDeleteLayout = (LinearLayout) findViewById(R.id.InsertDeleteLayout);
+        //mInsertDeleteLayout = (LinearLayout) findViewById(R.id.InsertDeleteLayout);
         setupButton(R.id.SetUrlButton);
 
-        mTextCalName = (TextView) findViewById(R.id.TextCalName);
+        /*mTextCalName = (TextView) findViewById(R.id.TextCalName);
         mTextCalAccountName = (TextView) findViewById(R.id.TextCalAccountName);
         mTextCalAccountType = (TextView) findViewById(R.id.TextCalAccountType);
         mTextCalOwner = (TextView) findViewById(R.id.TextCalOwner);
-        mTextCalState = (TextView) findViewById(R.id.TextCalState);
         mTextCalId = (TextView) findViewById(R.id.TextCalId);
+*/
+        mTextCalState = (TextView) findViewById(R.id.TextCalState);
         mTextCalTimezone = (TextView) findViewById(R.id.TextCalTimezone);
         mTextCalSize = (TextView) findViewById(R.id.TextCalSize);
+        mtextIcsNbEntries = (TextView) findViewById(R.id.textIcsNbEntries);
+        mtextIcsFirstDate = (TextView) findViewById(R.id.textIcsFirstDate);
+        mtextIcsLastDate = (TextView) findViewById(R.id.textIcsLastDate);
 
+        //toggle for export
+        ToggleButton toggleErasePreviousCalendar = (ToggleButton) findViewById(R.id.toggleErasePreviousCalendar);
+        isErasePreviousCalendar = mSettings.getBoolean(Settings.PREF_IS_ERASE_PREVIOUS_CALENDAR);
+        toggleErasePreviousCalendar.setChecked(isErasePreviousCalendar);
+        toggleErasePreviousCalendar.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSettings.putBoolean(Settings.PREF_IS_ERASE_PREVIOUS_CALENDAR, isChecked);
+                isErasePreviousCalendar = isChecked;
+            }
+        });
+
+        ToggleButton toggleEraseImportedReminder = (ToggleButton) findViewById(R.id.toggleEraseImportedReminder);
+        istoggleEraseImportedReminder = mSettings.getBoolean(Settings.PREF_IS_ERASE_REMINDER);
+        toggleEraseImportedReminder.setChecked(istoggleEraseImportedReminder);
+        toggleEraseImportedReminder.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mSettings.putBoolean(Settings.PREF_IS_ERASE_REMINDER, isChecked);
+                istoggleEraseImportedReminder = isChecked;
+            }
+        });
+
+        //intent gestion and preload stuff
         Intent intent = getIntent();
         if (intent == null)
             return;
@@ -183,7 +236,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                    }).start();
 
         if (action.equals(Intent.ACTION_VIEW))
-            setUrl(intent.getDataString(), null, null); // File intent
+            setUri(intent.getData(), null, null); // File intent
     }
 
     public Settings getSettings() {
@@ -216,8 +269,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
 
         mCalendars = calendars;
-        setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
 
+
+        setupSpinner(mCalendarSpinner, mCalendars);
+
+        //get the previews choice
+        if (calendarId == -1) {
+            calendarId = mSettings.getLong(mSettings.PREF_CALENDAR);
+        }
         for (int i = 0; i < mCalendars.size(); i++) {
             if (mCalendars.get(i).mId == calendarId) {
                 final int index = i;
@@ -242,12 +301,14 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void updateNumEntries(AndroidCalendar calendar) {
         final int entries = calendar.mNumEntries;
         runOnUiThread(new Runnable() {
-                          public void run() {
-                              mTextCalSize.setText(Integer.toString(entries));
-                              mExportButton.setEnabled(entries > 0);
-                              mInsertDeleteLayout.setVisibility(View.GONE);
-                          }
-                      });
+            public void run() {
+                mTextCalSize.setText(Integer.toString(entries));
+                mExportButton.setEnabled(entries > 0);
+                mClearEventButton.setEnabled(entries > 0);
+                mClearReminderButton.setEnabled(entries > 0);
+                //mInsertDeleteLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
     private Button setupButton(int id) {
@@ -256,25 +317,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return button;
     }
 
-    private <E> void setupSpinner(final Spinner spinner, final List<E> list, final Button button) {
+    private <E> void setupSpinner(final Spinner spinner, final List<E> list) {
         final int id = android.R.layout.simple_spinner_item;
         final int dropId = android.R.layout.simple_spinner_dropdown_item;
         final Context ctx = this;
 
         runOnUiThread(new Runnable() {
-                          public void run() {
-                              ArrayAdapter<E> adaptor = new ArrayAdapter<>(ctx, id, list);
-                              adaptor.setDropDownViewResource(dropId);
-                              spinner.setAdapter(adaptor);
-                              if (list.size() != 0)
-                                  spinner.setVisibility(View.VISIBLE);
-                              button.setVisibility(View.VISIBLE);
-                          }
-                      });
+            public void run() {
+                ArrayAdapter<E> adaptor = new ArrayAdapter<>(ctx, id, list);
+                adaptor.setDropDownViewResource(dropId);
+                spinner.setAdapter(adaptor);
+
+                /*if (list.size() != 0) {
+                    spinner.setVisibility(View.VISIBLE);
+                }
+                button.setVisibility(View.VISIBLE);*/
+            }
+        });
     }
 
     private void setSources(List<CalendarSource> sources) {
-        setupSpinner(mFileSpinner, sources, mLoadButton);
+        setupSpinner(mFileSpinner, sources);
     }
 
     public boolean setUrl(String url, String username, String password) {
@@ -287,14 +350,31 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    public boolean setUri(Uri uri, String username, String password) {
+        try {
+            CalendarSource source = new CalendarSource(uri, username, password);
+            setSources(Collections.singletonList(source));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public AndroidCalendar getSelectedCalendar() {
         return (AndroidCalendar) mCalendarSpinner.getSelectedItem();
     }
 
-    public URLConnection getSelectedURL() throws IOException {
+    public InputStream getSelectedICSasInputStream() throws IOException {
+
+        CalendarSource sel = (CalendarSource) mFileSpinner.getSelectedItem();
+
+        return sel == null ? null : sel.getStream();
+    }
+
+    /*public URLConnection getSelectedURL() throws IOException {
         CalendarSource sel = (CalendarSource) mFileSpinner.getSelectedItem();
         return sel == null ? null : sel.getConnection();
-    }
+    }*/
 
     public String generateUid() {
         // Generated UIDs take the form <ms>-<uuid>@sufficientlysecure.org.
@@ -352,19 +432,95 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         new AlertDialog.Builder(this).setView(text).create().show();
     }
 
+    @Override
+    public void onClick(View view) {
+        AlertDialog.Builder builder;
+        switch (view.getId()) {
+            case R.id.ClearEventButton:
+                builder = new AlertDialog.Builder(this);
+                //builder.setMessage("Message above the image");
+                builder.setPositiveButton("Ok ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new ClearCalendar(mMainActivity, true, false).start();
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setMessage(R.string.clear_warning);
+                builder.setIcon(R.mipmap.ic_launcher);
+                builder.setTitle(R.string.warning);
+                builder.create().show();
+                break;
+            case R.id.ClearReminderButton:
+                builder = new AlertDialog.Builder(this);
+                //builder.setMessage("Message above the image");
+                builder.setPositiveButton("Ok ", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        new ClearCalendar(mMainActivity, false, true).start();
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                builder.setMessage(R.string.clear_warning);
+                builder.setIcon(R.mipmap.ic_launcher);
+                builder.setTitle(R.string.warning);
+                builder.create().show();
+                break;
+            case R.id.SetUrlButton:
+                UrlDialog.show(this);
+                break;
+            case R.id.SearchButton:
+                new SearchForFiles(this).start();
+                break;
+            //case R.id.LoadButton:
+            //    new LoadFile(this).start();
+            //    break;
+            case R.id.SaveButton:
+                new SaveCalendar(this).start();
+                break;
+            case R.id.InsertButton:
+                if (isErasePreviousCalendar)
+                    new ClearCalendar(mMainActivity, true, false).start();
+                new ProcessVEvent(this, mCalendar, true).start();
+                if (istoggleEraseImportedReminder)
+                    new ClearCalendar(mMainActivity, false, true).start();
+                break;
+        }
+    }
+
     private class CalendarSource {
         private static final String HTTP_SEP = "://";
-
-        private final URL mUrl;
         private final String mUsername;
         private final String mPassword;
+        private URL mUrl = null;
+        private Uri mUri = null;
+        private String mString;
 
         public CalendarSource(URL url, String username, String password) {
             mUrl = url;
+            mString = url.toString();
             mUsername = username;
             mPassword = password;
         }
 
+        public CalendarSource(Uri uri, String username, String password) {
+            mUri = uri;
+            mString = uri.toString();
+            mUsername = username;
+            mPassword = password;
+        }
         public URLConnection getConnection() throws IOException {
             if (mUsername != null) {
                 String protocol = mUrl.getProtocol();
@@ -386,9 +542,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return mUrl.openConnection();
         }
 
+        public InputStream getStream() throws IOException {
+            InputStream in;
+
+            if (mUri != null) {
+                ContentResolver contentResolver = getContentResolver();
+                in = contentResolver.openInputStream(mUri);
+            } else {
+                URLConnection c = this.getConnection();
+                in = c == null ? null : c.getInputStream();
+            }
+            return in;
+        }
         @Override
         public String toString() {
-            return mUrl.toString();
+            return mString;
         }
     }
 
@@ -445,55 +613,114 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             if (mCalendarBuilder == null)
                 mCalendarBuilder = new CalendarBuilder();
 
-            URLConnection c = getSelectedURL();
-            InputStream in = c == null ? null : c.getInputStream();
-            mCalendar = in == null ? null : mCalendarBuilder.build(in);
+            //URLConnection c = getSelectedURL();
+            //InputStream in = c == null ? null : c.getInputStream();
+            //mCalendar = in == null ? null : mCalendarBuilder.build(in);
+            mCalendar = mCalendarBuilder.build(getSelectedICSasInputStream());
+
+            //get basic information on ICS calendar (start date end date and nb of event)
+            ComponentList mIcsEventList = mCalendar.getComponents(VEvent.VEVENT);
+            final int n = mIcsEventList.size();
+            Date first = null;
+            Date last = null;
+            for (Object temp : mIcsEventList) {
+                VEvent e = (VEvent) temp;
+                Date current = e.getStartDate().getDate();
+                if (first == null || first.after(current))
+                    first = current;
+                if (last == null || last.before(current))
+                    last = current;
+            }
+            final String strfirst = first.toString().substring(0, 8);
+            final String strlast = last.toString().substring(0, 8);
+            final String numberOfEvent = Integer.toString(n);
 
             runOnUiThread(new Runnable() {
-                              public void run() {
-                                  if (mCalendar == null) {
-                                      mInsertDeleteLayout.setVisibility(View.GONE);
-                                      return;
-                                  }
+                public void run() {
 
-                                  Resources res = getResources();
-                                  final int n = mCalendar.getComponents(VEvent.VEVENT).size();
-                                  mInsertButton.setText(get(res, R.plurals.insert_n_entries, n));
-                                  mDeleteButton.setText(get(res, R.plurals.delete_n_entries, n));
-                                  mInsertDeleteLayout.setVisibility(View.VISIBLE);
-                                  mScrollViewMain.post(new Runnable() {
-                                                           @Override
-                                                           public void run() {
-                                                               mScrollViewMain.fullScroll(ScrollView.FOCUS_DOWN);
-                                                           }
-                                  });
-                              }
-                              private String get(Resources res, int id, int n) {
-                                  return res.getQuantityString(id, n, n);
-                              }
-                          });
+
+                    if (mCalendar == null) {
+                        mtextIcsNbEntries.setText(R.string.not_available);
+                        mtextIcsFirstDate.setText(R.string.not_available);
+                        mtextIcsLastDate.setText(R.string.not_available);
+                        //mInsertDeleteLayout.setVisibility(View.GONE);
+                        return;
+                    }
+
+
+                    Resources res = getResources();
+
+                    //mInsertButton.setText(get(res, R.plurals.insert_n_entries, n));
+
+                    mtextIcsNbEntries.setText(numberOfEvent);
+                    mtextIcsFirstDate.setText(strfirst);
+                    mtextIcsLastDate.setText(strlast);
+                    //mDeleteButton.setText(get(res, R.plurals.delete_n_entries, n));
+                    //mInsertDeleteLayout.setVisibility(View.VISIBLE);
+                    mScrollViewMain.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            mScrollViewMain.fullScroll(ScrollView.FOCUS_DOWN);
+                        }
+                    });
+                }
+
+                private String get(Resources res, int id, int n) {
+                    return res.getQuantityString(id, n, n);
+                }
+            });
         }
     }
 
-    @Override
-    public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.SetUrlButton:
-                UrlDialog.show(this);
-                break;
-            case R.id.SearchButton:
-                new SearchForFiles(this).start();
-                break;
-            case R.id.LoadButton:
-                new LoadFile(this).start();
-                break;
-            case R.id.SaveButton:
-                new SaveCalendar(this).start();
-                break;
-            case R.id.InsertButton:
-            case R.id.DeleteButton:
-                new ProcessVEvent(this, mCalendar, view.getId() == R.id.InsertButton).start();
-                break;
+    private class ClearCalendar extends RunnableWithProgress {
+        private MainActivity mMainActivity;
+        private boolean isClearEvent = false;
+        private boolean isClearReminder = false;
+
+        public ClearCalendar(MainActivity activity, boolean clearEvent, boolean clearReminder) {
+            super(activity, R.string.erasing_data, false);
+            isClearEvent = clearEvent;
+            isClearReminder = clearReminder;
+            mMainActivity = activity;
+        }
+
+
+        @Override
+        protected void run() throws Exception {
+            final AndroidCalendar selectedCal = mMainActivity.getSelectedCalendar();
+            ContentResolver contentResolver = getContentResolver();
+
+            Uri reminderUri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+                reminderUri = Uri.parse("content://com.android.calendar/reminders");
+            else
+                reminderUri = Uri.parse("content://calendar/reminders");
+
+            Uri eventUri;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.FROYO)
+                eventUri = Uri.parse("content://com.android.calendar/events");
+            else
+                eventUri = Uri.parse("content://calendar/events");
+
+            if (isClearEvent || isClearReminder) {
+
+                Cursor cursor = contentResolver.query(eventUri, new String[]{"_id"}, "calendar_id = " + selectedCal.mId, null, null); // calendar_id can change in new versions
+                while (cursor.moveToNext()) {
+
+                    if (isClearEvent) {
+                        Uri deleteUri = ContentUris.withAppendedId(eventUri, cursor.getInt(0));
+                        contentResolver.delete(deleteUri, null, null);
+                    } else {
+                        if (isClearReminder) {
+                            Cursor reminderCursor = contentResolver.query(reminderUri, new String[]{"_id"}, "event_id = " + cursor.getInt(0), null, null); // calendar_id can change in new versions
+                            while (reminderCursor.moveToNext()) {
+                                Uri deleteUri = ContentUris.withAppendedId(reminderUri, reminderCursor.getInt(0));
+                                contentResolver.delete(deleteUri, null, null);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }
