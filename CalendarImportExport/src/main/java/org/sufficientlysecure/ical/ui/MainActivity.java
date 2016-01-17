@@ -93,7 +93,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     // Views
     private Spinner mCalendarSpinner;
     private Spinner mFileSpinner;
-    private Button mLoadButton;
+    //private Button mLoadButton;
     private Button mInsertButton;
     //private Button mDeleteButton;
     private Button mExportButton;
@@ -179,7 +179,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setupButton(R.id.SearchButton);
         mClearEventButton = setupButton(R.id.ClearEventButton);
         mClearReminderButton = setupButton(R.id.ClearReminderButton);
-        mLoadButton = setupButton(R.id.LoadButton);
+        //mLoadButton = setupButton(R.id.LoadButton);
         mInsertButton = setupButton(R.id.InsertButton);
         mExportButton = setupButton(R.id.SaveButton);
         mScrollViewMain = (ScrollView) findViewById(R.id.ScrollViewMain);
