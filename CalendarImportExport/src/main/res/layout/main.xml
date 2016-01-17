@@ -62,7 +62,7 @@
                     style="@android:style/TextAppearance.Medium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NA" />
+                    android:text="@string/not_available" />
 
                 <TextView
                         style="@android:style/TextAppearance.Small"
@@ -77,7 +77,7 @@
                         style="@android:style/TextAppearance.Medium"
                         android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NA" />
+                    android:text="@string/not_available" />
 
                 <TextView
                         style="@android:style/TextAppearance.Small"
@@ -92,7 +92,7 @@
                         style="@android:style/TextAppearance.Medium"
                         android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="NA" />
+                    android:text="@string/not_available" />
 
             </LinearLayout>
 
@@ -168,16 +168,10 @@
             android:layout_height="wrap_content"
             android:visibility="visible" />
 
-        <Button
-            android:id="@+id/LoadButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/load_calendar"
-            android:visibility="gone" />
-
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:baselineAligned="false"
             android:orientation="horizontal"
             android:visibility="visible">
 

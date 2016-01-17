@@ -271,7 +271,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mCalendars = calendars;
 
 
-        setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
+        setupSpinner(mCalendarSpinner, mCalendars);
 
         //get the previews choice
         if (calendarId == -1) {
@@ -317,7 +317,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return button;
     }
 
-    private <E> void setupSpinner(final Spinner spinner, final List<E> list, final Button button) {
+    private <E> void setupSpinner(final Spinner spinner, final List<E> list) {
         final int id = android.R.layout.simple_spinner_item;
         final int dropId = android.R.layout.simple_spinner_dropdown_item;
         final Context ctx = this;
@@ -327,17 +327,17 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 ArrayAdapter<E> adaptor = new ArrayAdapter<>(ctx, id, list);
                 adaptor.setDropDownViewResource(dropId);
                 spinner.setAdapter(adaptor);
-                if (list.size() != 0) {
-                    spinner.setVisibility(View.VISIBLE);
 
+                /*if (list.size() != 0) {
+                    spinner.setVisibility(View.VISIBLE);
                 }
-                button.setVisibility(View.VISIBLE);
+                button.setVisibility(View.VISIBLE);*/
             }
         });
     }
 
     private void setSources(List<CalendarSource> sources) {
-        setupSpinner(mFileSpinner, sources, mLoadButton);
+        setupSpinner(mFileSpinner, sources);
     }
 
     public boolean setUrl(String url, String username, String password) {
@@ -484,9 +484,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             case R.id.SearchButton:
                 new SearchForFiles(this).start();
                 break;
-            case R.id.LoadButton:
-                new LoadFile(this).start();
-                break;
+            //case R.id.LoadButton:
+            //    new LoadFile(this).start();
+            //    break;
             case R.id.SaveButton:
                 new SaveCalendar(this).start();
                 break;
