@@ -46,10 +46,12 @@ import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -183,7 +185,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                    }).start();
 
         if (action.equals(Intent.ACTION_VIEW))
-            setUrl(intent.getDataString(), null, null); // File intent
+            setUri(intent.getData(), null, null); // File intent
     }
 
     public Settings getSettings() {
@@ -233,21 +235,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     public void showToast(final String msg) {
         runOnUiThread(new Runnable() {
-                          public void run() {
-                              Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
-                          }
-                      });
+            public void run() {
+                Toast.makeText(getApplicationContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void updateNumEntries(AndroidCalendar calendar) {
         final int entries = calendar.mNumEntries;
         runOnUiThread(new Runnable() {
-                          public void run() {
-                              mTextCalSize.setText(Integer.toString(entries));
-                              mExportButton.setEnabled(entries > 0);
-                              mInsertDeleteLayout.setVisibility(View.GONE);
-                          }
-                      });
+            public void run() {
+                mTextCalSize.setText(Integer.toString(entries));
+                mExportButton.setEnabled(entries > 0);
+                mInsertDeleteLayout.setVisibility(View.GONE);
+            }
+        });
     }
 
     private Button setupButton(int id) {
@@ -262,15 +264,15 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         final Context ctx = this;
 
         runOnUiThread(new Runnable() {
-                          public void run() {
-                              ArrayAdapter<E> adaptor = new ArrayAdapter<>(ctx, id, list);
-                              adaptor.setDropDownViewResource(dropId);
-                              spinner.setAdapter(adaptor);
-                              if (list.size() != 0)
-                                  spinner.setVisibility(View.VISIBLE);
-                              button.setVisibility(View.VISIBLE);
-                          }
-                      });
+            public void run() {
+                ArrayAdapter<E> adaptor = new ArrayAdapter<>(ctx, id, list);
+                adaptor.setDropDownViewResource(dropId);
+                spinner.setAdapter(adaptor);
+                if (list.size() != 0)
+                    spinner.setVisibility(View.VISIBLE);
+                button.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
     private void setSources(List<CalendarSource> sources) {
@@ -287,13 +289,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         }
     }
 
+    public boolean setUri(Uri uri, String username, String password) {
+        try {
+            CalendarSource source = new CalendarSource(uri, username, password);
+            setSources(Collections.singletonList(source));
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+
     public AndroidCalendar getSelectedCalendar() {
         return (AndroidCalendar) mCalendarSpinner.getSelectedItem();
     }
 
-    public URLConnection getSelectedURL() throws IOException {
+    public InputStream getSelectedURI() throws IOException {
         CalendarSource sel = (CalendarSource) mFileSpinner.getSelectedItem();
-        return sel == null ? null : sel.getConnection();
+        return sel == null ? null : sel.getStream();
     }
 
     public String generateUid() {
@@ -355,12 +368,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private class CalendarSource {
         private static final String HTTP_SEP = "://";
 
-        private final URL mUrl;
+        private URL mUrl = null;
+        private Uri mUri = null;
+        private String mString;
         private final String mUsername;
         private final String mPassword;
 
         public CalendarSource(URL url, String username, String password) {
             mUrl = url;
+            mString = url.toString();
+            mUsername = username;
+            mPassword = password;
+        }
+
+        public CalendarSource(Uri uri, String username, String password) {
+            mUri = uri;
+            mString = uri.toString();
             mUsername = username;
             mPassword = password;
         }
@@ -386,9 +409,22 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return mUrl.openConnection();
         }
 
+        public InputStream getStream() throws IOException {
+            InputStream in;
+
+            if (mUri != null) {
+                ContentResolver contentResolver = getContentResolver();
+                in = contentResolver.openInputStream(mUri);
+            } else {
+                URLConnection c = this.getConnection();
+                in = c == null ? null : c.getInputStream();
+            }
+            return in;
+        }
+
         @Override
         public String toString() {
-            return mUrl.toString();
+            return mString;
         }
     }
 
@@ -445,9 +481,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             if (mCalendarBuilder == null)
                 mCalendarBuilder = new CalendarBuilder();
 
-            URLConnection c = getSelectedURL();
-            InputStream in = c == null ? null : c.getInputStream();
-            mCalendar = in == null ? null : mCalendarBuilder.build(in);
+            mCalendar = mCalendarBuilder.build(getSelectedURI());
+
 
             runOnUiThread(new Runnable() {
                               public void run() {
