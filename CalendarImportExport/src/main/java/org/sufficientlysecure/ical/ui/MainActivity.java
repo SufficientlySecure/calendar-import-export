@@ -127,6 +127,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 mTextCalOwner.setText(calendar.mOwner);
                 mTextCalState.setText(calendar.mIsActive ? R.string.active : R.string.inactive);
                 mTextCalId.setText(calendar.mIdStr);
+                mSettings.putLong(Settings.PREF_CALENDAR, calendar.mId);
                 if (calendar.mTimezone == null)
                     mTextCalTimezone.setText(R.string.not_applicable);
                 else
@@ -219,6 +220,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         mCalendars = calendars;
         setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
+        //get the previews choice
+        if (calendarId == -1) {
+            calendarId = mSettings.getLong(mSettings.PREF_CALENDAR);
+        }
 
         for (int i = 0; i < mCalendars.size(); i++) {
             if (mCalendars.get(i).mId == calendarId) {

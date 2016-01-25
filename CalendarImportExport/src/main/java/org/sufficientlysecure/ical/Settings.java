@@ -27,6 +27,8 @@ public class Settings {
     public static final String PREF_SAVE_PASSWORDS = "save_passwords";
     public static final String PREF_TEST_FILE_SUPPORT = "test_file_support";
     public static final String PREF_UIDPID = "uidPid";
+    public static final String PREF_CALENDAR = "last_calendar_id";
+
     public enum DuplicateHandlingEnum {
         DUP_REPLACE,
         DUP_REPLACE_ANY,
@@ -54,7 +56,16 @@ public class Settings {
     public void putInt(final String key, final int value) {
         mPreferences.edit().putInt(key, value).commit();
     }
+    public long getLong(final String key) {
+        return getLong(key, 0);
+    }
+    public long getLong(final String key, final int value) {
+        return mPreferences.getLong(key, value);
+    }
 
+    public void putLong(final String key, final long value) {
+        mPreferences.edit().putLong(key, value).commit();
+    }
     public boolean getBoolean(final String key, final boolean def) {
         return mPreferences.getBoolean(key, def);
     }
