@@ -136,7 +136,8 @@ public class SaveCalendar extends RunnableWithProgress {
         ContentResolver resolver = activity.getContentResolver();
         String where = Events.CALENDAR_ID + "=?";
         String[] args = new String[] { selectedCal.mIdStr };
-        Cursor cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, null);
+        final String sortBy = Events.CALENDAR_ID + " ASC";
+        Cursor cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, sortBy);
         setMax(cur.getCount());
 
         boolean relaxed = settings.getIcal4jValidationRelaxed();
