@@ -219,4 +219,6 @@ The following keys are used internally only
 :key: lastUrl
 :key: lastUrlUsername
 :key: lastUrlPassword
+:key: lastCalendarId
+:key: lastCalendarName
 ///////////////////////////////////////////
