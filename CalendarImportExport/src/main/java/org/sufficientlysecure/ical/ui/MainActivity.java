@@ -129,6 +129,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                     mTextCalTimezone.setText(R.string.not_applicable);
                 else
                     mTextCalTimezone.setText(calendar.mTimezone);
+                mSettings.putLong(Settings.PREF_LASTCALENDARID, calendar.mId);
+                mSettings.putString(Settings.PREF_LASTCALENDARNAME, calendar.mName);
                 updateNumEntries(calendar);
             }
             @Override
@@ -218,14 +220,24 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mCalendars = calendars;
         setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
 
+        String calendarName = null;
+
+        if (calendarId == -1) {
+            // Not loading from an Intent: use the previously selected calendar
+            calendarId = mSettings.getLong(mSettings.PREF_LASTCALENDARID, -1);
+            if (calendarId != -1)
+                calendarName = mSettings.getString(mSettings.PREF_LASTCALENDARNAME);
+        }
+
         for (int i = 0; i < mCalendars.size(); i++) {
-            if (mCalendars.get(i).mId == calendarId) {
+            if (mCalendars.get(i).mId == calendarId &&
+                (calendarName == null || mCalendars.get(i).mName.contentEquals(calendarName))) {
                 final int index = i;
                 runOnUiThread(new Runnable() {
-                                  public void run() {
-                                      mCalendarSpinner.setSelection(index);
-                                  }
-                              });
+                    public void run() {
+                        mCalendarSpinner.setSelection(index);
+                    }
+                });
                 break;
             }
         }
