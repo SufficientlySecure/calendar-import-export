@@ -18,6 +18,8 @@ public class Settings {
     public static final String PREF_ICAL4J_VALIDATION_RELAXED = "ical4j.validation.relaxed";
     public static final String PREF_IMPORT_REMINDERS = "import_reminders";
     public static final String PREF_KEEP_UIDS = "keep_uids";
+    public static final String PREF_LASTCALENDARID = "lastCalendarId";
+    public static final String PREF_LASTCALENDARNAME = "lastCalendarName";
     public static final String PREF_LASTEXPORTFILE = "lastExportFile";
     public static final String PREF_LASTURL = "lastUrl";
     public static final String PREF_LASTURLPASSWORD = "lastUrlPassword";
