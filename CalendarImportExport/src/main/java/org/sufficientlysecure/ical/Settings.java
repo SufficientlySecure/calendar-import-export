@@ -55,6 +55,18 @@ public class Settings {
         mPreferences.edit().putInt(key, value).commit();
     }
 
+    public long getLong(final String key, final long def) {
+        return mPreferences.getLong(key, def);
+    }
+
+    public long getLong(final String key) {
+        return getLong(key, 0);
+    }
+
+    public void putLong(final String key, final long value) {
+        mPreferences.edit().putLong(key, value).commit();
+    }
+
     public boolean getBoolean(final String key, final boolean def) {
         return mPreferences.getBoolean(key, def);
     }
