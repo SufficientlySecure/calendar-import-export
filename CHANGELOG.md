@@ -1,3 +1,6 @@
+## 2.2
+  * New icon
+
 ## 2.1
   * Fix organizer handling
   * Scroll view automatically to show buttons
