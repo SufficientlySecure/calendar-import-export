@@ -122,7 +122,7 @@ public class UrlDialog extends DialogFragment {
                 String username = loginRequired ? mTextUsername.getText().toString() : "";
                 String password = loginRequired ? mTextPassword.getText().toString() : "";
 
-                if (!mActivity.setUrl(url, username, password)) {
+                if (!mActivity.setSource(url, null, username, password)) {
                     TextView label = (TextView) dlg.findViewById(R.id.TextViewUrlError);
                     label.setText(R.string.invalid_url);
                     return;

@@ -46,10 +46,12 @@ import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
@@ -185,7 +187,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                    }).start();
 
         if (action.equals(Intent.ACTION_VIEW))
-            setUrl(intent.getDataString(), null, null); // File intent
+            setSource(null, intent.getData(), null, null); // File intent
     }
 
     public Settings getSettings() {
@@ -289,12 +291,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setupSpinner(mFileSpinner, sources, mLoadButton);
     }
 
-    public boolean setUrl(String url, String username, String password) {
+    public boolean setSource(String url, Uri uri, String username, String password) {
         try {
-            CalendarSource source = new CalendarSource(new URL(url), username, password);
+            CalendarSource source = new CalendarSource(url, uri, username, password);
             setSources(Collections.singletonList(source));
             return true;
-        } catch (MalformedURLException e) {
+        } catch (Exception e) {
             return false;
         }
     }
@@ -303,9 +305,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return (AndroidCalendar) mCalendarSpinner.getSelectedItem();
     }
 
-    public URLConnection getSelectedURL() throws IOException {
+    public InputStream getSelectedURI() throws IOException {
         CalendarSource sel = (CalendarSource) mFileSpinner.getSelectedItem();
-        return sel == null ? null : sel.getConnection();
+        return sel == null ? null : sel.getStream();
     }
 
     public String generateUid() {
@@ -367,12 +369,21 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private class CalendarSource {
         private static final String HTTP_SEP = "://";
 
-        private final URL mUrl;
+        private URL mUrl = null;
+        private Uri mUri = null;
+        private final String mString;
         private final String mUsername;
         private final String mPassword;
 
-        public CalendarSource(URL url, String username, String password) {
-            mUrl = url;
+        public CalendarSource(String url, Uri uri,
+                              String username, String password) throws MalformedURLException {
+            if (url != null) {
+                mUrl = new URL(url);
+                mString = mUrl.toString();
+            } else {
+                mUri = uri;
+                mString = uri.toString();
+            }
             mUsername = username;
             mPassword = password;
         }
@@ -398,9 +409,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             return mUrl.openConnection();
         }
 
+        public InputStream getStream() throws IOException {
+            if (mUri != null)
+                return getContentResolver().openInputStream(mUri);
+            URLConnection c = this.getConnection();
+            return c == null ? null : c.getInputStream();
+        }
+
         @Override
         public String toString() {
-            return mUrl.toString();
+            return mString;
         }
     }
 
@@ -420,7 +438,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             for (String ext: extensions) {
                 if (root.toString().endsWith(ext)) {
                     try {
-                        sources.add(new CalendarSource(root.toURI().toURL(), null, null));
+                        final String url = root.toURI().toURL().toString();
+                        sources.add(new CalendarSource(url, null, null, null));
                     } catch (MalformedURLException e) {
                         // Can't happen
                     }
@@ -457,9 +476,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             if (mCalendarBuilder == null)
                 mCalendarBuilder = new CalendarBuilder();
 
-            URLConnection c = getSelectedURL();
-            InputStream in = c == null ? null : c.getInputStream();
-            mCalendar = in == null ? null : mCalendarBuilder.build(in);
+            mCalendar = mCalendarBuilder.build(getSelectedURI());
+
 
             runOnUiThread(new Runnable() {
                               public void run() {
