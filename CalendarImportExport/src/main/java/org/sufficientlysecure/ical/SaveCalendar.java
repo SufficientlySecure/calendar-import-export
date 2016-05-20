@@ -90,6 +90,7 @@ public class SaveCalendar extends RunnableWithProgress {
     private final PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
     private TimeZoneRegistry mTzRegistry;
     private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
+    private final Set<String> mFailedOrganisers = new HashSet<>();
 
     private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELLED");
     private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
@@ -118,6 +119,7 @@ public class SaveCalendar extends RunnableWithProgress {
         final AndroidCalendar selectedCal = activity.getSelectedCalendar();
 
         mInsertedTimeZones.clear();
+        mFailedOrganisers.clear();
 
         String file = getFile(settings.getString(Settings.PREF_LASTEXPORTFILE));
         if (TextUtils.isEmpty(file))
@@ -274,8 +276,11 @@ public class SaveCalendar extends RunnableWithProgress {
             try {
                 l.add(new Organizer(organizer));
             } catch (URISyntaxException ignored) {
-                Log.e(TAG, "Failed to create mailTo for organizer " + organizer);
-            }
+                if (!mFailedOrganisers.contains(organizer)) {
+                    Log.e(TAG, "Failed to create mailTo for organizer " + organizer);
+                    mFailedOrganisers.add(organizer);
+                }
+             }
         }
 
         copyProperty(l, Property.LOCATION, cur, Events.EVENT_LOCATION);
