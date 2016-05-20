@@ -137,7 +137,17 @@ public class SaveCalendar extends RunnableWithProgress {
         String where = Events.CALENDAR_ID + "=?";
         String[] args = new String[] { selectedCal.mIdStr };
         final String sortBy = Events.CALENDAR_ID + " ASC";
-        Cursor cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, sortBy);
+        Cursor cur;
+        try {
+            cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, sortBy);
+        } catch (NullPointerException npe) {
+            Log.w(TAG, "Calendar provider is missing columns, continuing anyway");
+            int n = 0;
+            for (n = 0; n < EVENT_COLS.length; ++n)
+                if (EVENT_COLS[n] == null)
+                    Log.e(TAG, "Invalid EVENT_COLS index " + Integer.toString(n));
+            cur = resolver.query(Events.CONTENT_URI, null, where, args, sortBy);
+        }
         setMax(cur.getCount());
 
         boolean relaxed = settings.getIcal4jValidationRelaxed();
