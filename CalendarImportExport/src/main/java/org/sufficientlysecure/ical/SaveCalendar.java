@@ -424,12 +424,15 @@ public class SaveCalendar extends RunnableWithProgress {
 
     private Date getDateTime(Cursor cur, String dbName, String dbTzName, Calendar cal) {
         int i = getColumnIndex(cur, dbName);
-        if (i == -1 || cur.isNull(i))
+        if (i == -1 || cur.isNull(i)) {
+            Log.e(TAG, "No valid " + dbName + " column found, index: " + Integer.toString(i));
             return null;
+        }
 
         if (cal == null) {
             return utcDateFromMs(cur.getLong(i));     // Ignore timezone for date-only dates
-        }
+        } else if (dbTzName == null)
+            Log.e(TAG, "No valid tz " + dbName + " column given");
 
         String tz = getString(cur, dbTzName);
         final boolean isUtc = isUtcTimeZone(tz);
@@ -442,13 +445,20 @@ public class SaveCalendar extends RunnableWithProgress {
             throw new RuntimeException("UTC mismatch after setTime");
 
         if (!isUtc) {
-            if (mTzRegistry == null)
+            if (mTzRegistry == null) {
                 mTzRegistry = TimeZoneRegistryFactory.getInstance().createRegistry();
+                if (mTzRegistry == null)
+                    throw new RuntimeException("Failed to create TZ registry");
+            }
             TimeZone t = mTzRegistry.getTimeZone(tz);
-            dt.setTimeZone(t);
-            if (!mInsertedTimeZones.contains(t)) {
-                cal.getComponents().add(t.getVTimeZone());
-                mInsertedTimeZones.add(t);
+            if (t == null)
+                Log.e(TAG, "Unknown TZ " + tz + ", assuming UTC");
+            else {
+                dt.setTimeZone(t);
+                if (!mInsertedTimeZones.contains(t)) {
+                    cal.getComponents().add(t.getVTimeZone());
+                    mInsertedTimeZones.add(t);
+                }
             }
         }
         return dt;
