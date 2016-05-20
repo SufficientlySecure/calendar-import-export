@@ -1,3 +1,7 @@
+## 2.3
+  * Fix importing calendars from emails (thanks to Fred Dupont)
+  * Fix an exception when exporting on some systems
+
 ## 2.2
   * New icon
 
@@ -11,4 +15,4 @@
 
 
 ## 1.5
-  * This is a updated fork from iCal Import/Export, found on Google code (http://code.google.com/p/ical-import-export/). 
+  * This is a updated fork from iCal Import/Export, found on Google code (http://code.google.com/p/ical-import-export/).
