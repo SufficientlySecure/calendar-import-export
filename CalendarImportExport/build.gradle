@@ -7,8 +7,8 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 23
-        versionCode 53
-        versionName "2.2"
+        versionCode 54
+        versionName "2.3"
     }
 
     dependencies {
