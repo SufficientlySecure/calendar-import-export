@@ -43,6 +43,7 @@
     <string name="timezone">Timezone</string>
     <string name="username">Username</string>
     <string name="writing_calendar_to_file">Writing calendar to file&#8230;</string>
+    <string name="permissions_not_granted">Required permissions have not been granted!</string>
 
     <plurals name="delete_n_entries">
          <item quantity="one">Delete %d entry</item>

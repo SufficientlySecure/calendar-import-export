@@ -45,17 +45,23 @@ import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
@@ -73,6 +79,8 @@ import android.widget.TextView;
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
     public static final String EXTRA_CALENDAR_ID = "calendarId";
+
+    private static final int MY_PERMISSIONS_REQUEST = 1;
 
     private Settings mSettings;
 
@@ -111,6 +119,71 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         setContentView(R.layout.main);
 
+        initView();
+
+        if (!hasPermissions()) {
+            return;
+        }
+
+        initIntent();
+    }
+
+    private boolean hasPermissions() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+
+        if ((ContextCompat.checkSelfPermission(this,
+                Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)
+                || (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
+                || (ContextCompat.checkSelfPermission(this,
+                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.GET_ACCOUNTS,
+                            Manifest.permission.READ_CALENDAR,
+                            Manifest.permission.READ_EXTERNAL_STORAGE},
+                    MY_PERMISSIONS_REQUEST);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST: {
+                boolean granted = false;
+
+                if (grantResults.length > 0) {
+                    granted = true;
+
+                    for (int grantResult : grantResults) {
+                        if (grantResult != PackageManager.PERMISSION_GRANTED) {
+                            granted = false;
+                            break;
+                        }
+                    }
+                }
+
+                if (granted) {
+                    initIntent();
+                } else {
+                    Toast.makeText(this, R.string.permissions_not_granted, Toast.LENGTH_LONG).show();
+                    finish();
+                    return;
+                }
+                return;
+            }
+        }
+    }
+
+    private void initView() {
         mSettings = new Settings(PreferenceManager.getDefaultSharedPreferences(this));
         SettingsActivity.processSettings(mSettings);
 
@@ -171,7 +244,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mTextCalId = (TextView) findViewById(R.id.TextCalId);
         mTextCalTimezone = (TextView) findViewById(R.id.TextCalTimezone);
         mTextCalSize = (TextView) findViewById(R.id.TextCalSize);
+    }
 
+    private void initIntent() {
         Intent intent = getIntent();
         if (intent == null)
             return;
@@ -181,10 +256,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         final long id = action.equals(LOAD_CALENDAR) ? intent.getLongExtra(EXTRA_CALENDAR_ID, -1) : -1;
 
         new Thread(new Runnable() {
-                       public void run() {
-                           MainActivity.this.init(id);
-                       }
-                   }).start();
+            public void run() {
+                MainActivity.this.init(id);
+            }
+        }).start();
 
         if (action.equals(Intent.ACTION_VIEW))
             setSource(null, intent.getData(), null, null); // File intent

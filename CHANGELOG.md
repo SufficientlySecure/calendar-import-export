@@ -1,6 +1,7 @@
 ## 2.3
   * Fix importing calendars from emails (thanks to Fred Dupont)
   * Fix an exception when exporting on some systems
+  * Uses Android 6 runtime permissions
 
 ## 2.2
   * New icon
