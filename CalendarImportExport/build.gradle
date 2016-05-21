@@ -7,6 +7,17 @@ android {
     defaultConfig {
         minSdkVersion 8
         targetSdkVersion 23
+        versionCode 53
+        versionName "2.2"
+    }
+
+    dependencies {
+        compile 'com.android.support:support-v4:23.3.0'
+
+        compile 'org.mnode.ical4j:ical4j:1.0.6'
+        compile 'backport-util-concurrent:backport-util-concurrent:3.1'
+        compile 'commons-codec:commons-codec:1.10'
+        compile 'commons-lang:commons-lang:2.6'
     }
 
     compileOptions {
@@ -18,15 +29,6 @@ android {
     packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
-    }
-
-    dependencies {
-        compile 'com.android.support:support-v4:23.0.1'
-
-        compile 'org.mnode.ical4j:ical4j:1.0.6'
-        compile 'backport-util-concurrent:backport-util-concurrent:3.1'
-        compile 'commons-codec:commons-codec:1.10'
-        compile 'commons-lang:commons-lang:2.6'
     }
 
     configurations {
