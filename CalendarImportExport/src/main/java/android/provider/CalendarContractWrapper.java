@@ -39,7 +39,7 @@ import android.os.Build;
 import android.os.RemoteException;
 import android.text.format.DateUtils;
 import android.text.format.Time;
-import android.util.Log;
+import org.sufficientlysecure.ical.util.Log
 
 /**
  * <p>
