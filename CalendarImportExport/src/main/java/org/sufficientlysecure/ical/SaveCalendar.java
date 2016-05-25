@@ -142,7 +142,7 @@ public class SaveCalendar extends RunnableWithProgress {
         Cursor cur;
         try {
             cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, sortBy);
-        } catch (NullPointerException npe) {
+        } catch (Exception except) {
             Log.w(TAG, "Calendar provider is missing columns, continuing anyway");
             int n = 0;
             for (n = 0; n < EVENT_COLS.length; ++n)
