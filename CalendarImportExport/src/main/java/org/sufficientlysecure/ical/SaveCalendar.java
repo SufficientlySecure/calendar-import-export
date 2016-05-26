@@ -225,6 +225,11 @@ public class SaveCalendar extends RunnableWithProgress {
                                                          result[0] = "";
                                                      }
                                                  })
+                                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                                                     public void onCancel(DialogInterface iface) {
+                                                         result[0] = "";
+                                                     }
+                                                 })
                                  .create();
         int state = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
         dlg.getWindow().setSoftInputMode(state);
