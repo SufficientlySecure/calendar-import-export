@@ -28,7 +28,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContractWrapper.Calendars;
 import android.provider.CalendarContractWrapper.Events;
-import org.sufficientlysecure.ical.util.Log
+import org.sufficientlysecure.ical.util.Log;
 
 
 @SuppressLint("NewApi")
