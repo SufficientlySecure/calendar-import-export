@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="account_name">Профил име</string>
+  <string name="account_type">Профил тип</string>
+  <string name="actions">ДЕЙСТВИЯ</string>
+  <string name="active">Активно</string>
+  <string name="add_reminder">Добави напомняне</string>
+  <string name="app_name">Календар импорт-експорт</string>
+  <string name="calendar_selection">ИЗБОР КАЛЕНДАР</string>
+  <string name="calendar_url">Календар URL</string>
+  <string name="delete">Изтрива</string>
+  <string name="delete_entries">Изтрива записи</string>
+  <string name="destination_filename">Дестинация за име на файл</string>
+  <string name="did_not_check_for_dupes">Не се проверява за дубликати.</string>
+  <string name="enter_destination_filename">Въведи дестинация за име на файл</string>
+  <string name="enter_source_url">Въведи изходен URL</string>
+  <string name="error">Грешка</string>
+  <string name="events">Събития</string>
+  <string name="help">Помощ</string>
+  <string name="id">ид</string>
+  <string name="import_file">Импорт файл</string>
+  <string name="import_network">Импорт URL</string>
+  <string name="inactive">Неактивно</string>
+  <string name="information">Информация</string>
+  <string name="insert_entries">Вмъкни запис</string>
+  <string name="invalid_url">Нвалиден URL</string>
+  <string name="legal_notices">Правни бележки</string>
+  <string name="load_calendar">Зарежда</string>
+  <string name="login_required">Изисква вход</string>
+  <string name="name">Име</string>
+  <string name="no_calendars_found">Няма налични календари.\n\Можете да създавате каледнар, чрез импорт/експорт и обратно.\n\Ако ползвате Cyanogenmod: Бъдете сигурни, че Поверителност е изключено за това приложение и позволява запис/четене на календар.\n\Ако ползвате Android 4.3 приложението Ops: Бъдете сигурни,че позволява на календар четене/запис за това приложение.</string>
+  <string name="not_applicable">Н/П</string>
+  <string name="owner">Собственик</string>
+  <string name="password">Парола</string>
+  <string name="processing_entries">Записва ...</string>
+  <string name="reading_file_please_wait">Четене на файл, моля изчакайте ...</string>
+  <string name="searching_for_files">Търсене за iCalendar файлове …</string>
+  <string name="select_a_calendar">Избор календар</string>
+  <string name="settings">Настройки</string>
+  <string name="space"> </string>
+  <string name="state">Държава</string>
+  <string name="timezone">Времева зона</string>
+  <string name="username">Потребител</string>
+  <string name="writing_calendar_to_file">Записва календара във файл ...</string>
+  <plurals name="delete_n_entries">
+    <item quantity="one">Изтрива %d записа</item>
+    <item quantity="other">Изтрива %d записа</item>
+  </plurals>
+  <plurals name="found_n_duplicates">
+    <item quantity="one">Открити %d дублирани записа.</item>
+    <item quantity="other">Открити %d дублирани записа.</item>
+  </plurals>
+  <plurals name="insert_n_entries">
+    <item quantity="one">Вмъква %d записа</item>
+    <item quantity="other">Вмъква %d записа</item>
+  </plurals>
+  <plurals name="processed_n_entries">
+    <item quantity="one">Обработени %d записа.</item>
+    <item quantity="other">Обработени %d записа.</item>
+  </plurals>
+  <plurals name="wrote_n_events_to">
+    <item quantity="one">Изписа %1$d събития към %2$s</item>
+    <item quantity="other">Изписа %1$d събития към %2$s</item>
+  </plurals>
+  <!--Must match the minutes array in RemindersDialog.java-->
+  <string-array name="reminder_time_values">
+    <item>5 минути</item>
+    <item>10 минути</item>
+    <item>15 минути</item>
+    <item>30 минути</item>
+    <item>45 минути</item>
+    <item>1 час</item>
+    <item>2 часа</item>
+    <item>4 часа</item>
+    <item>8 часа</item>
+    <item>12 часа</item>
+    <item>24 часа</item>
+    <item>48 часа</item>
+    <item>3 дни</item>
+    <item>4 дни</item>
+    <item>5 дни</item>
+    <item>6 дни</item>
+    <item>1 седмица</item>
+    <item>2 седмици</item>
+    <item>3 седмици</item>
+    <item>1 месец</item>
+  </string-array>
+</resources>

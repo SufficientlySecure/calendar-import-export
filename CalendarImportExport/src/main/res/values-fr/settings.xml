@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="_export_">Exporter</string>
+  <string name="_import_">Importer</string>
+  <string name="_no_notes174_calendar_support">Pas de prise en charge des agendas Notes®</string>
+  <string name="add_outlook174_and_exchange8482_extensions">Ajouter les extensions Outlook® et Exchange™ aux agendas exportés</string>
+  <string name="allow_different_line_endings">Permettre des fins de ligne différentes</string>
+  <string name="allow_various_line_wrapping_schemes">Permettre différentes sortes de fins de ligne</string>
+  <string name="choose_the_reminders_to_apply">Choisir le rappel devant être appliqué aux événements importés</string>
+  <string name="compatibility">Compatibilité</string>
+  <string name="debug_logging">Journalisation de débogage</string>
+  <string name="default_reminders">Rappels par défaut</string>
+  <string name="developer_mode">Mode développeur</string>
+  <string name="developer_tools">Outils pour développeurs</string>
+  <string name="disabled">Désactivé</string>
+  <string name="do_not_import_reminders">Ne pas importer les rappels</string>
+  <string name="do_not_save_passwords">Ne pas enregistrer les mots de passe</string>
+  <string name="do_not_update_timezone_data">Ne pas actualiser les données de fuseaux horaires</string>
+  <string name="duplicate_handling">Gestion des doublons</string>
+  <string name="enable_developer_features">Activer les fonctions pour développeurs</string>
+  <string name="enforce_rfc_compliant_input">Imposer des entrées conformes RFC</string>
+  <string name="enforce_rfc_compliant_line_wrapping">Imposer des fins de ligne conformes RFC</string>
+  <string name="extra_logging_for_debugging">Journalisation supplémentaire pour le débogage</string>
+  <string name="general">Général</string>
+  <string name="generate_new_identifiers_for_imported">Générer de nouveaux identifiants pour les événements importés</string>
+  <string name="global_uids">UID globaux</string>
+  <string name="how_to_handle_duplicate_events">Comment gérer les doublons d\'événements lors de l\'importation</string>
+  <string name="identifiers_are_globally_unique">Les identifiants sont globalement uniques</string>
+  <string name="identifiers_are_unique_only_within">Les identifiants ne sont uniques que dans un agenda</string>
+  <string name="import_reminders">Importer les rappels</string>
+  <string name="import_unique_identifiers_to_identify">Importer des identifiants uniques pour identifier les événements</string>
+  <string name="keep_uids">Conserver les UID</string>
+  <string name="microsoft_compatible">Compatible Microsoft</string>
+  <string name="microsoft_extensions">Extensions Microsoft</string>
+  <string name="no_microsoft174_calendar_extensions">Pas d\'extension d\'agenda Microsoft® </string>
+  <string name="no_microsoft174_calendar_support">Pas de prise en charge des agendas Microsoft®</string>
+  <string name="no_vcard_support">Pas de prise en charge de vCard</string>
+  <string name="notes_compatible">Compatible Notes®</string>
+  <string name="permissive_export">Exportation permissive</string>
+  <string name="permissive_parsing">Analyse permissive</string>
+  <string name="process_test_file_directives">Traiter les instructions des fichiers test</string>
+  <string name="reminders">Rappels</string>
+  <string name="save_passwords">Enregistrer les mots de passe</string>
+  <string name="save_passwords_in_insecure_local">Enregistrer les mots de passe dans un stockage local non sécurisé</string>
+  <string name="skip_extensive_validation_of_the">Ignorer la validation approfondie du fichier de sortie</string>
+  <string name="support_calendars_exported_by_ibm174">Prendre en charge les agendas exportés par Notes® d\'IBM® (anciennement Lotus)</string>
+  <string name="support_calendars_exported_by_outlook174">Prendre en charge les agendas exportés par Outlook® et Exchange™</string>
+  <string name="support_common_incorrect_quirks">Prendre en charge les bizarreries erronées habituelles</string>
+  <string name="support_events_in_vcard_format">Prendre en charge les événements au format vCard</string>
+  <string name="test_file_support">Prise en charge des fichiers de test</string>
+  <string name="timezone_updates">Mises à jour des fuseaux horaires</string>
+  <string name="update_timezone_data_over_the">Mettre à jour par le réseau les données de fuseaux horaires</string>
+  <string name="validate_the_output_file">Valider le fichier de sortie</string>
+  <string name="vcard_compatible">Compatible vCard</string>
+  <string-array name="duplicate_handling_array">
+    <item>Remplacer par les événements importés s\'ils sont dans le même agenda</item>
+    <item>Remplacer par les événements importés quel que soit l\'agenda</item>
+    <item>Conserver l\'événement existant et ignorer l\'événement importé</item>
+    <item>Ne pas vérifier la présence de doublons, toujours insérer tous les événements importés</item>
+  </string-array>
+</resources>

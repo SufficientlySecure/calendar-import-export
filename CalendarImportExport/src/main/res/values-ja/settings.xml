@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="_export_">エクスポート</string>
+  <string name="_import_">インポート</string>
+  <string name="_no_notes174_calendar_support">Notes® カレンダーはサポートしていません</string>
+  <string name="add_outlook174_and_exchange8482_extensions">エクスポートしたカレンダーに Outlook® および Exchange™ 拡張を追加</string>
+  <string name="allow_different_line_endings">異なる行末を許可する</string>
+  <string name="allow_various_line_wrapping_schemes">様々な行の折り返し方式を許可する</string>
+  <string name="choose_the_reminders_to_apply">インポートしたイベントに適用するリマインダーを選択</string>
+  <string name="compatibility">互換性</string>
+  <string name="debug_logging">デバッグログ</string>
+  <string name="default_reminders">デフォルト リマインダー</string>
+  <string name="developer_mode">開発者モード</string>
+  <string name="developer_tools">開発者ツール</string>
+  <string name="disabled">無効</string>
+  <string name="do_not_import_reminders">リマインダーをインポートしない</string>
+  <string name="do_not_save_passwords">パスワードを保存しない</string>
+  <string name="do_not_update_timezone_data">タイムゾーンのデータを更新しない</string>
+  <string name="duplicate_handling">重複した処理</string>
+  <string name="enable_developer_features">開発者機能を有効にする</string>
+  <string name="enforce_rfc_compliant_input">RFC に準拠した入力を強制する</string>
+  <string name="enforce_rfc_compliant_line_wrapping">RFC に準拠した行の折り返しを強制する</string>
+  <string name="extra_logging_for_debugging">デバッグ用の追加のログ出力</string>
+  <string name="general">全般</string>
+  <string name="generate_new_identifiers_for_imported">インポートしたイベントに新しい識別子を生成します</string>
+  <string name="global_uids">グローバル UID</string>
+  <string name="how_to_handle_duplicate_events">インポート時に重複したイベントを処理する方法</string>
+  <string name="identifiers_are_globally_unique">識別子はグローバルに一意</string>
+  <string name="identifiers_are_unique_only_within">識別子はカレンダーの中でのみ一意</string>
+  <string name="import_reminders">リマインダーをインポート</string>
+  <string name="import_unique_identifiers_to_identify">イベントを識別する、一意の識別子をインポート</string>
+  <string name="keep_uids">UID を保持</string>
+  <string name="microsoft_compatible">Microsoft 互換</string>
+  <string name="microsoft_extensions">Microsoft 拡張</string>
+  <string name="no_microsoft174_calendar_extensions">Microsoft® カレンダー拡張はありません</string>
+  <string name="no_microsoft174_calendar_support">Microsoft® カレンダーはサポートしていません</string>
+  <string name="no_vcard_support">vCard はサポートしていません</string>
+  <string name="notes_compatible">Notes 互換</string>
+  <string name="permissive_export">許容エクスポート</string>
+  <string name="permissive_parsing">許容解析</string>
+  <string name="process_test_file_directives">テストファイル指示を処理</string>
+  <string name="reminders">リマインダー</string>
+  <string name="save_passwords">パスワードを保存</string>
+  <string name="save_passwords_in_insecure_local">パスワードを安全ではないローカルストレージに保存します</string>
+  <string name="skip_extensive_validation_of_the">出力ファイルの追加の検証をスキップ</string>
+  <string name="support_calendars_exported_by_ibm174">IBM® (旧 Lotus) Notes® でエクスポートしたカレンダーをサポートします</string>
+  <string name="support_calendars_exported_by_outlook174">Outlook® および Exchange™ でエクスポートしたカレンダーをサポートします</string>
+  <string name="support_common_incorrect_quirks">一般的な誤った慣習をサポートします</string>
+  <string name="support_events_in_vcard_format">vCard 形式のイベントをサポートします</string>
+  <string name="test_file_support">テストファイル サポート</string>
+  <string name="timezone_updates">タイムゾーン更新</string>
+  <string name="update_timezone_data_over_the">ネットワーク越しにタイムゾーンデータを更新します</string>
+  <string name="validate_the_output_file">出力ファイルを検証します</string>
+  <string name="vcard_compatible">vCard 互換</string>
+  <string-array name="duplicate_handling_array">
+    <item>同じカレンダーの場合、インポートしたイベントで置き換え</item>
+    <item>カレンダーに関係なく、インポートしたイベントで置き換え</item>
+    <item>既存のイベントを保持し、インポートしたイベントを無視する</item>
+    <item>重複をチェックしないで、常にすべてのインポートされたイベントを挿入する</item>
+  </string-array>
+</resources>

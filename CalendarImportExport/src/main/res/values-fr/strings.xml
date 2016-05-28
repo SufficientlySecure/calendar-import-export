@@ -1,0 +1,89 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="account_name">Nom du compte</string>
+  <string name="account_type">Type de compte</string>
+  <string name="actions">ACTIONS</string>
+  <string name="active">Activé</string>
+  <string name="add_reminder">Ajouter un rappel</string>
+  <string name="app_name">Importation/exportation d\'agendas</string>
+  <string name="calendar_selection">SÉLECTION DE L\'AGENDA</string>
+  <string name="calendar_url">URL de l\'agenda</string>
+  <string name="delete">Supprimer</string>
+  <string name="delete_entries">Supprimer des entrées</string>
+  <string name="destination_filename">Nom du fichier de destination</string>
+  <string name="did_not_check_for_dupes">Vérification des doublons non effectuée.</string>
+  <string name="enter_destination_filename">Saisir le nom du fichier de destination</string>
+  <string name="enter_source_url">Saisir l\'URL source</string>
+  <string name="error">Erreur</string>
+  <string name="events">Évènements</string>
+  <string name="help">Aide</string>
+  <string name="id">id</string>
+  <string name="import_file">Importer un fichier</string>
+  <string name="import_network">Importer d\'une URL</string>
+  <string name="inactive">Désactivé</string>
+  <string name="information">Informations</string>
+  <string name="insert_entries">Insérer des entrées</string>
+  <string name="invalid_url">URL invalide</string>
+  <string name="legal_notices">Avis juridiques</string>
+  <string name="load_calendar">Charger</string>
+  <string name="login_required">Connexion exigée</string>
+  <string name="name">Nom</string>
+  <string name="no_calendars_found">Aucun agenda n\'a été trouvé.\n\nVous devez créer un agenda pour l\'importation/l\'exportation. Vous pouvez installer « Agenda hors-ligne » pour en créer un.\n\Si vous utilisez Cyanogenmod, assurez-vous que « Privacy Guard » est désactivé pour permettre la lecture/écriture de l\'agenda.\n\nSi vous utilisez « App Ops » sur Android 4.3, assurez-vous d\'autoriser l\'accès en lecture/écriture pour cette application.</string>
+  <string name="not_applicable">S.O.</string>
+  <string name="owner">Propriétaire</string>
+  <string name="password">Mot de passe</string>
+  <string name="processing_entries">Traitement des entrées...</string>
+  <string name="reading_file_please_wait">Lecture du fichier, veuillez patienter...</string>
+  <string name="searching_for_files">Recherche des fichiers iCalendar...</string>
+  <string name="select_a_calendar">Sélectionner un agenda</string>
+  <string name="settings">Paramètres</string>
+  <string name="space"> </string>
+  <string name="state">État</string>
+  <string name="timezone">Fuseau horaire</string>
+  <string name="username">Nom d\'utilisateur</string>
+  <string name="writing_calendar_to_file">Écriture de l\'agenda dans le fichier...</string>
+  <string name="permissions_not_granted">Les permissions exigées n\'ont pas été accordées !</string>
+  <plurals name="delete_n_entries">
+    <item quantity="one">Supprimer %d entrée</item>
+    <item quantity="other">Supprimer %d entrées</item>
+  </plurals>
+  <plurals name="found_n_duplicates">
+    <item quantity="one">%d doublon a été trouvé</item>
+    <item quantity="other">%d doublon ont été trouvés</item>
+  </plurals>
+  <plurals name="insert_n_entries">
+    <item quantity="one">Insérer %d entrée</item>
+    <item quantity="other">Insérer %d entrées</item>
+  </plurals>
+  <plurals name="processed_n_entries">
+    <item quantity="one">%d entrée traitée.</item>
+    <item quantity="other">%d entrées traitées.</item>
+  </plurals>
+  <plurals name="wrote_n_events_to">
+    <item quantity="one">%1$d événement écrit vers %2$s</item>
+    <item quantity="other">%1$d événements écrits vers %2$s</item>
+  </plurals>
+  <!--Must match the minutes array in RemindersDialog.java-->
+  <string-array name="reminder_time_values">
+    <item>5 minutes</item>
+    <item>10 minutes</item>
+    <item>15 minutes</item>
+    <item>30 minutes</item>
+    <item>45 minutes</item>
+    <item>1 heure</item>
+    <item>2 heures</item>
+    <item>4 heures</item>
+    <item>8 heures</item>
+    <item>12 heures</item>
+    <item>24 heures</item>
+    <item>48 heures</item>
+    <item>3 jours</item>
+    <item>4 jours</item>
+    <item>5 jours</item>
+    <item>6 jours</item>
+    <item>1 semaine</item>
+    <item>2 semaines</item>
+    <item>3 semaines</item>
+    <item>1 mois</item>
+  </string-array>
+</resources>

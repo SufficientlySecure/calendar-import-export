@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="_export_">Экспорт</string>
+  <string name="_import_">Импорт</string>
+  <string name="_no_notes174_calendar_support">Не поддерживать календари Notes®</string>
+  <string name="add_outlook174_and_exchange8482_extensions">Добавлять расширения Outlook® and Exchange™ при экспорте календарей</string>
+  <string name="allow_different_line_endings">Допускать различные концы строк</string>
+  <string name="allow_various_line_wrapping_schemes">Разрешать перенос строк</string>
+  <string name="choose_the_reminders_to_apply">Добавить напоминания к импортируемым событиям</string>
+  <string name="compatibility">Совместимость</string>
+  <string name="debug_logging">Запись в журнал отладки</string>
+  <string name="default_reminders">Напоминания по умолчанию</string>
+  <string name="developer_mode">Режим разработчика</string>
+  <string name="developer_tools">Инструменты для разработчиков</string>
+  <string name="disabled">Отключено</string>
+  <string name="do_not_import_reminders">Не импортировать напоминания</string>
+  <string name="do_not_save_passwords">Не сохранять пароли</string>
+  <string name="do_not_update_timezone_data">Не обновлять данные о часовом поясе</string>
+  <string name="duplicate_handling">Действия с дубликатами</string>
+  <string name="enable_developer_features">Включить функции разработчика</string>
+  <string name="enforce_rfc_compliant_input">Принудительно устанавливать RFC-совместимый ввод</string>
+  <string name="enforce_rfc_compliant_line_wrapping">Принудительно устанавливать RFC-совместимые переносы</string>
+  <string name="extra_logging_for_debugging">Расширенная запись в журнал отладки</string>
+  <string name="general">Общие настройки</string>
+  <string name="generate_new_identifiers_for_imported">Генерировать новые идентификаторы для импортируемых событий</string>
+  <string name="global_uids">Глобальные идентификаторы</string>
+  <string name="how_to_handle_duplicate_events">Что делать с уникальными событиями при импорте</string>
+  <string name="identifiers_are_globally_unique">Идентификаторы уникальны глобально</string>
+  <string name="identifiers_are_unique_only_within">Идентификаторы уникальны только в календаре</string>
+  <string name="import_reminders">Импортировать напоминания</string>
+  <string name="import_unique_identifiers_to_identify">Импортировать существующие идентификаторы к событиям</string>
+  <string name="keep_uids">Сохранение идентификаторов</string>
+  <string name="microsoft_compatible">Совместимость с форматами Microsoft</string>
+  <string name="microsoft_extensions">Расширения Microsoft</string>
+  <string name="no_microsoft174_calendar_extensions">Не добавлять расширения календарей Microsoft®</string>
+  <string name="no_microsoft174_calendar_support">Не поддерживать календари Microsoft®</string>
+  <string name="no_vcard_support">Не поддерживать vCard</string>
+  <string name="notes_compatible">Совместимость с Notes</string>
+  <string name="permissive_export">Допустимый экспорт</string>
+  <string name="permissive_parsing">Допустимый парсинг</string>
+  <string name="process_test_file_directives">Обрабатывать папки с тестовыми файлами</string>
+  <string name="reminders">Напоминания</string>
+  <string name="save_passwords">Сохранять пароли</string>
+  <string name="save_passwords_in_insecure_local">Сохранять пароли на небезопасном локальном носителе</string>
+  <string name="skip_extensive_validation_of_the">Пропускать расширенную проверку выходного файла</string>
+  <string name="support_calendars_exported_by_ibm174">Поддерживать календари IBM® (бывшая Lotus) Notes®</string>
+  <string name="support_calendars_exported_by_outlook174">Поддерживать календари Outlook® and Exchange™</string>
+  <string name="support_common_incorrect_quirks">Поддерживать общие нестандартные особенности программ</string>
+  <string name="support_events_in_vcard_format">Поддерживать события в формате vCard</string>
+  <string name="test_file_support">Поддержка тестовых файлов</string>
+  <string name="timezone_updates">Обновления часовых поясов</string>
+  <string name="update_timezone_data_over_the">Обновлять данные о часовом поясе через Интернет</string>
+  <string name="validate_the_output_file">Проверять выходной файл</string>
+  <string name="vcard_compatible">Совместимость с vCard</string>
+  <string-array name="duplicate_handling_array">
+    <item>Заменять событие импортируемым, если оно находится в том же самом календаре</item>
+    <item>Заменять событие импортируемым вне зависимости от календаря</item>
+    <item>Оставить существующее событие и игнорировать импортируемое</item>
+    <item>Не проверять на дубликаты, всегда добавлять импортируемые события</item>
+  </string-array>
+</resources>

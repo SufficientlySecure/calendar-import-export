@@ -1,0 +1,61 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="_export_">Експорт</string>
+  <string name="_import_">Импорт</string>
+  <string name="_no_notes174_calendar_support">Не поддържа Notes® календар</string>
+  <string name="add_outlook174_and_exchange8482_extensions">Добавя Outlook® и Exchange™ разширения към екпортирани календари</string>
+  <string name="allow_different_line_endings">Разрешава различнен край на ред</string>
+  <string name="allow_various_line_wrapping_schemes">Разрешава различни схеми на параграф</string>
+  <string name="choose_the_reminders_to_apply">Избори напомняния за прилагане към импортирани събития</string>
+  <string name="compatibility">Съвместимост</string>
+  <string name="debug_logging">Списък с отстраняване на грешки</string>
+  <string name="default_reminders">Напомняния по подразбиране</string>
+  <string name="developer_mode">Режим разработчик</string>
+  <string name="developer_tools">Инструменти на разработчик</string>
+  <string name="disabled">Изключено</string>
+  <string name="do_not_import_reminders">Не импортирай напомняния</string>
+  <string name="do_not_save_passwords">Не запазвай пароли</string>
+  <string name="do_not_update_timezone_data">Не обновявавай времева зона</string>
+  <string name="duplicate_handling">Дублирана обработка</string>
+  <string name="enable_developer_features">Активирай функции за разработчик</string>
+  <string name="enforce_rfc_compliant_input">Наложи RFC съвместим вход</string>
+  <string name="enforce_rfc_compliant_line_wrapping">Наложи RFC съвместим параграф</string>
+  <string name="extra_logging_for_debugging">Екстра списък за отстраняване на грешки</string>
+  <string name="general">Главен</string>
+  <string name="generate_new_identifiers_for_imported">Генерирай нови идентификатори за имопртирани събития</string>
+  <string name="global_uids">Глобален УИН</string>
+  <string name="how_to_handle_duplicate_events">Как да обработва дублирани събития докато импортира</string>
+  <string name="identifiers_are_globally_unique">Идентификаторите са уникални глобално</string>
+  <string name="identifiers_are_unique_only_within">Идентификаторите са уникални само в календара</string>
+  <string name="import_reminders">Импортира напомняния</string>
+  <string name="import_unique_identifiers_to_identify">Импортира уникални идентификатори към идентификатор събития</string>
+  <string name="keep_uids">Задръж УИН</string>
+  <string name="microsoft_compatible">Microsoft съвместим</string>
+  <string name="microsoft_extensions">Microsoft разширения</string>
+  <string name="no_microsoft174_calendar_extensions">Няма разширения Microsoft® календар</string>
+  <string name="no_microsoft174_calendar_support">Не поддържа Microsoft® календар</string>
+  <string name="no_vcard_support">Не поддържа vCard</string>
+  <string name="notes_compatible">Notes съвместим</string>
+  <string name="permissive_export">Толерантен експорт</string>
+  <string name="permissive_parsing">Толерантен разбор</string>
+  <string name="process_test_file_directives">Обработка на тестов файл</string>
+  <string name="reminders">Напомняния</string>
+  <string name="save_passwords">Запис пароли</string>
+  <string name="save_passwords_in_insecure_local">Записва пароли в несигурно локално хранилище </string>
+  <string name="skip_extensive_validation_of_the">Пропусни подробна проверка на изходния файл</string>
+  <string name="support_calendars_exported_by_ibm174">Поддържа календари екпортирани от IBM® (някогашния Lotus) Notes®</string>
+  <string name="support_calendars_exported_by_outlook174">Поддържа календари експортирани от Outlook® и Exchange™</string>
+  <string name="support_common_incorrect_quirks">Поддържа общи некоректни особености</string>
+  <string name="support_events_in_vcard_format">Поддържа събития във vCard формат</string>
+  <string name="test_file_support">Поддържа тестов файл</string>
+  <string name="timezone_updates">Обновяване времева зона</string>
+  <string name="update_timezone_data_over_the">Обновява данни за времева зона през мрежа</string>
+  <string name="validate_the_output_file">Валидира изходният файл</string>
+  <string name="vcard_compatible">vCard съвместим</string>
+  <string-array name="duplicate_handling_array">
+    <item>Заменя с импортираното събитие, ако е в същия календар</item>
+    <item>Заменя с импортираното събитие без значение от календара</item>
+    <item>Задържа съществуващо събитие и игнорира импортираното събитие</item>
+    <item>Не проверявай за дубликати на всичко, вмъквай винаги всички импортирани събития</item>
+  </string-array>
+</resources>

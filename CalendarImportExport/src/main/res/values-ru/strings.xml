@@ -1,0 +1,98 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="account_name">Имя аккаунта</string>
+  <string name="account_type">Тип аккаунта</string>
+  <string name="actions">ДЕЙСТВИЯ</string>
+  <string name="active">Активен</string>
+  <string name="add_reminder">Добавить напоминание</string>
+  <string name="app_name">Импорт-экспорт календарей</string>
+  <string name="calendar_selection">ВЫБОР КАЛЕНДАРЯ</string>
+  <string name="calendar_url">Ссылка на календарь</string>
+  <string name="delete">Удалить</string>
+  <string name="delete_entries">Удалить записи</string>
+  <string name="destination_filename">Имя файла</string>
+  <string name="did_not_check_for_dupes">Проверка на дубликаты не проведена.</string>
+  <string name="enter_destination_filename">Введите имя файла</string>
+  <string name="enter_source_url">Введите ссылку на исходный файл</string>
+  <string name="error">Ошибка</string>
+  <string name="events">Событий</string>
+  <string name="help">Помощь</string>
+  <string name="id">Идентификационный номер</string>
+  <string name="import_file">Импортировать файл</string>
+  <string name="import_network">Импортировать ссылку</string>
+  <string name="inactive">Неактивен</string>
+  <string name="information">Сведения</string>
+  <string name="insert_entries">Добавить записи</string>
+  <string name="invalid_url">Неверная ссылка</string>
+  <string name="legal_notices">Правовое уведомление</string>
+  <string name="load_calendar">Загрузить</string>
+  <string name="login_required">Требуется авторизация</string>
+  <string name="name">Название</string>
+  <string name="no_calendars_found">Календарь не найден.\n\nДля импорта/экспорта требуется создать календарь с помощью приложения Offline Calendar.\n\nЕсли вы используете Cyanogenmod, убедитесь, что для данного приложения отключен \"Защищенный режим\" и разрешены чтение/запись в календарь.\n\nЕсли вы используете App Ops для Android 4.3, убедитесь, что данному приложению разрешены чтение/запись в календарь.</string>
+  <string name="not_applicable">Недоступно</string>
+  <string name="owner">Владелец</string>
+  <string name="password">Пароль</string>
+  <string name="processing_entries">Обработка записей...</string>
+  <string name="reading_file_please_wait">Чтение файла, пожалуйста, подождите...</string>
+  <string name="searching_for_files">Поиск файлов iCalendar...</string>
+  <string name="select_a_calendar">Выберите календарь</string>
+  <string name="settings">Настройки</string>
+  <string name="space"> </string>
+  <string name="state">Состояние</string>
+  <string name="timezone">Часовой пояс</string>
+  <string name="username">Имя пользователя</string>
+  <string name="writing_calendar_to_file">Сохранение календаря в файл...</string>
+  <plurals name="delete_n_entries">
+    <item quantity="one">Удалить %d запись</item>
+    <item quantity="few">Удалить %d записи</item>
+    <item quantity="many">Удалить %d записей</item>
+    <item quantity="other">Удалить %d записей</item>
+  </plurals>
+  <plurals name="found_n_duplicates">
+    <item quantity="one">Найдено %d дублированная запись.</item>
+    <item quantity="few">Найдено %d дублированные записи.</item>
+    <item quantity="many">Найдено %d дублированных записей.</item>
+    <item quantity="other">Найдено %d дублированных записей.</item>
+  </plurals>
+  <plurals name="insert_n_entries">
+    <item quantity="one">Добавить %d запись</item>
+    <item quantity="few">Добавить %d записи</item>
+    <item quantity="many">Добавить %d записей</item>
+    <item quantity="other">Добавить %d записей</item>
+  </plurals>
+  <plurals name="processed_n_entries">
+    <item quantity="one">Обработана %d запись.</item>
+    <item quantity="few">Обработано %d записи.</item>
+    <item quantity="many">Обработано %d записей.</item>
+    <item quantity="other">Обработано %d записей.</item>
+  </plurals>
+  <plurals name="wrote_n_events_to">
+    <item quantity="one">Сохранено %1$d событие в файл %2$s</item>
+    <item quantity="few">Сохранено %1$d события в файл %2$s</item>
+    <item quantity="many">Сохранено %1$d событий в файл %2$s</item>
+    <item quantity="other">Сохранено %1$d событий в файл %2$s</item>
+  </plurals>
+  <!--Must match the minutes array in RemindersDialog.java-->
+  <string-array name="reminder_time_values">
+    <item>5 минут</item>
+    <item>10 минут</item>
+    <item>15 минут</item>
+    <item>30 минут</item>
+    <item>45 минут</item>
+    <item>1 час</item>
+    <item>2 часа</item>
+    <item>4 часа</item>
+    <item>8 часов</item>
+    <item>12 часов</item>
+    <item>24 часа</item>
+    <item>48 часов</item>
+    <item>3 дня</item>
+    <item>4 дня</item>
+    <item>5 дней</item>
+    <item>6 дней</item>
+    <item>1 неделя</item>
+    <item>2 недели</item>
+    <item>3 недели</item>
+    <item>1 месяц</item>
+  </string-array>
+</resources>

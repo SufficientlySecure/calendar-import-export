@@ -1,0 +1,84 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<resources>
+  <string name="account_name">アカウント名</string>
+  <string name="account_type">アカウント種類</string>
+  <string name="actions">アクション</string>
+  <string name="active">アクティブ</string>
+  <string name="add_reminder">リマインダーを追加</string>
+  <string name="app_name">カレンダー インポート-エクスポート</string>
+  <string name="calendar_selection">カレンダーの選択</string>
+  <string name="calendar_url">カレンダー URL</string>
+  <string name="delete">削除</string>
+  <string name="delete_entries">エントリーを削除</string>
+  <string name="destination_filename">出力ファイル名</string>
+  <string name="did_not_check_for_dupes">重複をチェックしない</string>
+  <string name="enter_destination_filename">出力ファイル名を入力してください</string>
+  <string name="enter_source_url">ソース URL を入力してください</string>
+  <string name="error">エラー</string>
+  <string name="events">イベント</string>
+  <string name="help">ヘルプ</string>
+  <string name="id">id</string>
+  <string name="import_file">インポートファイル</string>
+  <string name="import_network">インポート URL</string>
+  <string name="inactive">非アクティブ</string>
+  <string name="information">情報</string>
+  <string name="insert_entries">エントリーを挿入</string>
+  <string name="invalid_url">URL が正しくありません</string>
+  <string name="legal_notices">免責事項</string>
+  <string name="load_calendar">ロード</string>
+  <string name="login_required">ログインが必要です</string>
+  <string name="name">名前</string>
+  <string name="no_calendars_found">カレンダーが見つかりませんでした。\n\nインポート/エクスポートしてカレンダーを作成する必要があります。\"オフラインカレンダー\" をインストールして、作成することができます\n\nCyanogenmod を使用している場合は、このアプリケーションがカレンダーを読み取り/書き込みできるようにするために、プライバシーガードが無効になっていることを確認してください。\nAndroid 4.3 App Ops を使用している場合は、このアプリケーションにカレンダーの読み取り/書き込みアクセスを許可していることを確認してください。</string>
+  <string name="not_applicable">該当なし</string>
+  <string name="owner">オーナー</string>
+  <string name="password">パスワード</string>
+  <string name="processing_entries">エントリーの処理中…</string>
+  <string name="reading_file_please_wait">ファイルの読み込み中、しばらくお待ちください…</string>
+  <string name="searching_for_files">iCalendar ファイルの検索中…</string>
+  <string name="select_a_calendar">カレンダーを選択</string>
+  <string name="settings">設定</string>
+  <string name="space"> </string>
+  <string name="state">状態</string>
+  <string name="timezone">タイムゾーン</string>
+  <string name="username">ユーザー名</string>
+  <string name="writing_calendar_to_file">カレンダーをファイルに書き込み中…</string>
+  <string name="permissions_not_granted">必要なアクセス許可が付与されていません!</string>
+  <plurals name="delete_n_entries">
+    <item quantity="other">%d エントリーを削除</item>
+  </plurals>
+  <plurals name="found_n_duplicates">
+    <item quantity="other">%d の重複エントリーが見つかりました。</item>
+  </plurals>
+  <plurals name="insert_n_entries">
+    <item quantity="other">%d エントリーを挿入</item>
+  </plurals>
+  <plurals name="processed_n_entries">
+    <item quantity="other">%d エントリーを処理しました。</item>
+  </plurals>
+  <plurals name="wrote_n_events_to">
+    <item quantity="other">%1$d イベントを %2$s に書き込みました</item>
+  </plurals>
+  <!--Must match the minutes array in RemindersDialog.java-->
+  <string-array name="reminder_time_values">
+    <item>5 分</item>
+    <item>10 分</item>
+    <item>15 分</item>
+    <item>30 分</item>
+    <item>45 分</item>
+    <item>1 時間</item>
+    <item>2 時間</item>
+    <item>4 時間</item>
+    <item>8 時間</item>
+    <item>12 時間</item>
+    <item>24 時間</item>
+    <item>48 時間</item>
+    <item>3 日</item>
+    <item>4 日</item>
+    <item>5 日</item>
+    <item>6 日</item>
+    <item>1 週間</item>
+    <item>2 週間</item>
+    <item>3 週間</item>
+    <item>1 ヶ月</item>
+  </string-array>
+</resources>
