@@ -144,6 +144,14 @@
             android:dependency="developer_mode" />
 
         <CheckBoxPreference
+            android:key="query_all_columns"
+            android:title="@string/query_all_columns"
+            android:summaryOn="@string/ask_for_all_columns_when"
+            android:summaryOff="@string/use_a_subset_of_columns"
+            android:defaultValue="false"
+            android:dependency="developer_mode" />
+
+        <CheckBoxPreference
             android:key="test_file_support"
             android:title="@string/test_file_support"
             android:summaryOn="@string/process_test_file_directives"

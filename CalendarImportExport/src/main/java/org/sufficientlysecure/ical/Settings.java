@@ -26,6 +26,7 @@ public class Settings {
     public static final String PREF_LASTURLUSERNAME = "lastUrlUsername";
     public static final String PREF_MICROSOFT_EXTENSIONS = "microsoft_extensions";
     public static final String PREF_NET_FORTUNA_ICAL4J_TIMEZONE_UPDATE_ENABLED = "net.fortuna.ical4j.timezone.update.enabled";
+    public static final String PREF_QUERY_ALL_COLUMNS = "query_all_columns";
     public static final String PREF_SAVE_PASSWORDS = "save_passwords";
     public static final String PREF_TEST_FILE_SUPPORT = "test_file_support";
     public static final String PREF_UIDPID = "uidPid";
@@ -219,6 +220,14 @@ public class Settings {
 
     public void setDebugLogging(boolean value) {
         putBoolean(PREF_DEBUG_LOGGING, value);
+    }
+
+    public boolean getQueryAllColumns() {
+        return getBoolean(PREF_QUERY_ALL_COLUMNS, false);
+    }
+
+    public void setQueryAllColumns(boolean value) {
+        putBoolean(PREF_QUERY_ALL_COLUMNS, value);
     }
 
     public boolean getTestFileSupport() {

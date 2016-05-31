@@ -205,6 +205,18 @@ application while it runs.
 
 :dependency: developer_mode
 
+==== Query all columns (Y/N)
+
+Ask for all columns when querying/Use a subset of columns when querying.
+
+This setting can be useful when investigating differences between
+calendar providers. When combined with debug logging it may provide
+clues for a developer to help fix problems. It is not enabled normally
+because it can be significantly slower.
+
+:dependency: developer_mode
+
+
 ==== Test file support (Y/N)
 
 Process test file directives/Disabled.

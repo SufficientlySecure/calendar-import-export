@@ -7,6 +7,7 @@
     <string name="add_outlook174_and_exchange8482_extensions">Add Outlook&#174; and Exchange&#8482; extensions to exported calendars</string>
     <string name="allow_different_line_endings">Allow different line endings</string>
     <string name="allow_various_line_wrapping_schemes">Allow various line wrapping schemes</string>
+    <string name="ask_for_all_columns_when">Ask for all columns when querying</string>
     <string name="choose_the_reminders_to_apply">Choose the reminders to apply to imported events</string>
     <string name="compatibility">Compatibility</string>
     <string name="debug_logging">Debug logging</string>
@@ -40,6 +41,7 @@
     <string name="permissive_export">Permissive export</string>
     <string name="permissive_parsing">Permissive parsing</string>
     <string name="process_test_file_directives">Process test file directives</string>
+    <string name="query_all_columns">Query all columns</string>
     <string name="reminders">Reminders</string>
     <string name="save_passwords">Save passwords</string>
     <string name="save_passwords_in_insecure_local">Save passwords in insecure local storage</string>
@@ -51,6 +53,7 @@
     <string name="test_file_support">Test file support</string>
     <string name="timezone_updates">Timezone Updates</string>
     <string name="update_timezone_data_over_the">Update timezone data over the network</string>
+    <string name="use_a_subset_of_columns">Use a subset of columns when querying</string>
     <string name="validate_the_output_file">Validate the output file</string>
     <string name="vcard_compatible">vCard compatible</string>
     <string-array name="duplicate_handling_array">

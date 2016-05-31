@@ -92,6 +92,7 @@ public class SaveCalendar extends RunnableWithProgress {
     private TimeZoneRegistry mTzRegistry;
     private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
     private final Set<String> mFailedOrganisers = new HashSet<>();
+    boolean mAllCols;
 
     private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELLED");
     private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
@@ -121,6 +122,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
         mInsertedTimeZones.clear();
         mFailedOrganisers.clear();
+        mAllCols = settings.getQueryAllColumns();
 
         String lastName = settings.getString(Settings.PREF_LASTEXPORTFILE);
         String suggestedName = calculateFileName(selectedCal.mDisplayName);
@@ -147,7 +149,8 @@ public class SaveCalendar extends RunnableWithProgress {
         final String sortBy = Events.CALENDAR_ID + " ASC";
         Cursor cur;
         try {
-            cur = resolver.query(Events.CONTENT_URI, EVENT_COLS, where, args, sortBy);
+            cur = resolver.query(Events.CONTENT_URI, mAllCols ? null : EVENT_COLS,
+                                 where, args, sortBy);
         } catch (Exception except) {
             Log.w(TAG, "Calendar provider is missing columns, continuing anyway");
             int n = 0;
@@ -401,7 +404,8 @@ public class SaveCalendar extends RunnableWithProgress {
 
             ContentResolver resolver = getActivity().getContentResolver();
             long eventId = getLong(cur, Events._ID);
-            Cursor alarmCur = Reminders.query(resolver, eventId, REMINDER_COLS);
+            Cursor alarmCur;
+            alarmCur = Reminders.query(resolver, eventId, mAllCols ? null : REMINDER_COLS);
             while (alarmCur.moveToNext()) {
                 int mins = getInt(alarmCur, Reminders.MINUTES);
                 if (mins == -1)
