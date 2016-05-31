@@ -1,3 +1,7 @@
+## 2.4
+  * Suggest filenames when saving to reduce required typing
+  * Developer mode changes for debugging user issues
+
 ## 2.3
   * Fix importing calendars from emails (thanks to Fred Dupont)
   * Fix an exception when exporting on some systems
