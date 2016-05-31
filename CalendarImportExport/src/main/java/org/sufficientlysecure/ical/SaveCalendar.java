@@ -1,5 +1,5 @@
 /**
- *  Copyright (C) 2015  Jon Griffiths (jon_p_griffiths@yahoo.com)
+ *  Copyright (C) 2015-2016  Jon Griffiths (jon_p_griffiths@yahoo.com)
  *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
  *
@@ -79,6 +79,7 @@ import android.provider.CalendarContractWrapper.Events;
 import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
 import android.text.TextUtils;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.database.DatabaseUtils;
@@ -121,7 +122,12 @@ public class SaveCalendar extends RunnableWithProgress {
         mInsertedTimeZones.clear();
         mFailedOrganisers.clear();
 
-        String file = getFile(settings.getString(Settings.PREF_LASTEXPORTFILE));
+        String lastName = settings.getString(Settings.PREF_LASTEXPORTFILE);
+        String suggestedName = calculateFileName(selectedCal.mDisplayName);
+        if (TextUtils.isEmpty(lastName))
+            lastName = suggestedName;
+
+        String file = getFile(lastName, suggestedName);
         if (TextUtils.isEmpty(file))
             return;
 
@@ -202,7 +208,15 @@ public class SaveCalendar extends RunnableWithProgress {
         activity.showToast(msg);
     }
 
-    private void getFileImpl(final String previousFile, final String[] result) {
+    private String calculateFileName(final String displayName) {
+        // Replace all non-alnum chars with '_'
+        String stripped = displayName.replaceAll("[^a-zA-Z0-9_-]", "_");
+        // Replace repeated '_' with a single '_'
+        return stripped.replaceAll("(_)\\1{1,}", "$1");
+    }
+
+    private void getFileImpl(final String previousFile, final String suggestedFile,
+                             final String[] result) {
 
         final EditText input = new EditText(getActivity());
         input.setHint(R.string.destination_filename);
@@ -211,6 +225,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
         final int ok = android.R.string.ok;
         final int cancel = android.R.string.cancel;
+        final int suggest = R.string.suggest;
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         AlertDialog dlg = builder.setIcon(R.mipmap.ic_launcher)
                                  .setTitle(R.string.enter_destination_filename)
@@ -218,6 +233,10 @@ public class SaveCalendar extends RunnableWithProgress {
                                  .setPositiveButton(ok, new DialogInterface.OnClickListener() {
                                                      public void onClick(DialogInterface iface, int id) {
                                                          result[0] = input.getText().toString();
+                                                     }
+                                                 })
+                                 .setNeutralButton(suggest, new DialogInterface.OnClickListener() {
+                                                     public void onClick(DialogInterface iface, int id) {
                                                      }
                                                  })
                                  .setNegativeButton(cancel, new DialogInterface.OnClickListener() {
@@ -234,13 +253,21 @@ public class SaveCalendar extends RunnableWithProgress {
         int state = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
         dlg.getWindow().setSoftInputMode(state);
         dlg.show();
+        // Overriding 'Suggest' here prevents it from closing the dialog
+        dlg.getButton(DialogInterface.BUTTON_NEUTRAL)
+           .setOnClickListener(new View.OnClickListener() {
+               public void onClick(View onClick) {
+                   input.setText(suggestedFile);
+                   input.setSelection(input.getText().length());
+               }
+        });
     }
 
-    private String getFile(final String previousFile) {
+    private String getFile(final String previousFile, final String suggestedFile) {
         final String[] result = new String[1];
         getActivity().runOnUiThread(new Runnable() {
                                         public void run() {
-                                            getFileImpl(previousFile, result);
+                                            getFileImpl(previousFile, suggestedFile, result);
                                         }
                                    });
         while (result[0] == null) {

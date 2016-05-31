@@ -40,6 +40,7 @@
     <string name="settings">Settings</string>
     <string name="space"> </string>
     <string name="state">State</string>
+    <string name="suggest">Suggest</string>
     <string name="timezone">Timezone</string>
     <string name="username">Username</string>
     <string name="writing_calendar_to_file">Writing calendar to file&#8230;</string>
