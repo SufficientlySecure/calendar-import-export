@@ -59,7 +59,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -82,6 +81,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 
     private static final int MY_PERMISSIONS_REQUEST = 1;
+    private static final String[] MY_PERMISSIONS = new String[] {
+        Manifest.permission.GET_ACCOUNTS,
+        Manifest.permission.READ_CALENDAR,
+        Manifest.permission.READ_EXTERNAL_STORAGE
+    };
 
     private Settings mSettings;
 
@@ -128,64 +132,56 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         initView();
 
-        if (!hasPermissions()) {
-            return;
-        }
+        if (hasPermissions())
+            initIntent();
+    }
 
-        initIntent();
+    private boolean isGranted(final String permission) {
+        final int status = ContextCompat.checkSelfPermission(this, permission);
+        return status == PackageManager.PERMISSION_GRANTED;
     }
 
     private boolean hasPermissions() {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return true;
-        }
 
-        if ((ContextCompat.checkSelfPermission(this,
-                Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED)
-                || (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_CALENDAR) != PackageManager.PERMISSION_GRANTED)
-                || (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED)) {
+        boolean allGranted = true;
+        for (final String permission : MY_PERMISSIONS)
+            if (!isGranted(permission)) {
+                allGranted = false;
+                break;
+            }
 
-            ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.GET_ACCOUNTS,
-                            Manifest.permission.READ_CALENDAR,
-                            Manifest.permission.READ_EXTERNAL_STORAGE},
-                    MY_PERMISSIONS_REQUEST);
+        if (allGranted)
+            return true;
 
-            return false;
-        }
-
-        return true;
+        ActivityCompat.requestPermissions(this, MY_PERMISSIONS, MY_PERMISSIONS_REQUEST);
+        return false;
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
+                                           String permissions[],
+                                           int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST: {
-                boolean granted = false;
+                boolean allGranted = false;
 
                 if (grantResults.length > 0) {
-                    granted = true;
-
-                    for (int grantResult : grantResults) {
+                    allGranted = true;
+                    for (int grantResult : grantResults)
                         if (grantResult != PackageManager.PERMISSION_GRANTED) {
-                            granted = false;
+                            allGranted = false;
                             break;
                         }
-                    }
                 }
 
-                if (granted) {
-                    initIntent();
-                } else {
+                if (!allGranted) {
                     Toast.makeText(this, R.string.permissions_not_granted, Toast.LENGTH_LONG).show();
                     finish();
                     return;
                 }
-                return;
+                initIntent();
             }
         }
     }
