@@ -44,6 +44,7 @@ import org.sufficientlysecure.ical.Settings;
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.util.Log;
 
 import android.Manifest;
 import android.app.AlertDialog;
@@ -87,6 +88,10 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private CalendarBuilder mCalendarBuilder;
     private Calendar mCalendar;
 
+    private static final long NO_CALENDAR = -1;
+    private long mIntentCalendarId = NO_CALENDAR;
+    private boolean mInitialCreated = false;
+
     // UID generation
     private long mUidMs = 0;
     private String mUidTail;
@@ -118,6 +123,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.main);
+        mIntentCalendarId = NO_CALENDAR;
+        mInitialCreated = true;
 
         initView();
 
@@ -253,11 +260,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
         String action = intent.getAction();
 
-        final long id = action.equals(LOAD_CALENDAR) ? intent.getLongExtra(EXTRA_CALENDAR_ID, -1) : -1;
+        if (action.equals(LOAD_CALENDAR))
+            mIntentCalendarId = intent.getLongExtra(EXTRA_CALENDAR_ID, NO_CALENDAR);
 
         new Thread(new Runnable() {
             public void run() {
-                MainActivity.this.init(id);
+                MainActivity.this.initialiseCalendars();
             }
         }).start();
 
@@ -269,7 +277,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return mSettings;
     }
 
-    private void init(long calendarId) {
+    private void initialiseCalendars() {
         List<AndroidCalendar> calendars = AndroidCalendar.loadAll(getContentResolver());
         if (calendars.isEmpty()) {
             Runnable task;
@@ -294,21 +302,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             runOnUiThread(task);
         }
 
+        // FIXME: If we already have initialised then:
+        //  a) Preserve our chosen calendar selection if it still exists
+        //  b) Avoid updating at all if nothing has changed
         mCalendars = calendars;
         setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
 
         String calendarName = null;
 
-        if (calendarId == -1) {
+        if (mIntentCalendarId == NO_CALENDAR) {
             // Not loading from an Intent: use the previously selected calendar
-            calendarId = mSettings.getLong(mSettings.PREF_LASTCALENDARID, -1);
-            if (calendarId != -1)
+            mIntentCalendarId = mSettings.getLong(mSettings.PREF_LASTCALENDARID, NO_CALENDAR);
+            if (mIntentCalendarId != NO_CALENDAR)
                 calendarName = mSettings.getString(mSettings.PREF_LASTCALENDARNAME);
         }
 
+        boolean found = false;
         for (int i = 0; i < mCalendars.size(); i++) {
-            if (mCalendars.get(i).mId == calendarId &&
+            if (mCalendars.get(i).mId == mIntentCalendarId &&
                 (calendarName == null || mCalendars.get(i).mName.contentEquals(calendarName))) {
+                found = true;
                 final int index = i;
                 runOnUiThread(new Runnable() {
                     public void run() {
@@ -318,6 +331,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
             }
         }
+        if (!found)
+            mIntentCalendarId = NO_CALENDAR; // Don't try to match this id again
     }
 
     public void showToast(final String msg) {
@@ -364,6 +379,26 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     private void setSources(List<CalendarSource> sources) {
         setupSpinner(mFileSpinner, sources, mLoadButton);
+    }
+
+    protected void onResume() {
+        super.onResume();
+        if (mInitialCreated)
+            mInitialCreated = false; // Init already done by onCreate()
+        else {
+            new Thread(new Runnable() {
+                             public void run() {
+                                 // Update view if any source calendar was modified
+                                 MainActivity.this.initialiseCalendars();
+                             }
+                         }).start();
+        }
+        // FIXME: Register calendar update broadcast receiver
+    }
+
+    protected void onPause() {
+        super.onPause();
+        // FIXME: Unregister calendar update broadcast receiver
     }
 
     public boolean setSource(String url, Uri uri, String username, String password) {
