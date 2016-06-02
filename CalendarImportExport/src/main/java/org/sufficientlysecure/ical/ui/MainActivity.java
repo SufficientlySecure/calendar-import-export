@@ -141,7 +141,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mCalendarUpdateFilter = new IntentFilter("android.intent.action.PROVIDER_CHANGED");
         mCalendarUpdateReciever = new BroadcastReceiver() {
             public void onReceive(final Context context, final Intent intent) {
-                Log.d(TAG, "Received broadcast: " + mCalendarUpdateFilter.getAction(0));
+                Log.d(TAG, "Received broadcast: " + intent.getAction());
                 if (intent.getAction() == mCalendarUpdateFilter.getAction(0))
                     onExternalCalendarChanged();
             }
