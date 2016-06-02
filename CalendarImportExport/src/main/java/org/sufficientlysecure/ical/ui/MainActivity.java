@@ -48,10 +48,12 @@ import org.sufficientlysecure.ical.util.Log;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
@@ -77,6 +79,8 @@ import android.widget.Toast;
 import android.widget.TextView;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
+    private static final String TAG = "ICS_MainActivity";
+
     public static final String LOAD_CALENDAR = "org.sufficientlysecure.ical.LOAD_CALENDAR";
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 
@@ -95,6 +99,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final long NO_CALENDAR = -1;
     private long mIntentCalendarId = NO_CALENDAR;
     private boolean mInitialCreated = false;
+
+    private IntentFilter mCalendarUpdateFilter;
+    private BroadcastReceiver mCalendarUpdateReciever;
 
     // UID generation
     private long mUidMs = 0;
@@ -129,6 +136,16 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         setContentView(R.layout.main);
         mIntentCalendarId = NO_CALENDAR;
         mInitialCreated = true;
+
+        // Create a receiver for calendar updates.
+        mCalendarUpdateFilter = new IntentFilter("android.intent.action.PROVIDER_CHANGED");
+        mCalendarUpdateReciever = new BroadcastReceiver() {
+            public void onReceive(final Context context, final Intent intent) {
+                Log.d(TAG, "Received broadcast: " + mCalendarUpdateFilter.getAction(0));
+                if (intent.getAction() == mCalendarUpdateFilter.getAction(0))
+                    onExternalCalendarChanged();
+            }
+        };
 
         initView();
 
@@ -259,11 +276,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         if (action.equals(LOAD_CALENDAR))
             mIntentCalendarId = intent.getLongExtra(EXTRA_CALENDAR_ID, NO_CALENDAR);
 
-        new Thread(new Runnable() {
-            public void run() {
-                MainActivity.this.initialiseCalendars();
-            }
-        }).start();
+        onExternalCalendarChanged();
 
         if (action.equals(Intent.ACTION_VIEW))
             setSource(null, intent.getData(), null, null); // File intent
@@ -274,6 +287,8 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
     private void initialiseCalendars() {
+        Log.d(TAG, "initialiseCalendars");
+
         List<AndroidCalendar> calendars = AndroidCalendar.loadAll(getContentResolver());
         if (calendars.isEmpty()) {
             Runnable task;
@@ -379,22 +394,29 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
 
     protected void onResume() {
         super.onResume();
+        Log.d(TAG, "onResume");
         if (mInitialCreated)
             mInitialCreated = false; // Init already done by onCreate()
-        else {
-            new Thread(new Runnable() {
-                             public void run() {
-                                 // Update view if any source calendar was modified
-                                 MainActivity.this.initialiseCalendars();
-                             }
-                         }).start();
-        }
-        // FIXME: Register calendar update broadcast receiver
+        else
+            onExternalCalendarChanged();
+
+        registerReceiver(mCalendarUpdateReciever, mCalendarUpdateFilter);
     }
 
     protected void onPause() {
         super.onPause();
-        // FIXME: Unregister calendar update broadcast receiver
+        Log.d(TAG, "onPause");
+
+        unregisterReceiver(mCalendarUpdateReciever);
+    }
+
+    private void onExternalCalendarChanged() {
+        new Thread(new Runnable() {
+                           public void run() {
+                               // Update view if any source calendar was modified
+                               MainActivity.this.initialiseCalendars();
+                           }
+                       }).start();
     }
 
     public boolean setSource(String url, Uri uri, String username, String password) {
