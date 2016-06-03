@@ -125,4 +125,22 @@ public class AndroidCalendar {
     public String toString() {
         return mDisplayName + " (" + mIdStr + ")";
     }
+
+    private boolean differ(final String lhs, final String rhs) {
+        if (lhs == null)
+            return rhs != null;
+        return rhs == null || !lhs.equals(rhs);
+    }
+
+    public boolean differsFrom(AndroidCalendar other) {
+        return mId != other.mId ||
+               mIsActive != other.mIsActive ||
+               mNumEntries != other.mNumEntries ||
+               differ(mName, other.mName) ||
+               differ(mDisplayName, other.mDisplayName) ||
+               differ(mAccountName, other.mAccountName) ||
+               differ(mAccountType, other.mAccountType) ||
+               differ(mOwner, other.mOwner) ||
+               differ(mTimezone, other.mTimezone);
+    }
 }

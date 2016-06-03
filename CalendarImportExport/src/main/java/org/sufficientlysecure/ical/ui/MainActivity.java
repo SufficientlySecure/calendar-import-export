@@ -286,6 +286,25 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         return mSettings;
     }
 
+    private boolean isListUpdate(final List<AndroidCalendar> calendars) {
+        if (mCalendars == null) {
+            Log.d(TAG, "First time init of calendar list");
+            return true;
+        }
+        if (mCalendars.size() != calendars.size()) {
+            Log.i(TAG, "A calendar has been added or removed");
+            return true;
+        }
+        for (int i = 0; i < mCalendars.size(); ++i) {
+            if (mCalendars.get(i).differsFrom(calendars.get(i))) {
+                Log.i(TAG, "A calendar or its events has changed");
+                return true;
+            }
+        }
+        Log.d(TAG, "No calendar changes found");
+        return false; // No differences
+    }
+
     private void initialiseCalendars() {
         Log.d(TAG, "initialiseCalendars");
 
@@ -313,9 +332,12 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             runOnUiThread(task);
         }
 
+        if (!isListUpdate(calendars))
+            return;
+
         // FIXME: If we already have initialised then:
         //  a) Preserve our chosen calendar selection if it still exists
-        //  b) Avoid updating at all if nothing has changed
+
         mCalendars = calendars;
         setupSpinner(mCalendarSpinner, mCalendars, mExportButton);
 
