@@ -28,7 +28,7 @@
   <string name="load_calendar">ロード</string>
   <string name="login_required">ログインが必要です</string>
   <string name="name">名前</string>
-  <string name="no_calendars_found">カレンダーが見つかりませんでした。\n\nインポート/エクスポートしてカレンダーを作成する必要があります。\"オフラインカレンダー\" をインストールして、作成することができます\n\nCyanogenmod を使用している場合は、このアプリケーションがカレンダーを読み取り/書き込みできるようにするために、プライバシーガードが無効になっていることを確認してください。\nAndroid 4.3 App Ops を使用している場合は、このアプリケーションにカレンダーの読み取り/書き込みアクセスを許可していることを確認してください。</string>
+  <string name="no_calendars_found">カレンダーが見つかりませんでした。\n\nインポート/エクスポートしてカレンダーを作成する必要があります。\"オフラインカレンダー\" をインストールして、作成することができます\n\nCyanogenmod を使用している場合は、このアプリケーションがカレンダーを読み取り/書き込みできるようにするために、プライバシーガードが無効になっていることを確認してください。\n\nAndroid 4.3 App Ops を使用している場合は、このアプリケーションにカレンダーの読み取り/書き込みアクセスを許可していることを確認してください。</string>
   <string name="not_applicable">該当なし</string>
   <string name="owner">オーナー</string>
   <string name="password">パスワード</string>
@@ -39,6 +39,7 @@
   <string name="settings">設定</string>
   <string name="space"> </string>
   <string name="state">状態</string>
+  <string name="suggest">提案</string>
   <string name="timezone">タイムゾーン</string>
   <string name="username">ユーザー名</string>
   <string name="writing_calendar_to_file">カレンダーをファイルに書き込み中…</string>

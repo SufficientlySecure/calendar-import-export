@@ -39,6 +39,7 @@
   <string name="settings">Paramètres</string>
   <string name="space"> </string>
   <string name="state">État</string>
+  <string name="suggest">Sugérer</string>
   <string name="timezone">Fuseau horaire</string>
   <string name="username">Nom d\'utilisateur</string>
   <string name="writing_calendar_to_file">Écriture de l\'agenda dans le fichier...</string>

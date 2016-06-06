@@ -6,6 +6,7 @@
   <string name="add_outlook174_and_exchange8482_extensions">エクスポートしたカレンダーに Outlook® および Exchange™ 拡張を追加</string>
   <string name="allow_different_line_endings">異なる行末を許可する</string>
   <string name="allow_various_line_wrapping_schemes">様々な行の折り返し方式を許可する</string>
+  <string name="ask_for_all_columns_when">照会するときにすべての列を問い合わせます</string>
   <string name="choose_the_reminders_to_apply">インポートしたイベントに適用するリマインダーを選択</string>
   <string name="compatibility">互換性</string>
   <string name="debug_logging">デバッグログ</string>
@@ -39,6 +40,7 @@
   <string name="permissive_export">許容エクスポート</string>
   <string name="permissive_parsing">許容解析</string>
   <string name="process_test_file_directives">テストファイル指示を処理</string>
+  <string name="query_all_columns">すべての列を照会</string>
   <string name="reminders">リマインダー</string>
   <string name="save_passwords">パスワードを保存</string>
   <string name="save_passwords_in_insecure_local">パスワードを安全ではないローカルストレージに保存します</string>
@@ -50,6 +52,7 @@
   <string name="test_file_support">テストファイル サポート</string>
   <string name="timezone_updates">タイムゾーン更新</string>
   <string name="update_timezone_data_over_the">ネットワーク越しにタイムゾーンデータを更新します</string>
+  <string name="use_a_subset_of_columns">照会するときに列のサブセットを使用します</string>
   <string name="validate_the_output_file">出力ファイルを検証します</string>
   <string name="vcard_compatible">vCard 互換</string>
   <string-array name="duplicate_handling_array">

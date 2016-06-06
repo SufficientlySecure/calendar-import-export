@@ -28,7 +28,6 @@
   <string name="load_calendar">Зарежда</string>
   <string name="login_required">Изисква вход</string>
   <string name="name">Име</string>
-  <string name="no_calendars_found">Няма налични календари.\n\Можете да създавате каледнар, чрез импорт/експорт и обратно.\n\Ако ползвате Cyanogenmod: Бъдете сигурни, че Поверителност е изключено за това приложение и позволява запис/четене на календар.\n\Ако ползвате Android 4.3 приложението Ops: Бъдете сигурни,че позволява на календар четене/запис за това приложение.</string>
   <string name="not_applicable">Н/П</string>
   <string name="owner">Собственик</string>
   <string name="password">Парола</string>

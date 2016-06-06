@@ -28,7 +28,6 @@
   <string name="load_calendar">Загрузить</string>
   <string name="login_required">Требуется авторизация</string>
   <string name="name">Название</string>
-  <string name="no_calendars_found">Календарь не найден.\n\nДля импорта/экспорта требуется создать календарь с помощью приложения Offline Calendar.\n\nЕсли вы используете Cyanogenmod, убедитесь, что для данного приложения отключен \"Защищенный режим\" и разрешены чтение/запись в календарь.\n\nЕсли вы используете App Ops для Android 4.3, убедитесь, что данному приложению разрешены чтение/запись в календарь.</string>
   <string name="not_applicable">Недоступно</string>
   <string name="owner">Владелец</string>
   <string name="password">Пароль</string>
