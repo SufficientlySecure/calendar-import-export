@@ -1,3 +1,6 @@
+## 2.5
+  * Fix issues with both all day event export and import
+
 ## 2.4
   * Automatically refresh calendar information when changed outside the app
   * Suggest filenames when saving to reduce required typing
