@@ -247,15 +247,9 @@ public class ProcessVEvent extends RunnableWithProgress {
         boolean isRecurring = hasProperty(e, Property.RRULE) || hasProperty(e, Property.RDATE);
 
         if (startIsDate) {
-            // If the start date is a DATE, the event is all-day, midnight to midnight (RFC 2445).
-            // Add a duration of 1 day and remove the end date. If the event is non-recurring then
-            // we will convert the duration to an end date below, which fixes all-day cases where
-            // the end date is set to the same day at 23:59:59, rolls over because of a TZ, etc.
-            e.getProperties().add(ONE_DAY);
+            // If the start date is a DATE we expect the end date to be a date too and the
+            // event is all-day, midnight to midnight (RFC 2445).
             allDay = true;
-            //  If an event is marked as all day it must be in the UTC timezone.
-            e.getStartDate().setUtc(true);
-            removeProperty(e, Property.DTEND);
         }
 
         if (!hasProperty(e, Property.DTEND) && !hasProperty(e, Property.DURATION)) {
