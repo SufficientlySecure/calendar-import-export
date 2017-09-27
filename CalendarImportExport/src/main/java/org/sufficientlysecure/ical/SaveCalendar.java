@@ -334,8 +334,11 @@ public class SaveCalendar extends RunnableWithProgress {
 
             if (end != null) {
                 dtEnd = new DtEnd(new Date(end));
-                l.add(dtEnd);
+            } else {
+                dtEnd = new DtEnd(utcDateFromMs(start.getTime() + DateUtils.DAY_IN_MILLIS));
             }
+
+            l.add(dtEnd);
         } else {
             // Regular or zero-time event. Start date must be a date-time
             Date startDate = getDateTime(cur, Events.DTSTART, Events.EVENT_TIMEZONE, cal);
