@@ -1,3 +1,6 @@
+## 2.6
+  * Fix another issues with all day events
+
 ## 2.5
   * Fix issues with both all day event export and import
 
