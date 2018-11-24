@@ -138,15 +138,50 @@ public class SaveCalendar extends RunnableWithProgress {
             file += ".ics";
 
         String fileName = Environment.getExternalStorageDirectory() + File.separator + file;
-        int i = 0;
 
         Log.i(TAG, "Save id " + selectedCal.mIdStr + " to file " + fileName);
 
+        String name = activity.getPackageName();
+        String ver;
+        try {
+            ver = activity.getPackageManager().getPackageInfo(name, 0).versionName;
+        } catch (NameNotFoundException e) {
+            ver = "Unknown Build";
+        }
+
+        String prodId = "-//" + selectedCal.mOwner + "//iCal Import/Export " + ver + "//EN";
+        Calendar cal = new Calendar();
+        cal.getProperties().add(new ProdId(prodId));
+        cal.getProperties().add(Version.VERSION_2_0);
+        cal.getProperties().add(Method.PUBLISH);
+        cal.getProperties().add(CalScale.GREGORIAN);
+        if (selectedCal.mTimezone != null) {
+            // We don't write any events with floating times, but export this
+            // anyway so the default timezone for new events is correct when
+            // the file is imported into a system that supports it.
+            cal.getProperties().add(new XProperty("X-WR-TIMEZONE", selectedCal.mTimezone));
+        }
+
         // query events
+        boolean relaxed = settings.getIcal4jValidationRelaxed();
+        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, relaxed);
         ContentResolver resolver = activity.getContentResolver();
+        List<VEvent> events = getEvents(resolver, selectedCal, cal);
+
+        for (VEvent v: events)
+            cal.getComponents().add(v);
+
+        new CalendarOutputter().output(cal, new FileOutputStream(fileName));
+
+        Resources res = activity.getResources();
+        String msg = res.getQuantityString(R.plurals.wrote_n_events_to, events.size(), events.size(), file);
+        activity.showToast(msg);
+    }
+
+    private List<VEvent> getEvents(ContentResolver resolver, AndroidCalendar cal_src, Calendar cal_dst) {
         String where = Events.CALENDAR_ID + "=?";
-        String[] args = new String[] { selectedCal.mIdStr };
-        final String sortBy = Events.CALENDAR_ID + " ASC";
+        String[] args = new String[] { cal_src.mIdStr };
+        String sortBy = Events.CALENDAR_ID + " ASC";
         Cursor cur;
         try {
             cur = resolver.query(Events.CONTENT_URI, mAllCols ? null : EVENT_COLS,
@@ -159,56 +194,23 @@ public class SaveCalendar extends RunnableWithProgress {
                     Log.e(TAG, "Invalid EVENT_COLS index " + Integer.toString(n));
             cur = resolver.query(Events.CONTENT_URI, null, where, args, sortBy);
         }
-        setMax(cur.getCount());
-
-        boolean relaxed = settings.getIcal4jValidationRelaxed();
-        CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, relaxed);
-
-        Calendar cal = new Calendar();
-        String name = activity.getPackageName();
-        String ver;
-        try {
-            ver = activity.getPackageManager().getPackageInfo(name, 0).versionName;
-        } catch (NameNotFoundException e) {
-            ver = "Unknown Build";
-        }
-        String prodId = "-//" + selectedCal.mOwner + "//iCal Import/Export " + ver + "//EN";
-        cal.getProperties().add(new ProdId(prodId));
-        cal.getProperties().add(Version.VERSION_2_0);
-        cal.getProperties().add(Method.PUBLISH);
-        cal.getProperties().add(CalScale.GREGORIAN);
-        if (selectedCal.mTimezone != null) {
-            // We don't write any events with floating times, but export this
-            // anyway so the default timezone for new events is correct when
-            // the file is imported into a system that supports it.
-            cal.getProperties().add(new XProperty("X-WR-TIMEZONE", selectedCal.mTimezone));
-        }
 
         DtStamp timestamp = new DtStamp(); // Same timestamp for all events
 
         // Collect up events and add them after any timezones
+        setMax(cur.getCount());
         List<VEvent> events = new ArrayList<>();
-
         while (cur.moveToNext()) {
             incrementProgress();
-            VEvent e = convertFromDb(cur, cal, timestamp);
+            VEvent e = convertFromDb(cur, cal_dst, timestamp);
             if (e != null) {
                 events.add(e);
                 if (Log.getIsUserEnabled())
                     Log.d(TAG, "Adding event: " + e.toString());
             }
-            i++;
         }
         cur.close();
-
-        for (VEvent v: events)
-            cal.getComponents().add(v);
-
-        new CalendarOutputter().output(cal, new FileOutputStream(fileName));
-
-        Resources res = activity.getResources();
-        String msg = res.getQuantityString(R.plurals.wrote_n_events_to, i, i, file);
-        activity.showToast(msg);
+        return events;
     }
 
     private String calculateFileName(final String displayName) {
