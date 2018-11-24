@@ -26,9 +26,11 @@ import java.net.URISyntaxException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
@@ -51,7 +53,6 @@ import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
 import net.fortuna.ical4j.model.property.Transp;
-import net.fortuna.ical4j.model.property.Uid;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.model.Period;
@@ -70,11 +71,15 @@ import org.sufficientlysecure.ical.util.Log;
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Environment;
+import android.provider.CalendarContract;
 import android.provider.CalendarContractWrapper.Events;
 import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
@@ -163,9 +168,13 @@ public class SaveCalendar extends RunnableWithProgress {
         }
 
         // query events
+        ContentResolver resolver = activity.getContentResolver();
+        int numberOfCreatedUids = 0;
+        if (Events.UID_2445 != null) {
+            numberOfCreatedUids  = ensureUids(activity, resolver, selectedCal);
+        }
         boolean relaxed = settings.getIcal4jValidationRelaxed();
         CompatibilityHints.setHintEnabled(CompatibilityHints.KEY_RELAXED_VALIDATION, relaxed);
-        ContentResolver resolver = activity.getContentResolver();
         List<VEvent> events = getEvents(resolver, selectedCal, cal);
 
         for (VEvent v: events)
@@ -175,7 +184,32 @@ public class SaveCalendar extends RunnableWithProgress {
 
         Resources res = activity.getResources();
         String msg = res.getQuantityString(R.plurals.wrote_n_events_to, events.size(), events.size(), file);
+        if (numberOfCreatedUids > 0) {
+            msg += "\n" + res.getQuantityString(R.plurals.created_n_uids_to, numberOfCreatedUids, numberOfCreatedUids);
+        }
         activity.showToast(msg);
+    }
+
+    private int ensureUids(MainActivity activity, ContentResolver resolver, AndroidCalendar cal) {
+        String[] cols = new String[] { Events._ID };
+        String[] args = new String[] { cal.mIdStr };
+        Map<Long, String> newUids = new HashMap<>();
+        Cursor cur = resolver.query(Events.CONTENT_URI, cols,
+                Events.CALENDAR_ID + " = ? AND " + Events.UID_2445 + " IS NULL", args, null);
+        while (cur.moveToNext()) {
+            Long id = getLong(cur, Events._ID);
+            String uid = activity.generateUid();
+            newUids.put(id, uid);
+        }
+        for (Long id: newUids.keySet()) {
+            String uid = newUids.get(id);
+            Uri updateUri = ContentUris.withAppendedId(CalendarContract.Events.CONTENT_URI, id);
+            ContentValues c = new ContentValues();
+            c.put(Events.UID_2445, uid);
+            resolver.update(updateUri, c, null, null);
+            Log.i(TAG, "Generated UID " + uid + " for event " + id);
+        }
+        return newUids.size();
     }
 
     private List<VEvent> getEvents(ContentResolver resolver, AndroidCalendar cal_src, Calendar cal_dst) {
@@ -296,10 +330,7 @@ public class SaveCalendar extends RunnableWithProgress {
 
         PropertyList l = new PropertyList();
         l.add(timestamp);
-        if (copyProperty(l, Property.UID, cur, Events.UID_2445) == null) {
-            // Generate a UID. Not ideal, since its not reproducible
-            l.add(new Uid(getActivity().generateUid()));
-        }
+        copyProperty(l, Property.UID, cur, Events.UID_2445);
 
         String summary = copyProperty(l, Property.SUMMARY, cur, Events.TITLE);
         String description = copyProperty(l, Property.DESCRIPTION, cur, Events.DESCRIPTION);
