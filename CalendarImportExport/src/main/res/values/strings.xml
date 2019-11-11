@@ -66,6 +66,10 @@
          <item quantity="one">Wrote %1$d event to %2$s</item>
          <item quantity="other">Wrote %1$d events to %2$s</item>
     </plurals>
+    <plurals name="created_n_uids_to">
+        <item quantity="one">Created %1$d fresh UID</item>
+        <item quantity="other">Created %1$d fresh UIDs</item>
+    </plurals>
 
     <!-- Must match the minutes array in RemindersDialog.java -->
     <string-array name="reminder_time_values">

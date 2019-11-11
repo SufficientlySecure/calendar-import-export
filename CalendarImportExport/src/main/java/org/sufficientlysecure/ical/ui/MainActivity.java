@@ -471,12 +471,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
             mUidTail = uidPid + "@sufficientlysecure.org";
         }
 
-        long ms = System.currentTimeMillis();
-        if (mUidMs == ms)
-            ms++; // Force ms to be unique
+        mUidMs = Math.max(mUidMs, System.currentTimeMillis());
+        String uid = Long.toString(mUidMs) + mUidTail;
+        mUidMs++;
 
-        mUidMs = ms;
-        return Long.toString(ms) + mUidTail;
+        return uid;
     }
 
     @Override
