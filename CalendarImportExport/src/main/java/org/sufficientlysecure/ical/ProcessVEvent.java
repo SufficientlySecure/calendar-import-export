@@ -467,7 +467,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     private Cursor queryEvents(ContentResolver resolver, StringBuilder b, List<String> argsList) {
-        final String where = b.toString();
+        final String where = b.toString() + " AND deleted=0";
         final String[] args = argsList.toArray(new String[argsList.size()]);
         return resolver.query(Events.CONTENT_URI, EVENT_QUERY_COLUMNS, where, args, null);
     }
