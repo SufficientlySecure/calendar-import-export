@@ -66,6 +66,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.util.ColorUtils;
 import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
@@ -93,6 +94,19 @@ import android.database.DatabaseUtils;
 public class SaveCalendar extends RunnableWithProgress {
     private static final String TAG = "ICS_SaveCalendar";
 
+    // calender DB column typically containing creation/last modified time
+    public static final String EVENTS_LASTMODIFIED = "secTimeStamp";
+    // iCal property for color (CSS3 color name)
+    public static final String EVENT_COLOR = "COLOR";
+    // X-prefix for my own values
+    public static final String X_PREFIX = "X-CIE-";
+    public static final String X_COLORARGB = X_PREFIX + "COLOR-ARGB";
+    public static final String X_COLORINDEX = X_PREFIX + "COLOR-INDEX";
+    // color index to CSS color name (matching ~Samsung colors; NextCloud needs them lower case)
+    // 0=lila 9c2760,  1=grün 8bc34a,  2=blau 03a9f4,  3=gelb ffc107,  4=orange ff7043
+    private static final String[] COLOR_NAMES = { "blueviolet", "forestgreen", "deepskyblue", "gold", "coral"};
+
+
     private final PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
     private TimeZoneRegistry mTzRegistry;
     private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
@@ -102,16 +116,6 @@ public class SaveCalendar extends RunnableWithProgress {
     private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELLED");
     private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
     private static final List<String> AVAIL_ENUM = Arrays.asList(null, "FREE", "BUSY-TENTATIVE");
-
-    // calender DB column typically containing creation/last modified time (at least Samsung)
-    private static final String EVENTS_LASTMODIFIED = "secTimeStamp";
-    // iCal property for color (CSS3 color name)
-    private static final String EVENT_COLOR = "COLOR";
-    // X-prefix for my own values
-    private static final String X_PREFIX = "X-CIE-";
-    // color index to CSS color name (matching ~Samsung colors; NextCloud needs them lower case)
-    // 0=lila 9c2760,  1=grün 8bc34a,  2=blau 03a9f4,  3=gelb ffc107,  4=orange ff7043
-    private static final String[] COLOR_NAMES = { "blueviolet", "forestgreen", "deepskyblue", "gold", "coral"};
 
     private static final String[] EVENT_COLS = new String[] {
         Events._ID, Events.ORIGINAL_ID, Events.UID_2445, Events.TITLE, Events.DESCRIPTION,
@@ -447,20 +451,24 @@ public class SaveCalendar extends RunnableWithProgress {
             copyProperty(l, Property.URL, cur, Events.CUSTOM_APP_URI);
         }
 
+        boolean colorWritten = false;
         if (hasStringValue(cur, Events.EVENT_COLOR)) {
             long argb = getLong(cur, Events.EVENT_COLOR) & 0xffff_ffffL;
-            addProperty(l, X_PREFIX + "COLORARGB", Long.toHexString(argb));
+            addProperty(l, X_COLORARGB, Long.toHexString(argb));
+            l.add(new XProperty(EVENT_COLOR, ColorUtils.getColorNameFromHex((int)argb).toLowerCase() ));
+            colorWritten = true;
         }
         if (hasStringValue(cur, Events.EVENT_COLOR_KEY)) {
             int ci = getInt(cur, Events.EVENT_COLOR_KEY);
-            addProperty(l, X_PREFIX + "COLORINDEX", Integer.toString(ci));
-            if (ci >= 0  &&  ci < COLOR_NAMES.length) {
+            addProperty(l, X_COLORINDEX, Integer.toString(ci));
+            if (!colorWritten  &&  ci >= 0  &&  ci < COLOR_NAMES.length) {
                 l.add(new XProperty(EVENT_COLOR, COLOR_NAMES[ci]));
+                colorWritten = true;
             }
         }
 
         if (hasStringValue(cur, EVENTS_LASTMODIFIED)) {
-            DateTime lastMod = new DateTime(true);          // must be UTC
+            DateTime lastMod = new DateTime(true);          // must be UTC; FIXME this may be inaccurate because of forced TZ
             lastMod.setTime(getLong(cur, EVENTS_LASTMODIFIED));
             addProperty(l, Property.LAST_MODIFIED, lastMod.toString());
         }

@@ -43,6 +43,7 @@ import net.fortuna.ical4j.model.Property;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.RemindersDialog;
+import org.sufficientlysecure.ical.util.ColorUtils;
 import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
@@ -369,6 +370,25 @@ public class ProcessVEvent extends RunnableWithProgress {
             // Remove null/empty UIDs
             c.remove(Events.UID_2445);
         }
+
+        // set color values, if given in iCal
+        Property p = e.getProperty(SaveCalendar.X_COLORARGB);
+        if (p != null) {
+            // given RGB dominates color name
+            c.put(Events.EVENT_COLOR, Integer.toString(Integer.parseUnsignedInt(p.getValue(), 16)));
+        } else {
+            p = e.getProperty(SaveCalendar.EVENT_COLOR);
+            if (p != null) {
+                ColorUtils.ColorName color = ColorUtils.getColorFromName(p.getValue());
+                if (color != null) {
+                    c.put(Events.EVENT_COLOR, Integer.toString(0xff000000 | color.getRGB()));
+                }
+            } else {
+                // index not together with color RGB
+                copyProperty(c, Events.EVENT_COLOR_KEY, e, SaveCalendar.X_COLORINDEX);
+            }
+        }
+
 
         for (Object alarm: e.getAlarms()) {
             VAlarm a = (VAlarm) alarm;
