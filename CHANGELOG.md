@@ -1,3 +1,6 @@
+## 2.7
+  * Newly generated UIDs on export are made persistent
+
 ## 2.6
   * Fix another issues with all day events
 
