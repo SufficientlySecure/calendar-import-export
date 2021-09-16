@@ -6,6 +6,8 @@ For more information, see http://sufficientlysecure.org/android/.
 
 | [Google Play](https://play.google.com/store/apps/details?id=org.sufficientlysecure.ical) | [F-Droid](https://f-droid.org/app/org.sufficientlysecure.ical) |
 
+See also the [CHANGELOG](CHANGELOG.md).
+
 # Build
 
 ## Prerequisites
