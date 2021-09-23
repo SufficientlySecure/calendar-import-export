@@ -372,7 +372,6 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         for (Object alarm: e.getAlarms()) {
             VAlarm a = (VAlarm) alarm;
-
             if (a.getAction() != Action.AUDIO && a.getAction() != Action.DISPLAY)
                 continue; // Ignore email and procedure alarms
 
@@ -385,17 +384,25 @@ public class ProcessVEvent extends RunnableWithProgress {
             //        - Check the calendars max number of alarms
             if (t.getDateTime() != null)
                 alarmMs = t.getDateTime().getTime(); // Absolute
-            else if (t.getDuration() != null && t.getDuration().isNegative()) {
+            else if (t.getDuration() != null && t.getDuration().isNegative()) { //alarm trigger before start of event
                 Related rel = (Related) t.getParameter(Parameter.RELATED);
                 if (rel != null && rel == Related.END)
                     alarmStartMs = e.getEndDate().getDate().getTime();
-                alarmMs = alarmStartMs - durationToMs(t.getDuration()); // Relative
-            } else {
+                alarmMs = alarmStartMs - durationToMs(t.getDuration()); // Relative "-"
+            }
+            else if (t.getDuration() != null && !t.getDuration().isNegative()) { //alarm trigger after start of event
+                Related rel = (Related) t.getParameter(Parameter.RELATED);
+                if (rel != null && rel == Related.END)
+                    alarmStartMs = e.getEndDate().getDate().getTime();
+                alarmMs = alarmStartMs + durationToMs(t.getDuration()); // Relative "+"
+            }
+            else {
                 continue;
             }
 
             int reminder = (int) ((startMs - alarmMs) / DateUtils.MINUTE_IN_MILLIS);
-            if (reminder >= 0 && !reminders.contains(reminder))
+
+            if (!reminders.contains(reminder))
                 reminders.add(reminder);
         }
 
