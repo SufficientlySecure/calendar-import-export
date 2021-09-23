@@ -2,6 +2,8 @@
   * Newly generated UIDs on export are made persistent
   * German translation (contributed by Björn Engel)
   * Support for reminders after begin of event (contributed by woheller69)
+  * Ignore deleted events on export (issue #44, contributed by Thies Wellpott)
+  * Support for event colors (contributed by Thies Wellpott)
 
 ## 2.6
   * Fix another issues with all day events
