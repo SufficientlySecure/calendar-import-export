@@ -66,6 +66,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.util.ColorUtils;
 import org.sufficientlysecure.ical.util.Log;
 
 import android.annotation.SuppressLint;
@@ -93,6 +94,19 @@ import android.database.DatabaseUtils;
 public class SaveCalendar extends RunnableWithProgress {
     private static final String TAG = "ICS_SaveCalendar";
 
+    // calender DB column typically containing creation/last modified time
+    public static final String EVENTS_LASTMODIFIED = "secTimeStamp";
+    // iCal property for color (CSS3 color name)
+    public static final String EVENT_COLOR = "COLOR";
+    // X-prefix for my own values
+    public static final String X_PREFIX = "X-CIE-";
+    public static final String X_COLORARGB = X_PREFIX + "COLOR-ARGB";
+    public static final String X_COLORINDEX = X_PREFIX + "COLOR-INDEX";
+    // color index to CSS color name (matching ~Samsung colors; NextCloud needs them lower case)
+    // 0=lila 9c2760,  1=grün 8bc34a,  2=blau 03a9f4,  3=gelb ffc107,  4=orange ff7043
+    private static final String[] COLOR_NAMES = { "blueviolet", "forestgreen", "deepskyblue", "gold", "coral"};
+
+
     private final PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
     private TimeZoneRegistry mTzRegistry;
     private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
@@ -108,7 +122,8 @@ public class SaveCalendar extends RunnableWithProgress {
         Events.ORGANIZER, Events.EVENT_LOCATION, Events.STATUS, Events.ALL_DAY, Events.RDATE,
         Events.RRULE, Events.DTSTART, Events.EVENT_TIMEZONE, Events.DURATION, Events.DTEND,
         Events.EVENT_END_TIMEZONE, Events.ACCESS_LEVEL, Events.AVAILABILITY, Events.EXDATE,
-        Events.EXRULE, Events.CUSTOM_APP_PACKAGE, Events.CUSTOM_APP_URI, Events.HAS_ALARM
+        Events.EXRULE, Events.CUSTOM_APP_PACKAGE, Events.CUSTOM_APP_URI, Events.HAS_ALARM,
+        Events.EVENT_COLOR, Events.EVENT_COLOR_KEY, EVENTS_LASTMODIFIED
     };
 
     private static final String[] REMINDER_COLS = new String[] {
@@ -195,7 +210,7 @@ public class SaveCalendar extends RunnableWithProgress {
         String[] args = new String[] { cal.mIdStr };
         Map<Long, String> newUids = new HashMap<>();
         Cursor cur = resolver.query(Events.CONTENT_URI, cols,
-                Events.CALENDAR_ID + " = ? AND " + Events.UID_2445 + " IS NULL", args, null);
+                Events.CALENDAR_ID + " = ? AND deleted=0 AND " + Events.UID_2445 + " IS NULL", args, null);
         while (cur.moveToNext()) {
             Long id = getLong(cur, Events._ID);
             String uid = activity.generateUid();
@@ -213,7 +228,7 @@ public class SaveCalendar extends RunnableWithProgress {
     }
 
     private List<VEvent> getEvents(ContentResolver resolver, AndroidCalendar cal_src, Calendar cal_dst) {
-        String where = Events.CALENDAR_ID + "=?";
+        String where = Events.CALENDAR_ID + "=? AND deleted=0";
         String[] args = new String[] { cal_src.mIdStr };
         String sortBy = Events.CALENDAR_ID + " ASC";
         Cursor cur;
@@ -230,6 +245,8 @@ public class SaveCalendar extends RunnableWithProgress {
         }
 
         DtStamp timestamp = new DtStamp(); // Same timestamp for all events
+
+        //TW:  _sync_id=1611333603291   pro Event?   oder: secTimeStamp=1611334074922
 
         // Collect up events and add them after any timezones
         setMax(cur.getCount());
@@ -434,6 +451,28 @@ public class SaveCalendar extends RunnableWithProgress {
             copyProperty(l, Property.URL, cur, Events.CUSTOM_APP_URI);
         }
 
+        boolean colorWritten = false;
+        if (hasStringValue(cur, Events.EVENT_COLOR)) {
+            long argb = getLong(cur, Events.EVENT_COLOR) & 0xffff_ffffL;
+            addProperty(l, X_COLORARGB, Long.toHexString(argb));
+            l.add(new XProperty(EVENT_COLOR, ColorUtils.getColorNameFromHex((int)argb).toLowerCase() ));
+            colorWritten = true;
+        }
+        if (hasStringValue(cur, Events.EVENT_COLOR_KEY)) {
+            int ci = getInt(cur, Events.EVENT_COLOR_KEY);
+            addProperty(l, X_COLORINDEX, Integer.toString(ci));
+            if (!colorWritten  &&  ci >= 0  &&  ci < COLOR_NAMES.length) {
+                l.add(new XProperty(EVENT_COLOR, COLOR_NAMES[ci]));
+                colorWritten = true;
+            }
+        }
+
+        if (hasStringValue(cur, EVENTS_LASTMODIFIED)) {
+            DateTime lastMod = new DateTime(true);          // must be UTC; FIXME this may be inaccurate because of forced TZ
+            lastMod.setTime(getLong(cur, EVENTS_LASTMODIFIED));
+            addProperty(l, Property.LAST_MODIFIED, lastMod.toString());
+        }
+
         VEvent e = new VEvent(l);
 
         if (getInt(cur, Events.HAS_ALARM) == 1) {
@@ -545,19 +584,23 @@ public class SaveCalendar extends RunnableWithProgress {
         return dt;
     }
 
-    private String copyProperty(PropertyList l, String evName, Cursor cur, String dbName) {
+    private void addProperty(PropertyList l, String evName, String value) {
         // None of the exceptions caught below should be able to be thrown AFAICS.
         try {
-            String value = getString(cur, dbName);
             if (value != null) {
                 Property p = mPropertyFactory.createProperty(evName);
                 p.setValue(value);
                 l.add(p);
-                return value;
             }
         } catch (IOException | URISyntaxException | ParseException ignored) {
+            Log.d(TAG, "Ignore property: " + evName + "=" + value + ": " + ignored.toString());
         }
-        return null;
+    }
+
+    private String copyProperty(PropertyList l, String evName, Cursor cur, String dbName) {
+        String value = getString(cur, dbName);
+        addProperty(l, evName, value);
+        return value;
     }
 
     private void copyEnumProperty(PropertyList l, String evName, Cursor cur, String dbName,
@@ -574,6 +617,7 @@ public class SaveCalendar extends RunnableWithProgress {
                 }
             }
         } catch (IOException | URISyntaxException | ParseException ignored) {
+            Log.d(TAG, "Ignore enum-property: " + evName + "=" + dbName + ": " + ignored.toString());
         }
     }
 }

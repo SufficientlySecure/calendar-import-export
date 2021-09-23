@@ -88,7 +88,9 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     private static final String[] MY_PERMISSIONS = new String[] {
         Manifest.permission.GET_ACCOUNTS,
         Manifest.permission.READ_CALENDAR,
-        Manifest.permission.READ_EXTERNAL_STORAGE
+        Manifest.permission.WRITE_CALENDAR,
+        Manifest.permission.READ_EXTERNAL_STORAGE,
+        Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
 
     private Settings mSettings;
