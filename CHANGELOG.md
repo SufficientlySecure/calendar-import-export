@@ -1,5 +1,7 @@
 ## 2.7
   * Newly generated UIDs on export are made persistent
+  * German translation (contributed by Björn Engel)
+  * Support for reminders after begin of event (contributed by woheller69)
 
 ## 2.6
   * Fix another issues with all day events
