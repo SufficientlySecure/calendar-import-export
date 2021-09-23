@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="account_name">Account Name</string>
+    <string name="account_type">Account Typ</string>
+    <string name="add_reminder">Erinnerung hinzufügen</string>
+    <string name="app_name">Calendar Import-Export</string>
+    <string name="delete">Löschen</string>
+    <string name="delete_entries">Lösche Eintrag</string>
+    <string name="enter_source_url">Quell URL eintragen</string>
+    <string name="error">Error</string>
+    <string name="events">Events</string>
+    <string name="help">Hilfe</string>
+    <string name="import_file">Importiere Datei</string>
+    <string name="import_network">Importiere URL</string>
+    <string name="inactive">Inaktiv</string>
+    <string name="information">Information</string>
+    <string name="insert_entries">Einträge einfügen</string>
+    <string name="invalid_url">Ungültige URL</string>
+    <string name="load_calendar">Laden</string>
+    <string name="login_required">Login erforderlich</string>
+    <string name="owner">Besitzer</string>
+    <string name="password">Passwort</string>
+    <string name="searching_for_files">Suche nach iCalendar Dateien...</string>
+    <string name="select_a_calendar">Kalender auswählen</string>
+    <string name="settings">Einstellungen</string>
+    <string name="timezone">Zeitzone</string>
+    <string name="permissions_not_granted">Erforderliche Berechtigungen wurden nicht erteilt!</string>
+
+
+    <!-- Must match the minutes array in RemindersDialog.java -->
+
+</resources>
