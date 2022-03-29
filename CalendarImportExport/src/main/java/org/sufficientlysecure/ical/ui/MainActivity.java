@@ -49,7 +49,6 @@ import org.sufficientlysecure.ical.util.Log;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -61,9 +60,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
@@ -182,6 +181,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[],
                                            int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST: {
                 boolean allGranted = false;
