@@ -3,7 +3,6 @@ apply plugin: 'com.android.application'
 android {
 
     compileSdkVersion 31
-    buildToolsVersion '30.0.2'
 
     defaultConfig {
         minSdkVersion 14
@@ -25,10 +24,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_7
     }
 
-    /* exclude duplicate files in our included libs */
     packagingOptions {
-        exclude 'META-INF/LICENSE.txt'
-        exclude 'META-INF/NOTICE.txt'
+        resources {
+            excludes += ['META-INF/LICENSE.txt', 'META-INF/NOTICE.txt']
+        }
     }
 
     configurations {
@@ -49,10 +48,10 @@ android {
             debuggable true
         }
     }
-
-    lintOptions {
+    lint {
         abortOnError false
     }
+
 
     /*
      * To sign release build, create file gradle.properties in ~/.gradle/ with this content:
@@ -81,4 +80,5 @@ android {
     } else {
         buildTypes.release.signingConfig = null
     }
+
 }
