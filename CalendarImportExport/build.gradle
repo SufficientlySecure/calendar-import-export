@@ -15,7 +15,7 @@ android {
         implementation 'com.android.support:support-v4:28.0.0'
         implementation 'org.mnode.ical4j:ical4j:1.0.8'
         implementation 'backport-util-concurrent:backport-util-concurrent:3.1'
-        implementation 'commons-codec:commons-codec:1.10'
+        implementation 'commons-codec:commons-codec:1.15'
         implementation 'commons-lang:commons-lang:2.6'
     }
 
