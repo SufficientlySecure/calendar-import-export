@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright (C) 2015-2016  Jon Griffiths (jon_p_griffiths@yahoo.com)
  *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
@@ -85,7 +85,6 @@ import android.provider.CalendarContractWrapper.Events;
 import android.provider.CalendarContractWrapper.Reminders;
 import android.text.format.DateUtils;
 import android.text.TextUtils;
-import android.view.View;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.database.DatabaseUtils;
@@ -237,10 +236,9 @@ public class SaveCalendar extends RunnableWithProgress {
                                  where, args, sortBy);
         } catch (Exception except) {
             Log.w(TAG, "Calendar provider is missing columns, continuing anyway");
-            int n = 0;
-            for (n = 0; n < EVENT_COLS.length; ++n)
+            for (int n = 0; n < EVENT_COLS.length; ++n)
                 if (EVENT_COLS[n] == null)
-                    Log.e(TAG, "Invalid EVENT_COLS index " + Integer.toString(n));
+                    Log.e(TAG, "Invalid EVENT_COLS index " + n);
             cur = resolver.query(Events.CONTENT_URI, null, where, args, sortBy);
         }
 
@@ -257,7 +255,7 @@ public class SaveCalendar extends RunnableWithProgress {
             if (e != null) {
                 events.add(e);
                 if (Log.getIsUserEnabled())
-                    Log.d(TAG, "Adding event: " + e.toString());
+                    Log.d(TAG, "Adding event: " + e);
             }
         }
         cur.close();
@@ -268,7 +266,7 @@ public class SaveCalendar extends RunnableWithProgress {
         // Replace all non-alnum chars with '_'
         String stripped = displayName.replaceAll("[^a-zA-Z0-9_-]", "_");
         // Replace repeated '_' with a single '_'
-        return stripped.replaceAll("(_)\\1{1,}", "$1");
+        return stripped.replaceAll("_+", "_");
     }
 
     private void getFileImpl(final String previousFile, final String suggestedFile,
@@ -286,46 +284,26 @@ public class SaveCalendar extends RunnableWithProgress {
         AlertDialog dlg = builder.setIcon(R.mipmap.ic_launcher)
                                  .setTitle(R.string.enter_destination_filename)
                                  .setView(input)
-                                 .setPositiveButton(ok, new DialogInterface.OnClickListener() {
-                                                     public void onClick(DialogInterface iface, int id) {
-                                                         result[0] = input.getText().toString();
-                                                     }
-                                                 })
-                                 .setNeutralButton(suggest, new DialogInterface.OnClickListener() {
-                                                     public void onClick(DialogInterface iface, int id) {
-                                                     }
-                                                 })
-                                 .setNegativeButton(cancel, new DialogInterface.OnClickListener() {
-                                                     public void onClick(DialogInterface iface, int id) {
-                                                         result[0] = "";
-                                                     }
-                                                 })
-                                 .setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                                     public void onCancel(DialogInterface iface) {
-                                                         result[0] = "";
-                                                     }
-                                                 })
+                                 .setPositiveButton(ok, (iface, id) -> result[0] = input.getText().toString())
+                                 .setNeutralButton(suggest, (iface, id) -> {
+                                 })
+                                 .setNegativeButton(cancel, (iface, id) -> result[0] = "")
+                                 .setOnCancelListener(iface -> result[0] = "")
                                  .create();
         int state = WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE;
         dlg.getWindow().setSoftInputMode(state);
         dlg.show();
         // Overriding 'Suggest' here prevents it from closing the dialog
         dlg.getButton(DialogInterface.BUTTON_NEUTRAL)
-           .setOnClickListener(new View.OnClickListener() {
-               public void onClick(View onClick) {
-                   input.setText(suggestedFile);
-                   input.setSelection(input.getText().length());
-               }
-        });
+           .setOnClickListener(onClick -> {
+               input.setText(suggestedFile);
+               input.setSelection(input.getText().length());
+           });
     }
 
     private String getFile(final String previousFile, final String suggestedFile) {
         final String[] result = new String[1];
-        getActivity().runOnUiThread(new Runnable() {
-                                        public void run() {
-                                            getFileImpl(previousFile, suggestedFile, result);
-                                        }
-                                   });
+        getActivity().runOnUiThread(() -> getFileImpl(previousFile, suggestedFile, result));
         while (result[0] == null) {
             try {
                 Thread.sleep(30);
@@ -463,7 +441,6 @@ public class SaveCalendar extends RunnableWithProgress {
             addProperty(l, X_COLORINDEX, Integer.toString(ci));
             if (!colorWritten  &&  ci >= 0  &&  ci < COLOR_NAMES.length) {
                 l.add(new XProperty(EVENT_COLOR, COLOR_NAMES[ci]));
-                colorWritten = true;
             }
         }
 
@@ -545,7 +522,7 @@ public class SaveCalendar extends RunnableWithProgress {
     private Date getDateTime(Cursor cur, String dbName, String dbTzName, Calendar cal) {
         int i = getColumnIndex(cur, dbName);
         if (i == -1 || cur.isNull(i)) {
-            Log.e(TAG, "No valid " + dbName + " column found, index: " + Integer.toString(i));
+            Log.e(TAG, "No valid " + dbName + " column found, index: " + i);
             return null;
         }
 
@@ -592,8 +569,8 @@ public class SaveCalendar extends RunnableWithProgress {
                 p.setValue(value);
                 l.add(p);
             }
-        } catch (IOException | URISyntaxException | ParseException ignored) {
-            Log.d(TAG, "Ignore property: " + evName + "=" + value + ": " + ignored.toString());
+        } catch (IOException | URISyntaxException | ParseException e) {
+            Log.d(TAG, "Ignore property: " + evName + "=" + value + ": " + e);
         }
     }
 
@@ -616,8 +593,8 @@ public class SaveCalendar extends RunnableWithProgress {
                     l.add(p);
                 }
             }
-        } catch (IOException | URISyntaxException | ParseException ignored) {
-            Log.d(TAG, "Ignore enum-property: " + evName + "=" + dbName + ": " + ignored.toString());
+        } catch (IOException | URISyntaxException | ParseException e) {
+            Log.d(TAG, "Ignore enum-property: " + evName + "=" + dbName + ": " + e);
         }
     }
 }
