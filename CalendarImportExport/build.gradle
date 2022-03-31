@@ -16,7 +16,7 @@ android {
         implementation 'androidx.core:core:1.7.0'
         implementation 'androidx.fragment:fragment:1.4.1'
         implementation 'org.mnode.ical4j:ical4j:2.2.6'
-        implementation 'javax.cache:cache-api:1.0.0'
+        implementation 'javax.cache:cache-api:1.1.1'
         implementation 'org.slf4j:slf4j-jdk14:1.7.24'
         implementation 'backport-util-concurrent:backport-util-concurrent:3.1'
         implementation 'commons-codec:commons-codec:1.15'
