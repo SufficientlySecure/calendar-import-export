@@ -24,6 +24,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.net.URISyntaxException;
 import java.text.ParseException;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -88,6 +89,17 @@ import android.text.TextUtils;
 import android.view.WindowManager;
 import android.widget.EditText;
 import android.database.DatabaseUtils;
+
+class PropertyEntry {
+    public final String name;
+    public final String dbField;
+    public final List<String> values;
+    public PropertyEntry(String name, String dbField, List<String> values) {
+        this.name = name;
+        this.dbField = dbField;
+        this.values = values;
+    }
+}
 
 @SuppressLint("NewApi")
 public class SaveCalendar extends RunnableWithProgress {
@@ -326,10 +338,10 @@ public class SaveCalendar extends RunnableWithProgress {
 
         PropertyList l = new PropertyList();
         l.add(timestamp);
-        transferProperty(l, cur, Events.UID_2445, Property.UID);
+        transferProperty(l, cur, Property.UID);
 
-        String summary = transferProperty(l, cur, Events.TITLE, Property.SUMMARY);
-        String description = transferProperty(l, cur, Events.DESCRIPTION, Property.DESCRIPTION);
+        String summary = transferProperty(l, cur, Property.SUMMARY);
+        String description = transferProperty(l, cur, Property.DESCRIPTION);
 
         String organizer = getString(cur, Events.ORGANIZER);
         if (!TextUtils.isEmpty(organizer)) {
@@ -347,8 +359,8 @@ public class SaveCalendar extends RunnableWithProgress {
              }
         }
 
-        transferProperty(l, cur, Events.EVENT_LOCATION, Property.LOCATION);
-        transferEnumProperty(l, cur, Events.STATUS, STATUS_ENUM, Property.STATUS);
+        transferProperty(l, cur, Property.LOCATION);
+        transferEnumProperty(l, cur, Property.STATUS);
 
         boolean allDay = TextUtils.equals(getString(cur, Events.ALL_DAY), "1");
         boolean isTransparent;
@@ -377,7 +389,7 @@ public class SaveCalendar extends RunnableWithProgress {
             if (hasStringValue(cur, Events.DURATION)) {
                 isTransparent = getString(cur, Events.DURATION).equals("PT0S");
                 if (!isTransparent) {
-                    transferProperty(l, cur, Events.DURATION, Property.DURATION);
+                    transferProperty(l, cur, Property.DURATION);
                 }
             } else {
                 String endTz = Events.EVENT_END_TIMEZONE;
@@ -393,7 +405,7 @@ public class SaveCalendar extends RunnableWithProgress {
             }
         }
 
-        transferEnumProperty(l, cur, Events.ACCESS_LEVEL, CLASS_ENUM, Property.CLASS);
+        transferEnumProperty(l, cur, Property.CLASS);
 
         int availability = getInt(cur, Events.AVAILABILITY);
         if (availability > Events.AVAILABILITY_TENTATIVE)
@@ -421,13 +433,13 @@ public class SaveCalendar extends RunnableWithProgress {
             l.add(fb);
         }
 
-        transferProperty(l, cur, Events.RRULE, Property.RRULE);
-        transferProperty(l, cur, Events.RDATE, Property.RDATE);
-        transferProperty(l, cur, Events.EXRULE, Property.EXRULE);
-        transferProperty(l, cur, Events.EXDATE, Property.EXDATE);
+        transferProperty(l, cur, Property.RRULE);
+        transferProperty(l, cur, Property.RDATE);
+        transferProperty(l, cur, Property.EXRULE);
+        transferProperty(l, cur, Property.EXDATE);
         if (TextUtils.isEmpty(getString(cur, Events.CUSTOM_APP_PACKAGE))) {
             // Only copy URL if there is no app i.e. we probably imported it.
-            transferProperty(l, cur, Events.CUSTOM_APP_URI, Property.URL);
+            transferProperty(l, cur, Property.URL);
         }
 
         boolean colorWritten = false;
@@ -562,6 +574,30 @@ public class SaveCalendar extends RunnableWithProgress {
         return dt;
     }
 
+    private static AbstractMap.SimpleEntry<String, PropertyEntry> makePropertyEntry(String name, String dbField) {
+        return new AbstractMap.SimpleEntry<String, PropertyEntry>(name, new PropertyEntry(name, dbField, null));
+    }
+
+    private static AbstractMap.SimpleEntry<String, PropertyEntry> makeEnumPropertyEntry(String name, String dbField, List<String> values) {
+        return new AbstractMap.SimpleEntry<String, PropertyEntry>(name, new PropertyEntry(name, dbField, values));
+    }
+
+    private static final Map<String, PropertyEntry> propertyEntries = Map.ofEntries(
+        makePropertyEntry(Property.UID, Events.UID_2445),
+        makePropertyEntry(Property.SUMMARY, Events.TITLE),
+        makePropertyEntry(Property.DESCRIPTION, Events.DESCRIPTION),
+        makePropertyEntry(Property.LOCATION, Events.EVENT_LOCATION),
+        makeEnumPropertyEntry(Property.STATUS, Events.STATUS, STATUS_ENUM),
+        makeEnumPropertyEntry(Property.CLASS, Events.ACCESS_LEVEL, CLASS_ENUM),
+        makePropertyEntry(Property.DURATION, Events.DURATION),
+        makePropertyEntry(Property.RRULE, Events.RRULE),
+        makePropertyEntry(Property.RDATE, Events.RDATE),
+        makePropertyEntry(Property.EXRULE, Events.EXRULE),
+        makePropertyEntry(Property.EXDATE, Events.EXDATE),
+        makePropertyEntry(Property.URL, Events.CUSTOM_APP_URI),
+        makePropertyEntry(Property.LAST_MODIFIED, null)
+    );
+
     private Property createProperty(String evName, String value) {
         if (value != null) {
             Property p = mPropertyFactory.createProperty(evName);
@@ -583,18 +619,20 @@ public class SaveCalendar extends RunnableWithProgress {
         }
     }
 
-    private String transferProperty(PropertyList l, Cursor cur, String fieldName, String evName) {
-        String value = getString(cur, fieldName);
+    private String transferProperty(PropertyList l, Cursor cur, String evName) {
+        PropertyEntry propertyEntry = propertyEntries.get(evName);
+        String value = getString(cur, propertyEntry.dbField);
         addProperty(l, evName, value);
         return value;
     }
 
-    private void transferEnumProperty(PropertyList l, Cursor cur, String fieldName, List<String> values, String evName) {
-        int i = getColumnIndex(cur, fieldName);
+    private void transferEnumProperty(PropertyList l, Cursor cur, String evName) {
+        PropertyEntry propertyEntry = propertyEntries.get(evName);
+        int i = getColumnIndex(cur, propertyEntry.dbField);
         if (i != -1 && !cur.isNull(i)) {
             int value = (int) cur.getLong(i);
-            if (value >= 0 && value < values.size()) {
-                addProperty(l, evName, values.get(value));
+            if (value >= 0 && value < propertyEntry.values.size()) {
+                addProperty(l, evName, propertyEntry.values.get(value));
             }
         }
     }
