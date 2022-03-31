@@ -19,33 +19,6 @@
 
 package org.sufficientlysecure.ical;
 
-import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ComponentList;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.model.component.VAlarm;
-import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
-import net.fortuna.ical4j.model.parameter.FbType;
-import net.fortuna.ical4j.model.parameter.Related;
-import net.fortuna.ical4j.model.Parameter;
-import net.fortuna.ical4j.model.property.Action;
-import net.fortuna.ical4j.model.property.DateProperty;
-import net.fortuna.ical4j.model.property.Duration;
-import net.fortuna.ical4j.model.property.FreeBusy;
-import net.fortuna.ical4j.model.property.Transp;
-import net.fortuna.ical4j.model.property.Trigger;
-import net.fortuna.ical4j.model.Property;
-
-import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
-import org.sufficientlysecure.ical.ui.MainActivity;
-import org.sufficientlysecure.ical.ui.RemindersDialog;
-import org.sufficientlysecure.ical.util.ColorUtils;
-import org.sufficientlysecure.ical.util.Log;
-
 import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -56,8 +29,35 @@ import android.net.ParseException;
 import android.net.Uri;
 import android.provider.CalendarContractWrapper.Events;
 import android.provider.CalendarContractWrapper.Reminders;
-import android.text.format.DateUtils;
 import android.text.TextUtils;
+import android.text.format.DateUtils;
+
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.ComponentList;
+import net.fortuna.ical4j.model.DateTime;
+import net.fortuna.ical4j.model.Dur;
+import net.fortuna.ical4j.model.Parameter;
+import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.component.VAlarm;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.model.parameter.FbType;
+import net.fortuna.ical4j.model.parameter.Related;
+import net.fortuna.ical4j.model.property.Action;
+import net.fortuna.ical4j.model.property.DateProperty;
+import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.FreeBusy;
+import net.fortuna.ical4j.model.property.Transp;
+import net.fortuna.ical4j.model.property.Trigger;
+
+import org.sufficientlysecure.ical.ui.MainActivity;
+import org.sufficientlysecure.ical.ui.RemindersDialog;
+import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.util.ColorUtils;
+import org.sufficientlysecure.ical.util.Log;
+
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressLint("NewApi")
 public class ProcessVEvent extends RunnableWithProgress {

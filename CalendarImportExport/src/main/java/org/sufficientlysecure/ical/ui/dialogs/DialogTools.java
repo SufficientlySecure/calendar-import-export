@@ -18,13 +18,13 @@
 
 package org.sufficientlysecure.ical.ui.dialogs;
 
-import org.sufficientlysecure.ical.R;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.text.method.LinkMovementMethod;
 import android.widget.TextView;
+
+import org.sufficientlysecure.ical.R;
 
 public final class DialogTools {
     private DialogTools() {

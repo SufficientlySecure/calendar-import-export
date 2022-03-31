@@ -19,6 +19,7 @@ package android.provider;
 
 //import android.annotation.SdkConstant;
 //import android.annotation.SdkConstant.SdkConstantType;
+
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.AlarmManager;
@@ -28,17 +29,13 @@ import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.ContentValues;
 import android.content.Context;
-//import android.content.CursorEntityIterator;
-import android.content.Entity;
-import android.content.EntityIterator;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.net.Uri;
 import android.os.Build;
-import android.os.RemoteException;
 import android.text.format.DateUtils;
 import android.text.format.Time;
+
 import org.sufficientlysecure.ical.util.Log;
 
 /**

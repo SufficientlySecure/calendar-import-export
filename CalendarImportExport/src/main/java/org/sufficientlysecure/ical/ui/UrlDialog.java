@@ -17,24 +17,25 @@
 
 package org.sufficientlysecure.ical.ui;
 
-import org.sufficientlysecure.ical.R;
-import org.sufficientlysecure.ical.Settings;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import androidx.annotation.NonNull;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
-import android.widget.CompoundButton;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentManager;
+
+import org.sufficientlysecure.ical.R;
+import org.sufficientlysecure.ical.Settings;
 
 public class UrlDialog extends DialogFragment {
 

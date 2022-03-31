@@ -18,11 +18,11 @@
 
 package org.sufficientlysecure.ical.ui.dialogs;
 
+import android.app.ProgressDialog;
+
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.ui.MainActivity;
 import org.sufficientlysecure.ical.util.Log;
-
-import android.app.ProgressDialog;
 
 public abstract class RunnableWithProgress extends ProgressDialog {
     private final MainActivity mActivity;

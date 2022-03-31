@@ -2,9 +2,9 @@
 
 package org.sufficientlysecure.ical.ui;
 
-import org.sufficientlysecure.ical.Settings;
-
 import android.content.SharedPreferences;
+
+import org.sufficientlysecure.ical.Settings;
 
 public class SettingsActivityBase extends android.preference.PreferenceActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {

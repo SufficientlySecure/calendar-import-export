@@ -17,6 +17,16 @@
 
 package org.sufficientlysecure.ical.ui;
 
+import android.content.Context;
+import android.preference.DialogPreference;
+import android.util.AttributeSet;
+import android.view.View;
+import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
+
+import androidx.annotation.NonNull;
+
 import org.sufficientlysecure.ical.R;
 import org.sufficientlysecure.ical.Settings;
 
@@ -25,15 +35,6 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import android.content.Context;
-import android.preference.DialogPreference;
-import androidx.annotation.NonNull;
-import android.util.AttributeSet;
-import android.view.View;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.Spinner;
 
 public class RemindersDialog extends DialogPreference {
 

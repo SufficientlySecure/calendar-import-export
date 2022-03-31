@@ -18,9 +18,6 @@
 
 package org.sufficientlysecure.ical;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import android.annotation.SuppressLint;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
@@ -28,7 +25,11 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.provider.CalendarContractWrapper.Calendars;
 import android.provider.CalendarContractWrapper.Events;
+
 import org.sufficientlysecure.ical.util.Log;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 @SuppressLint("NewApi")

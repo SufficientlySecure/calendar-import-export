@@ -17,10 +17,10 @@
 
 package org.sufficientlysecure.ical.ui;
 
+import android.content.SharedPreferences;
+
 import org.sufficientlysecure.ical.Settings;
 import org.sufficientlysecure.ical.util.Log;
-
-import android.content.SharedPreferences;
 
 public class SettingsActivity extends SettingsActivityBase {
 

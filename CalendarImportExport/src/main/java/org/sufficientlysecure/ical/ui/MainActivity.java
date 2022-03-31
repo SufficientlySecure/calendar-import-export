@@ -19,33 +19,6 @@
 
 package org.sufficientlysecure.ical.ui;
 
-import java.io.File;
-import java.io.InputStream;
-import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.UUID;
-
-import net.fortuna.ical4j.data.CalendarBuilder;
-import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.component.VEvent;
-import net.fortuna.ical4j.util.CompatibilityHints;
-
-import org.apache.commons.codec.binary.Base64;
-
-import org.sufficientlysecure.ical.AndroidCalendar;
-import org.sufficientlysecure.ical.ProcessVEvent;
-import org.sufficientlysecure.ical.SaveCalendar;
-import org.sufficientlysecure.ical.Settings;
-import org.sufficientlysecure.ical.R;
-import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
-import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
-import org.sufficientlysecure.ical.util.Log;
-
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -60,9 +33,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import androidx.core.app.ActivityCompat;
-import androidx.fragment.app.FragmentActivity;
-import androidx.core.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
@@ -72,10 +42,40 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
-import android.widget.Spinner;
 import android.widget.ScrollView;
-import android.widget.Toast;
+import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentActivity;
+
+import net.fortuna.ical4j.data.CalendarBuilder;
+import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.component.VEvent;
+import net.fortuna.ical4j.util.CompatibilityHints;
+
+import org.apache.commons.codec.binary.Base64;
+import org.sufficientlysecure.ical.AndroidCalendar;
+import org.sufficientlysecure.ical.ProcessVEvent;
+import org.sufficientlysecure.ical.R;
+import org.sufficientlysecure.ical.SaveCalendar;
+import org.sufficientlysecure.ical.Settings;
+import org.sufficientlysecure.ical.ui.dialogs.DialogTools;
+import org.sufficientlysecure.ical.ui.dialogs.RunnableWithProgress;
+import org.sufficientlysecure.ical.util.Log;
+
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 public class MainActivity extends FragmentActivity implements View.OnClickListener {
     private static final String TAG = "ICS_MainActivity";
