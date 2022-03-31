@@ -1,4 +1,4 @@
-/**
+/*
  *  Copyright (C) 2015  Jon Griffiths (jon_p_griffiths@yahoo.com)
  *  Copyright (C) 2013  Dominik Schürmann <dominik@dominikschuermann.de>
  *  Copyright (C) 2010-2011  Lukas Aichbauer
@@ -38,6 +38,7 @@ import net.fortuna.ical4j.model.DateTime;
 import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
+import net.fortuna.ical4j.model.component.CalendarComponent;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.parameter.FbType;
@@ -73,7 +74,7 @@ public class ProcessVEvent extends RunnableWithProgress {
     private final Calendar mICalCalendar;
     private final boolean mIsInserter;
 
-    private final class Options extends Settings {
+    private final static class Options extends Settings {
         private final List<Integer> mDefaultReminders;
 
         public Options(MainActivity activity) {
@@ -95,14 +96,14 @@ public class ProcessVEvent extends RunnableWithProgress {
     }
 
     @Override
-    protected void run() throws Exception {
+    protected void run() {
         final MainActivity activity = getActivity();
         final Options options = new Options(activity);
         final AndroidCalendar selectedCal = activity.getSelectedCalendar();
 
         List<Integer> reminders = new ArrayList<>();
 
-        ComponentList events = mICalCalendar.getComponents(VEvent.VEVENT);
+        ComponentList<CalendarComponent> events = mICalCalendar.getComponents(VEvent.VEVENT);
 
         setMax(events.size());
         ContentResolver resolver = activity.getContentResolver();
@@ -294,7 +295,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                 c.put(Events.ORGANIZER, mailTo.getTo());
                 c.put(Events.GUESTS_CAN_MODIFY, 1); // Ensure we can edit if not the organiser
             } catch (ParseException ignored) {
-                Log.e(TAG, "Failed to parse Organiser URI " + uri.toString());
+                Log.e(TAG, "Failed to parse Organiser URI " + uri);
             }
         }
 
@@ -390,8 +391,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
 
 
-        for (Object alarm: e.getAlarms()) {
-            VAlarm a = (VAlarm) alarm;
+        for (VAlarm a : e.getAlarms()) {
             if (a.getAction() != Action.AUDIO && a.getAction() != Action.DISPLAY)
                 continue; // Ignore email and procedure alarms
 
@@ -489,7 +489,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                 Log.e(TAG, "failed " + type + " values: " + c); // Not already logged, dump now
         }
         else
-            Log.d(TAG,  "Insert " + type + " returned " + result.toString());
+            Log.d(TAG,  "Insert " + type + " returned " + result);
         return result;
     }
 
@@ -536,7 +536,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         return queryEvents(resolver, b, argsList);
     }
 
-    private void checkTestValue(VEvent e, ContentValues c, String keyValue, String testName) {
+    private void checkTestValue(ContentValues c, String keyValue, String testName) {
         String[] parts = keyValue.split("=");
         String key = parts[0];
         String expected = parts.length > 1 ? parts[1] : "";
@@ -573,11 +573,10 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
         c.put("reminders", reminderValues);
 
-        for (Object o : e.getProperties()) {
-            Property p = (Property) o;
+        for (Property p : e.getProperties()) {
             switch (p.getName()) {
                 case "X-TEST-VALUE":
-                    checkTestValue(e, c, p.getValue(), testName.getValue());
+                    checkTestValue(c, p.getValue(), testName.getValue());
                     break;
                 case "X-TEST-MIN-VERSION":
                     final int ver = Integer.parseInt(p.getValue());
