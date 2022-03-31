@@ -16,12 +16,8 @@ android {
         implementation 'androidx.core:core:1.7.0'
         implementation 'androidx.fragment:fragment:1.4.1'
         implementation 'org.mnode.ical4j:ical4j:3.2.1'
-        implementation 'javax.cache:cache-api:1.1.1'
         implementation 'org.slf4j:slf4j-jdk14:1.7.24'
         implementation 'org.joda:joda-convert:1.5'
-        implementation 'backport-util-concurrent:backport-util-concurrent:3.1'
-        implementation 'commons-codec:commons-codec:1.15'
-        implementation 'commons-lang:commons-lang:2.6'
     }
 
     compileOptions {
@@ -32,8 +28,6 @@ android {
     packagingOptions {
         resources {
             excludes += [
-                'META-INF/LICENSE.txt',
-                'META-INF/NOTICE.txt',
                 'META-INF/INDEX.LIST',
                 'META-INF/groovy/org.codehaus.groovy.runtime.ExtensionModule',
                 'META-INF/groovy-release-info.properties'
