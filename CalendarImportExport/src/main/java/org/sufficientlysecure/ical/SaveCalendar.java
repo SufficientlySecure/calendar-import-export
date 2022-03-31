@@ -302,6 +302,7 @@ public class SaveCalendar extends RunnableWithProgress {
     }
 
     private String getFile(final String previousFile, final String suggestedFile) {
+        // TODO proper concurrency without busy waiting
         final String[] result = new String[1];
         getActivity().runOnUiThread(() -> getFileImpl(previousFile, suggestedFile, result));
         while (result[0] == null) {
