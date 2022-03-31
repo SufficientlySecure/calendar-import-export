@@ -1,3 +1,7 @@
+
+## 2.7.1
+  * Corrected library dependency problem (issue #94)
+
 ## 2.7
   * Newly generated UIDs on export are made persistent
   * German translation (contributed by Björn Engel)
