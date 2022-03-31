@@ -326,10 +326,10 @@ public class SaveCalendar extends RunnableWithProgress {
 
         PropertyList l = new PropertyList();
         l.add(timestamp);
-        copyProperty(l, Property.UID, cur, Events.UID_2445);
+        transferProperty(l, cur, Events.UID_2445, Property.UID);
 
-        String summary = copyProperty(l, Property.SUMMARY, cur, Events.TITLE);
-        String description = copyProperty(l, Property.DESCRIPTION, cur, Events.DESCRIPTION);
+        String summary = transferProperty(l, cur, Events.TITLE, Property.SUMMARY);
+        String description = transferProperty(l, cur, Events.DESCRIPTION, Property.DESCRIPTION);
 
         String organizer = getString(cur, Events.ORGANIZER);
         if (!TextUtils.isEmpty(organizer)) {
@@ -347,8 +347,8 @@ public class SaveCalendar extends RunnableWithProgress {
              }
         }
 
-        copyProperty(l, Property.LOCATION, cur, Events.EVENT_LOCATION);
-        copyEnumProperty(l, Property.STATUS, cur, Events.STATUS, STATUS_ENUM);
+        transferProperty(l, cur, Events.EVENT_LOCATION, Property.LOCATION);
+        transferEnumProperty(l, cur, Events.STATUS, STATUS_ENUM, Property.STATUS);
 
         boolean allDay = TextUtils.equals(getString(cur, Events.ALL_DAY), "1");
         boolean isTransparent;
@@ -377,7 +377,7 @@ public class SaveCalendar extends RunnableWithProgress {
             if (hasStringValue(cur, Events.DURATION)) {
                 isTransparent = getString(cur, Events.DURATION).equals("PT0S");
                 if (!isTransparent) {
-                    copyProperty(l, Property.DURATION, cur, Events.DURATION);
+                    transferProperty(l, cur, Events.DURATION, Property.DURATION);
                 }
             } else {
                 String endTz = Events.EVENT_END_TIMEZONE;
@@ -393,7 +393,7 @@ public class SaveCalendar extends RunnableWithProgress {
             }
         }
 
-        copyEnumProperty(l, Property.CLASS, cur, Events.ACCESS_LEVEL, CLASS_ENUM);
+        transferEnumProperty(l, cur, Events.ACCESS_LEVEL, CLASS_ENUM, Property.CLASS);
 
         int availability = getInt(cur, Events.AVAILABILITY);
         if (availability > Events.AVAILABILITY_TENTATIVE)
@@ -421,13 +421,13 @@ public class SaveCalendar extends RunnableWithProgress {
             l.add(fb);
         }
 
-        copyProperty(l, Property.RRULE, cur, Events.RRULE);
-        copyProperty(l, Property.RDATE, cur, Events.RDATE);
-        copyProperty(l, Property.EXRULE, cur, Events.EXRULE);
-        copyProperty(l, Property.EXDATE, cur, Events.EXDATE);
+        transferProperty(l, cur, Events.RRULE, Property.RRULE);
+        transferProperty(l, cur, Events.RDATE, Property.RDATE);
+        transferProperty(l, cur, Events.EXRULE, Property.EXRULE);
+        transferProperty(l, cur, Events.EXDATE, Property.EXDATE);
         if (TextUtils.isEmpty(getString(cur, Events.CUSTOM_APP_PACKAGE))) {
             // Only copy URL if there is no app i.e. we probably imported it.
-            copyProperty(l, Property.URL, cur, Events.CUSTOM_APP_URI);
+            transferProperty(l, cur, Events.CUSTOM_APP_URI, Property.URL);
         }
 
         boolean colorWritten = false;
@@ -583,19 +583,18 @@ public class SaveCalendar extends RunnableWithProgress {
         }
     }
 
-    private String copyProperty(PropertyList l, String evName, Cursor cur, String dbName) {
-        String value = getString(cur, dbName);
+    private String transferProperty(PropertyList l, Cursor cur, String fieldName, String evName) {
+        String value = getString(cur, fieldName);
         addProperty(l, evName, value);
         return value;
     }
 
-    private void copyEnumProperty(PropertyList l, String evName, Cursor cur, String dbName,
-                                     List<String> vals) {
-        int i = getColumnIndex(cur, dbName);
+    private void transferEnumProperty(PropertyList l, Cursor cur, String fieldName, List<String> values, String evName) {
+        int i = getColumnIndex(cur, fieldName);
         if (i != -1 && !cur.isNull(i)) {
             int value = (int) cur.getLong(i);
-            if (value >= 0 && value < vals.size()) {
-                addProperty(l, evName, vals.get(value));
+            if (value >= 0 && value < values.size()) {
+                addProperty(l, evName, values.get(value));
             }
         }
     }
