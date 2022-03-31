@@ -390,7 +390,6 @@ public class ProcessVEvent extends RunnableWithProgress {
             }
         }
 
-
         for (VAlarm a : e.getAlarms()) {
             if (a.getAction() != Action.AUDIO && a.getAction() != Action.DISPLAY)
                 continue; // Ignore email and procedure alarms
