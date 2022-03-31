@@ -562,16 +562,24 @@ public class SaveCalendar extends RunnableWithProgress {
         return dt;
     }
 
-    private void addProperty(PropertyList l, String evName, String value) {
-        // None of the exceptions caught below should be able to be thrown AFAICS.
-        try {
-            if (value != null) {
-                Property p = mPropertyFactory.createProperty(evName);
+    private Property createProperty(String evName, String value) {
+        if (value != null) {
+            Property p = mPropertyFactory.createProperty(evName);
+            // None of the exceptions caught below should be able to be thrown AFAICS.
+            try {
                 p.setValue(value);
-                l.add(p);
+            } catch (IOException | URISyntaxException | ParseException e) {
+                Log.d(TAG, "Ignore property: " + evName + "=" + value + ": " + e);
             }
-        } catch (IOException | URISyntaxException | ParseException e) {
-            Log.d(TAG, "Ignore property: " + evName + "=" + value + ": " + e);
+            return p;
+        }
+        return null;
+    }
+
+    private void addProperty(PropertyList l, String evName, String value) {
+        Property p = createProperty(evName, value);
+        if (p != null) {
+            l.add(p);
         }
     }
 
@@ -583,19 +591,12 @@ public class SaveCalendar extends RunnableWithProgress {
 
     private void copyEnumProperty(PropertyList l, String evName, Cursor cur, String dbName,
                                      List<String> vals) {
-        // None of the exceptions caught below should be able to be thrown AFAICS.
-        try {
-            int i = getColumnIndex(cur, dbName);
-            if (i != -1 && !cur.isNull(i)) {
-                int value = (int) cur.getLong(i);
-                if (value >= 0 && value < vals.size() && vals.get(value) != null) {
-                    Property p = mPropertyFactory.createProperty(evName);
-                    p.setValue(vals.get(value));
-                    l.add(p);
-                }
+        int i = getColumnIndex(cur, dbName);
+        if (i != -1 && !cur.isNull(i)) {
+            int value = (int) cur.getLong(i);
+            if (value >= 0 && value < vals.size()) {
+                addProperty(l, evName, vals.get(value));
             }
-        } catch (IOException | URISyntaxException | ParseException e) {
-            Log.d(TAG, "Ignore enum-property: " + evName + "=" + dbName + ": " + e);
         }
     }
 }
