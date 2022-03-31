@@ -403,19 +403,12 @@ public class ProcessVEvent extends RunnableWithProgress {
             //        - Check the calendars max number of alarms
             if (t.getDateTime() != null)
                 alarmMs = t.getDateTime().getTime(); // Absolute
-            else if (t.getDuration() != null && t.getDuration().isNegative()) { //alarm trigger before start of event
+            else if (t.getDuration() != null) {
                 Related rel = (Related) t.getParameter(Parameter.RELATED);
                 if (rel != null && rel == Related.END)
                     alarmStartMs = e.getEndDate().getDate().getTime();
-                alarmMs = alarmStartMs - durationToMs(t.getDuration()); // Relative "-"
-            }
-            else if (t.getDuration() != null && !t.getDuration().isNegative()) { //alarm trigger after start of event
-                Related rel = (Related) t.getParameter(Parameter.RELATED);
-                if (rel != null && rel == Related.END)
-                    alarmStartMs = e.getEndDate().getDate().getTime();
-                alarmMs = alarmStartMs + durationToMs(t.getDuration()); // Relative "+"
-            }
-            else {
+                alarmMs = alarmStartMs + durationToMs(t.getDuration());
+            } else {
                 continue;
             }
 
@@ -445,7 +438,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         ms += d.getHours()   * DateUtils.HOUR_IN_MILLIS;
         ms += d.getDays()    * DateUtils.DAY_IN_MILLIS;
         ms += d.getWeeks()   * DateUtils.WEEK_IN_MILLIS;
-        return ms;
+        return d.isNegative() ? - ms : ms;
     }
 
     private boolean hasProperty(VEvent e, String name) {
