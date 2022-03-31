@@ -36,6 +36,7 @@ import java.util.Set;
 
 import net.fortuna.ical4j.data.CalendarOutputter;
 import net.fortuna.ical4j.model.Calendar;
+import net.fortuna.ical4j.model.PropertyFactory;
 import net.fortuna.ical4j.model.component.VAlarm;
 import net.fortuna.ical4j.model.component.VEvent;
 import net.fortuna.ical4j.model.Date;
@@ -44,21 +45,31 @@ import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.parameter.FbType;
 import net.fortuna.ical4j.model.property.Action;
 import net.fortuna.ical4j.model.property.CalScale;
+import net.fortuna.ical4j.model.property.Clazz;
 import net.fortuna.ical4j.model.property.Description;
 import net.fortuna.ical4j.model.property.DtEnd;
 import net.fortuna.ical4j.model.property.DtStamp;
 import net.fortuna.ical4j.model.property.DtStart;
 import net.fortuna.ical4j.model.property.Duration;
+import net.fortuna.ical4j.model.property.ExDate;
+import net.fortuna.ical4j.model.property.ExRule;
 import net.fortuna.ical4j.model.property.FreeBusy;
+import net.fortuna.ical4j.model.property.LastModified;
+import net.fortuna.ical4j.model.property.Location;
 import net.fortuna.ical4j.model.property.Method;
 import net.fortuna.ical4j.model.property.Organizer;
 import net.fortuna.ical4j.model.property.ProdId;
+import net.fortuna.ical4j.model.property.RDate;
+import net.fortuna.ical4j.model.property.RRule;
+import net.fortuna.ical4j.model.property.Status;
+import net.fortuna.ical4j.model.property.Summary;
 import net.fortuna.ical4j.model.property.Transp;
+import net.fortuna.ical4j.model.property.Uid;
+import net.fortuna.ical4j.model.property.Url;
 import net.fortuna.ical4j.model.property.Version;
 import net.fortuna.ical4j.model.property.XProperty;
 import net.fortuna.ical4j.model.Period;
 import net.fortuna.ical4j.model.Property;
-import net.fortuna.ical4j.model.PropertyFactoryImpl;
 import net.fortuna.ical4j.model.PropertyList;
 import net.fortuna.ical4j.model.TimeZone;
 import net.fortuna.ical4j.model.TimeZoneRegistry;
@@ -90,12 +101,14 @@ import android.view.WindowManager;
 import android.widget.EditText;
 import android.database.DatabaseUtils;
 
-class PropertyEntry {
+class PropertyEntry<T extends Property> {
     public final String name;
+    public final PropertyFactory<T> factory;
     public final String dbField;
     public final List<String> values;
-    public PropertyEntry(String name, String dbField, List<String> values) {
+    public PropertyEntry(String name, PropertyFactory<T> factory, String dbField, List<String> values) {
         this.name = name;
+        this.factory = factory;
         this.dbField = dbField;
         this.values = values;
     }
@@ -117,9 +130,7 @@ public class SaveCalendar extends RunnableWithProgress {
     // 0=lila 9c2760,  1=grün 8bc34a,  2=blau 03a9f4,  3=gelb ffc107,  4=orange ff7043
     private static final String[] COLOR_NAMES = { "blueviolet", "forestgreen", "deepskyblue", "gold", "coral"};
 
-
-    private final PropertyFactoryImpl mPropertyFactory = PropertyFactoryImpl.getInstance();
-    private TimeZoneRegistry mTzRegistry;
+   private TimeZoneRegistry mTzRegistry;
     private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
     private final Set<String> mFailedOrganisers = new HashSet<>();
     boolean mAllCols;
@@ -336,7 +347,7 @@ public class SaveCalendar extends RunnableWithProgress {
             return null;
         }
 
-        PropertyList l = new PropertyList();
+        PropertyList<Property> l = new PropertyList<>();
         l.add(timestamp);
         transferProperty(l, cur, Property.UID);
 
@@ -574,65 +585,77 @@ public class SaveCalendar extends RunnableWithProgress {
         return dt;
     }
 
-    private static AbstractMap.SimpleEntry<String, PropertyEntry> makePropertyEntry(String name, String dbField) {
-        return new AbstractMap.SimpleEntry<String, PropertyEntry>(name, new PropertyEntry(name, dbField, null));
+    private static <T extends Property> AbstractMap.SimpleEntry<String, PropertyEntry<T>>
+      makeStandalonePropertyEntry(String name, PropertyFactory<T> factory) {
+        return new AbstractMap.SimpleEntry<>(name, new PropertyEntry<>(name, factory, null, null));
     }
 
-    private static AbstractMap.SimpleEntry<String, PropertyEntry> makeEnumPropertyEntry(String name, String dbField, List<String> values) {
-        return new AbstractMap.SimpleEntry<String, PropertyEntry>(name, new PropertyEntry(name, dbField, values));
+    private static <T extends Property> AbstractMap.SimpleEntry<String, PropertyEntry<T>>
+      makePropertyEntry(String name, PropertyFactory<T> factory, String dbField) {
+        return new AbstractMap.SimpleEntry<>(name, new PropertyEntry<>(name, factory, dbField, null));
+    }
+
+    private static <T extends Property> AbstractMap.SimpleEntry<String, PropertyEntry<T>>
+      makeEnumPropertyEntry(String name, PropertyFactory<T> factory, String dbField, List<String> values) {
+        return new AbstractMap.SimpleEntry<>(name, new PropertyEntry<>(name, factory, dbField, values));
     }
 
     private static final Map<String, PropertyEntry> propertyEntries = Map.ofEntries(
-        makePropertyEntry(Property.UID, Events.UID_2445),
-        makePropertyEntry(Property.SUMMARY, Events.TITLE),
-        makePropertyEntry(Property.DESCRIPTION, Events.DESCRIPTION),
-        makePropertyEntry(Property.LOCATION, Events.EVENT_LOCATION),
-        makeEnumPropertyEntry(Property.STATUS, Events.STATUS, STATUS_ENUM),
-        makeEnumPropertyEntry(Property.CLASS, Events.ACCESS_LEVEL, CLASS_ENUM),
-        makePropertyEntry(Property.DURATION, Events.DURATION),
-        makePropertyEntry(Property.RRULE, Events.RRULE),
-        makePropertyEntry(Property.RDATE, Events.RDATE),
-        makePropertyEntry(Property.EXRULE, Events.EXRULE),
-        makePropertyEntry(Property.EXDATE, Events.EXDATE),
-        makePropertyEntry(Property.URL, Events.CUSTOM_APP_URI),
-        makePropertyEntry(Property.LAST_MODIFIED, null)
+        makeStandalonePropertyEntry(Property.LAST_MODIFIED, new LastModified.Factory()),
+        makePropertyEntry(Property.UID, new Uid.Factory(), Events.UID_2445),
+        makePropertyEntry(Property.SUMMARY, new Summary.Factory(), Events.TITLE),
+        makePropertyEntry(Property.DESCRIPTION, new Description.Factory(), Events.DESCRIPTION),
+        makePropertyEntry(Property.LOCATION, new Location.Factory(), Events.EVENT_LOCATION),
+        makePropertyEntry(Property.DURATION, new Duration.Factory(), Events.DURATION),
+        makePropertyEntry(Property.RRULE, new RRule.Factory(), Events.RRULE),
+        makePropertyEntry(Property.RDATE, new RDate.Factory(), Events.RDATE),
+        makePropertyEntry(Property.EXRULE, new ExRule.Factory(), Events.EXRULE),
+        makePropertyEntry(Property.EXDATE, new ExDate.Factory(), Events.EXDATE),
+        makePropertyEntry(Property.URL, new Url.Factory(), Events.CUSTOM_APP_URI),
+        makeEnumPropertyEntry(Property.STATUS, new Status.Factory(), Events.STATUS, STATUS_ENUM),
+        makeEnumPropertyEntry(Property.CLASS, new Clazz.Factory(), Events.ACCESS_LEVEL, CLASS_ENUM)
     );
 
-    private Property createProperty(String evName, String value) {
+    private <T extends Property> T createProperty(PropertyEntry<T> propertyEntry, String value) {
         if (value != null) {
-            Property p = mPropertyFactory.createProperty(evName);
+            T p = propertyEntry.factory.createProperty();
             // None of the exceptions caught below should be able to be thrown AFAICS.
             try {
                 p.setValue(value);
             } catch (IOException | URISyntaxException | ParseException e) {
-                Log.d(TAG, "Ignore property: " + evName + "=" + value + ": " + e);
+                Log.d(TAG, "Ignore property: " + propertyEntry.name + "=" + value + ": " + e);
             }
             return p;
         }
         return null;
     }
 
-    private void addProperty(PropertyList l, String evName, String value) {
-        Property p = createProperty(evName, value);
+    private <T extends Property> void appendProperty(PropertyList<T> l, PropertyEntry<T> propertyEntry, String value) {
+        T p = createProperty(propertyEntry, value);
         if (p != null) {
             l.add(p);
         }
     }
 
-    private String transferProperty(PropertyList l, Cursor cur, String evName) {
-        PropertyEntry propertyEntry = propertyEntries.get(evName);
+    private <T extends Property> void addProperty(PropertyList<T> l, String evName, String value) {
+        PropertyEntry<T> propertyEntry = (PropertyEntry<T>) propertyEntries.get(evName);
+        appendProperty(l, propertyEntry, value);
+    }
+
+    private <T extends Property> String transferProperty(PropertyList<T> l, Cursor cur, String evName) {
+        PropertyEntry<T> propertyEntry = (PropertyEntry<T>) propertyEntries.get(evName);
         String value = getString(cur, propertyEntry.dbField);
-        addProperty(l, evName, value);
+        appendProperty(l, propertyEntry, value);
         return value;
     }
 
-    private void transferEnumProperty(PropertyList l, Cursor cur, String evName) {
-        PropertyEntry propertyEntry = propertyEntries.get(evName);
+    private <T extends Property> void transferEnumProperty(PropertyList<T> l, Cursor cur, String evName) {
+        PropertyEntry<T> propertyEntry = (PropertyEntry<T>) propertyEntries.get(evName);
         int i = getColumnIndex(cur, propertyEntry.dbField);
         if (i != -1 && !cur.isNull(i)) {
             int value = (int) cur.getLong(i);
             if (value >= 0 && value < propertyEntry.values.size()) {
-                addProperty(l, evName, propertyEntry.values.get(value));
+                appendProperty(l, propertyEntry, propertyEntry.values.get(value));
             }
         }
     }
