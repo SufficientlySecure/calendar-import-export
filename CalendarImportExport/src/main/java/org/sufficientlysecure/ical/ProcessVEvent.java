@@ -33,9 +33,7 @@ import android.text.TextUtils;
 import android.text.format.DateUtils;
 
 import net.fortuna.ical4j.model.Calendar;
-import net.fortuna.ical4j.model.ComponentList;
 import net.fortuna.ical4j.model.DateTime;
-import net.fortuna.ical4j.model.Dur;
 import net.fortuna.ical4j.model.Parameter;
 import net.fortuna.ical4j.model.Property;
 import net.fortuna.ical4j.model.component.CalendarComponent;
@@ -57,6 +55,8 @@ import org.sufficientlysecure.ical.util.ColorUtils;
 import org.sufficientlysecure.ical.util.Log;
 
 import java.net.URI;
+import java.time.temporal.TemporalAmount;
+import java.time.temporal.TemporalUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -103,7 +103,7 @@ public class ProcessVEvent extends RunnableWithProgress {
 
         List<Integer> reminders = new ArrayList<>();
 
-        ComponentList<CalendarComponent> events = mICalCalendar.getComponents(VEvent.VEVENT);
+        List<CalendarComponent> events = mICalCalendar.getComponents(VEvent.VEVENT);
 
         setMax(events.size());
         ContentResolver resolver = activity.getContentResolver();
@@ -431,14 +431,13 @@ public class ProcessVEvent extends RunnableWithProgress {
         return d;
     }
 
-    private static long durationToMs(Dur d) {
+    private static long durationToMs(TemporalAmount d) {
         long ms = 0;
-        ms += d.getSeconds() * DateUtils.SECOND_IN_MILLIS;
-        ms += d.getMinutes() * DateUtils.MINUTE_IN_MILLIS;
-        ms += d.getHours()   * DateUtils.HOUR_IN_MILLIS;
-        ms += d.getDays()    * DateUtils.DAY_IN_MILLIS;
-        ms += d.getWeeks()   * DateUtils.WEEK_IN_MILLIS;
-        return d.isNegative() ? - ms : ms;
+        for (TemporalUnit u : d.getUnits()) {
+            long unit = u.getDuration().toMillis();
+            ms += d.get(u) * unit;
+        }
+        return ms;
     }
 
     private boolean hasProperty(VEvent e, String name) {
