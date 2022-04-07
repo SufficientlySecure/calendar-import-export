@@ -76,4 +76,4 @@ along with Calendar Import/Export.  If not, see <http://www.gnu.org/licenses/>.
 
 # More
 
-Making a RELEASE [RELEASE](RELEASE.md).
+Making a [RELEASE](RELEASE.md).
