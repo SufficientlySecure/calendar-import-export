@@ -39,6 +39,7 @@ For more information, see [http://sufficientlysecure.org/android/](http://suffic
 3. Select the »build.gradle« file in this directory and click OK.
 4. Once imported, use the build action from the »Build« menu.
 
+
 # Contribute
 
 Fork the git repository, make changes and submit a pull request with the details.
@@ -71,3 +72,8 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Calendar Import/Export.  If not, see <http://www.gnu.org/licenses/>.
+
+
+# More
+
+Making a RELEASE [RELEASE](RELEASE.md).
