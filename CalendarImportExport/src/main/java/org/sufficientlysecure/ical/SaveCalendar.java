@@ -90,7 +90,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.text.ParseException;
-import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -101,16 +100,65 @@ import java.util.Map;
 import java.util.Set;
 
 class PropertyEntry<T extends Property> {
-    public final String name;
     public final PropertyFactory<T> factory;
     public final String dbField;
     public final List<String> values;
-    public PropertyEntry(String name, PropertyFactory<T> factory, String dbField, List<String> values) {
-        this.name = name;
+
+    public PropertyEntry(PropertyFactory<T> factory, String dbField, List<String> values) {
         this.factory = factory;
         this.dbField = dbField;
         this.values = values;
     }
+
+    public PropertyEntry(PropertyFactory<T> factory, String dbField) {
+        this(factory, dbField, null);
+    }
+
+    public PropertyEntry(PropertyFactory<T> factory) {
+        this(factory, null, null);
+    }
+}
+
+class ColorAttributes {
+    private final static String X_PREFIX = "X-CIE-";
+    public final static String X_COLORARGB = X_PREFIX + "COLOR-ARGB";
+    public final static String X_COLORINDEX = X_PREFIX + "COLOR-INDEX";
+}
+
+class Properties {
+    private final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELLED");
+    private final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
+
+    public final PropertyEntry<LastModified> lastModified =
+            new PropertyEntry<>(new LastModified.Factory());
+    public final PropertyEntry<Uid> uid =
+            new PropertyEntry<>(new Uid.Factory(), Events.UID_2445);
+    public final PropertyEntry<Summary> summary =
+            new PropertyEntry<>(new Summary.Factory(), Events.TITLE);
+    public final PropertyEntry<Description> description =
+            new PropertyEntry<>(new Description.Factory(), Events.DESCRIPTION);
+    public final PropertyEntry<Location> location =
+            new PropertyEntry<>(new Location.Factory(), Events.EVENT_LOCATION);
+    public final PropertyEntry<Duration> duration =
+            new PropertyEntry<>(new Duration.Factory(), Events.DURATION);
+    public final PropertyEntry<RRule> rRule =
+            new PropertyEntry<>(new RRule.Factory(), Events.RRULE);
+    public final PropertyEntry<RDate> rDate =
+            new PropertyEntry<>(new RDate.Factory(), Events.RDATE);
+    public final PropertyEntry<ExRule> exRule =
+            new PropertyEntry<>(new ExRule.Factory(), Events.EXRULE);
+    public final PropertyEntry<ExDate> exDate =
+            new PropertyEntry<>(new ExDate.Factory(), Events.EXDATE);
+    public final PropertyEntry<Url> url =
+            new PropertyEntry<>(new Url.Factory(), Events.CUSTOM_APP_URI);
+    public final PropertyEntry<Status> status =
+            new PropertyEntry<>(new Status.Factory(), Events.STATUS, STATUS_ENUM);
+    public final PropertyEntry<Clazz> clazz =
+            new PropertyEntry<>(new Clazz.Factory(), Events.ACCESS_LEVEL, CLASS_ENUM);
+    public final PropertyEntry<XProperty> colorARGB =
+            new PropertyEntry<>(new XProperty.Factory(ColorAttributes.X_COLORARGB));
+    public final PropertyEntry<XProperty> colorIndex =
+            new PropertyEntry<>(new XProperty.Factory(ColorAttributes.X_COLORINDEX));
 }
 
 @SuppressLint("NewApi")
@@ -121,21 +169,15 @@ public class SaveCalendar extends RunnableWithProgress {
     public static final String EVENTS_LASTMODIFIED = "secTimeStamp";
     // iCal property for color (CSS3 color name)
     public static final String EVENT_COLOR = "COLOR";
-    // X-prefix for my own values
-    public static final String X_PREFIX = "X-CIE-";
-    public static final String X_COLORARGB = X_PREFIX + "COLOR-ARGB";
-    public static final String X_COLORINDEX = X_PREFIX + "COLOR-INDEX";
     // color index to CSS color name (matching ~Samsung colors; NextCloud needs them lower case)
     // 0=lila 9c2760,  1=grün 8bc34a,  2=blau 03a9f4,  3=gelb ffc107,  4=orange ff7043
     private static final String[] COLOR_NAMES = { "blueviolet", "forestgreen", "deepskyblue", "gold", "coral"};
 
-   private TimeZoneRegistry mTzRegistry;
+    private TimeZoneRegistry mTzRegistry;
     private final Set<TimeZone> mInsertedTimeZones = new HashSet<>();
     private final Set<String> mFailedOrganisers = new HashSet<>();
     boolean mAllCols;
 
-    private static final List<String> STATUS_ENUM = Arrays.asList("TENTATIVE", "CONFIRMED", "CANCELLED");
-    private static final List<String> CLASS_ENUM = Arrays.asList(null, "CONFIDENTIAL", "PRIVATE", "PUBLIC");
     private static final List<String> AVAIL_ENUM = Arrays.asList(null, "FREE", "BUSY-TENTATIVE");
 
     private static final String[] EVENT_COLS = new String[] {
@@ -151,8 +193,11 @@ public class SaveCalendar extends RunnableWithProgress {
         Reminders.MINUTES, Reminders.METHOD
     };
 
+    private final Properties properties;
+
     public SaveCalendar(MainActivity activity) {
         super(activity, R.string.writing_calendar_to_file, true);
+        properties = new Properties();
     }
 
     @Override
@@ -348,10 +393,10 @@ public class SaveCalendar extends RunnableWithProgress {
 
         PropertyList<Property> l = new PropertyList<>();
         l.add(timestamp);
-        transferProperty(l, cur, Property.UID);
+        transferProperty(l, cur, properties.uid);
 
-        String summary = transferProperty(l, cur, Property.SUMMARY);
-        String description = transferProperty(l, cur, Property.DESCRIPTION);
+        String summary = transferProperty(l, cur, properties.summary);
+        String description = transferProperty(l, cur, properties.description);
 
         String organizer = getString(cur, Events.ORGANIZER);
         if (!TextUtils.isEmpty(organizer)) {
@@ -369,8 +414,8 @@ public class SaveCalendar extends RunnableWithProgress {
              }
         }
 
-        transferProperty(l, cur, Property.LOCATION);
-        transferEnumProperty(l, cur, Property.STATUS);
+        transferProperty(l, cur, properties.location);
+        transferEnumProperty(l, cur, properties.status);
 
         boolean allDay = TextUtils.equals(getString(cur, Events.ALL_DAY), "1");
         boolean isTransparent;
@@ -399,7 +444,7 @@ public class SaveCalendar extends RunnableWithProgress {
             if (hasStringValue(cur, Events.DURATION)) {
                 isTransparent = getString(cur, Events.DURATION).equals("PT0S");
                 if (!isTransparent) {
-                    transferProperty(l, cur, Property.DURATION);
+                    transferProperty(l, cur, properties.duration);
                 }
             } else {
                 String endTz = Events.EVENT_END_TIMEZONE;
@@ -415,7 +460,7 @@ public class SaveCalendar extends RunnableWithProgress {
             }
         }
 
-        transferEnumProperty(l, cur, Property.CLASS);
+        transferEnumProperty(l, cur, properties.clazz);
 
         int availability = getInt(cur, Events.AVAILABILITY);
         if (availability > Events.AVAILABILITY_TENTATIVE)
@@ -443,25 +488,25 @@ public class SaveCalendar extends RunnableWithProgress {
             l.add(fb);
         }
 
-        transferProperty(l, cur, Property.RRULE);
-        transferProperty(l, cur, Property.RDATE);
-        transferProperty(l, cur, Property.EXRULE);
-        transferProperty(l, cur, Property.EXDATE);
+        transferProperty(l, cur, properties.rRule);
+        transferProperty(l, cur, properties.rDate);
+        transferProperty(l, cur, properties.exRule);
+        transferProperty(l, cur, properties.exDate);
         if (TextUtils.isEmpty(getString(cur, Events.CUSTOM_APP_PACKAGE))) {
             // Only copy URL if there is no app i.e. we probably imported it.
-            transferProperty(l, cur, Property.URL);
+            transferProperty(l, cur, properties.url);
         }
 
         boolean colorWritten = false;
         if (hasStringValue(cur, Events.EVENT_COLOR)) {
             long argb = getLong(cur, Events.EVENT_COLOR) & 0xffff_ffffL;
-            addProperty(l, X_COLORARGB, Long.toHexString(argb));
+            addProperty(l, properties.colorARGB, Long.toHexString(argb));
             l.add(new XProperty(EVENT_COLOR, ColorUtils.getColorNameFromHex((int)argb).toLowerCase() ));
             colorWritten = true;
         }
         if (hasStringValue(cur, Events.EVENT_COLOR_KEY)) {
             int ci = getInt(cur, Events.EVENT_COLOR_KEY);
-            addProperty(l, X_COLORINDEX, Integer.toString(ci));
+            addProperty(l, properties.colorIndex, Integer.toString(ci));
             if (!colorWritten  &&  ci >= 0  &&  ci < COLOR_NAMES.length) {
                 l.add(new XProperty(EVENT_COLOR, COLOR_NAMES[ci]));
             }
@@ -470,7 +515,7 @@ public class SaveCalendar extends RunnableWithProgress {
         if (hasStringValue(cur, EVENTS_LASTMODIFIED)) {
             DateTime lastMod = new DateTime(true);          // must be UTC; FIXME this may be inaccurate because of forced TZ
             lastMod.setTime(getLong(cur, EVENTS_LASTMODIFIED));
-            addProperty(l, Property.LAST_MODIFIED, lastMod.toString());
+            addProperty(l, properties.lastModified, lastMod.toString());
         }
 
         VEvent e = new VEvent(l);
@@ -584,37 +629,6 @@ public class SaveCalendar extends RunnableWithProgress {
         return dt;
     }
 
-    private static <T extends Property> AbstractMap.SimpleEntry<String, PropertyEntry<T>>
-      makeStandalonePropertyEntry(String name, PropertyFactory<T> factory) {
-        return new AbstractMap.SimpleEntry<>(name, new PropertyEntry<>(name, factory, null, null));
-    }
-
-    private static <T extends Property> AbstractMap.SimpleEntry<String, PropertyEntry<T>>
-      makePropertyEntry(String name, PropertyFactory<T> factory, String dbField) {
-        return new AbstractMap.SimpleEntry<>(name, new PropertyEntry<>(name, factory, dbField, null));
-    }
-
-    private static <T extends Property> AbstractMap.SimpleEntry<String, PropertyEntry<T>>
-      makeEnumPropertyEntry(String name, PropertyFactory<T> factory, String dbField, List<String> values) {
-        return new AbstractMap.SimpleEntry<>(name, new PropertyEntry<>(name, factory, dbField, values));
-    }
-
-    private static final Map<String, PropertyEntry> propertyEntries = Map.ofEntries(
-        makeStandalonePropertyEntry(Property.LAST_MODIFIED, new LastModified.Factory()),
-        makePropertyEntry(Property.UID, new Uid.Factory(), Events.UID_2445),
-        makePropertyEntry(Property.SUMMARY, new Summary.Factory(), Events.TITLE),
-        makePropertyEntry(Property.DESCRIPTION, new Description.Factory(), Events.DESCRIPTION),
-        makePropertyEntry(Property.LOCATION, new Location.Factory(), Events.EVENT_LOCATION),
-        makePropertyEntry(Property.DURATION, new Duration.Factory(), Events.DURATION),
-        makePropertyEntry(Property.RRULE, new RRule.Factory(), Events.RRULE),
-        makePropertyEntry(Property.RDATE, new RDate.Factory(), Events.RDATE),
-        makePropertyEntry(Property.EXRULE, new ExRule.Factory(), Events.EXRULE),
-        makePropertyEntry(Property.EXDATE, new ExDate.Factory(), Events.EXDATE),
-        makePropertyEntry(Property.URL, new Url.Factory(), Events.CUSTOM_APP_URI),
-        makeEnumPropertyEntry(Property.STATUS, new Status.Factory(), Events.STATUS, STATUS_ENUM),
-        makeEnumPropertyEntry(Property.CLASS, new Clazz.Factory(), Events.ACCESS_LEVEL, CLASS_ENUM)
-    );
-
     private <T extends Property> T createProperty(PropertyEntry<T> propertyEntry, String value) {
         if (value != null) {
             T p = propertyEntry.factory.createProperty();
@@ -622,39 +636,32 @@ public class SaveCalendar extends RunnableWithProgress {
             try {
                 p.setValue(value);
             } catch (IOException | URISyntaxException | ParseException e) {
-                Log.d(TAG, "Ignore property: " + propertyEntry.name + "=" + value + ": " + e);
+                Log.d(TAG, "Ignore property: " + p.getName() + "=" + value + ": " + e);
             }
             return p;
         }
         return null;
     }
 
-    private <T extends Property> void appendProperty(PropertyList<T> l, PropertyEntry<T> propertyEntry, String value) {
-        T p = createProperty(propertyEntry, value);
-        if (p != null) {
-            l.add(p);
+    private <T extends Property> void addProperty(PropertyList<Property> l, PropertyEntry<T> p, String value) {
+        T prop = createProperty(p, value);
+        if (prop != null) {
+            l.add(prop);
         }
     }
 
-    private <T extends Property> void addProperty(PropertyList<T> l, String evName, String value) {
-        PropertyEntry<T> propertyEntry = (PropertyEntry<T>) propertyEntries.get(evName);
-        appendProperty(l, propertyEntry, value);
-    }
-
-    private <T extends Property> String transferProperty(PropertyList<T> l, Cursor cur, String evName) {
-        PropertyEntry<T> propertyEntry = (PropertyEntry<T>) propertyEntries.get(evName);
-        String value = getString(cur, propertyEntry.dbField);
-        appendProperty(l, propertyEntry, value);
+    private <T extends Property> String transferProperty(PropertyList<Property> l, Cursor cur, PropertyEntry<T> p) {
+        String value = getString(cur, p.dbField);
+        addProperty(l, p, value);
         return value;
     }
 
-    private <T extends Property> void transferEnumProperty(PropertyList<T> l, Cursor cur, String evName) {
-        PropertyEntry<T> propertyEntry = (PropertyEntry<T>) propertyEntries.get(evName);
-        int i = getColumnIndex(cur, propertyEntry.dbField);
+    private <T extends Property> void transferEnumProperty(PropertyList<Property> l, Cursor cur, PropertyEntry<T> p) {
+        int i = getColumnIndex(cur, p.dbField);
         if (i != -1 && !cur.isNull(i)) {
             int value = (int) cur.getLong(i);
-            if (value >= 0 && value < propertyEntry.values.size()) {
-                appendProperty(l, propertyEntry, propertyEntry.values.get(value));
+            if (value >= 0 && value < p.values.size()) {
+                addProperty(l, p, p.values.get(value));
             }
         }
     }

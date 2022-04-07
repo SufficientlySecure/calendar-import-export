@@ -373,7 +373,7 @@ public class ProcessVEvent extends RunnableWithProgress {
         }
 
         // set color values, if given in iCal
-        Property p = e.getProperty(SaveCalendar.X_COLORARGB);
+        Property p = e.getProperty(ColorAttributes.X_COLORARGB);
         if (p != null) {
             // given RGB dominates color name
             c.put(Events.EVENT_COLOR, Integer.toString(Integer.parseUnsignedInt(p.getValue(), 16)));
@@ -386,7 +386,7 @@ public class ProcessVEvent extends RunnableWithProgress {
                 }
             } else {
                 // index not together with color RGB
-                copyProperty(c, Events.EVENT_COLOR_KEY, e, SaveCalendar.X_COLORINDEX);
+                copyProperty(c, Events.EVENT_COLOR_KEY, e, ColorAttributes.X_COLORINDEX);
             }
         }
 
