@@ -551,7 +551,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 }
 
                 if (protocol.equalsIgnoreCase("http") || protocol.equalsIgnoreCase("https")) {
-                    String encoded = new String(new Base64().encode(userPass.getBytes("UTF-8")));
+                    String encoded = new String(Base64.encodeBase64(userPass.getBytes("UTF-8")));
                     URLConnection connection = mUrl.openConnection();
                     connection.setRequestProperty("Authorization", "Basic " + encoded);
                     return connection;
