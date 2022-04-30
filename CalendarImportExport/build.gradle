@@ -9,8 +9,8 @@ android {
         minSdkVersion 14
         //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 29 // retain pre-Android 11 storage model at the moment
-        versionCode 61
-        versionName "2.7.4"
+        versionCode 62
+        versionName "2.7.5"
     }
 
     dependencies {
