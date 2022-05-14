@@ -355,6 +355,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         boolean found = false;
         for (int i = 0; i < mCalendars.size(); i++) {
             if (mCalendars.get(i).mId == mIntentCalendarId &&
+                mCalendars.get(i).mName != null &&
                 (calendarName == null || mCalendars.get(i).mName.contentEquals(calendarName))) {
                 found = true;
                 final int index = i;
