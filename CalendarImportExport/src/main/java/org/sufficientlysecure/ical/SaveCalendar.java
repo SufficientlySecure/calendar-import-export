@@ -231,11 +231,14 @@ public class SaveCalendar extends RunnableWithProgress {
         String where = Events.CALENDAR_ID + "=? AND deleted=0";
         String[] args = new String[] { cal_src.mIdStr };
         String sortBy = Events.CALENDAR_ID + " ASC";
-        Cursor cur;
+        Cursor cur = null;
+
         try {
             cur = resolver.query(Events.CONTENT_URI, mAllCols ? null : EVENT_COLS,
                                  where, args, sortBy);
-        } catch (Exception except) {
+        } catch (Exception ignored) {}
+
+        if(cur == null) {
             Log.w(TAG, "Calendar provider is missing columns, continuing anyway");
             int n = 0;
             for (n = 0; n < EVENT_COLS.length; ++n)
