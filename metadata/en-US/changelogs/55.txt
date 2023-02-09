@@ -1,0 +1,3 @@
+* Automatically refresh calendar information when changed outside the app
+* Suggest filenames when saving to reduce required typing
+* Developer mode changes for debugging user issues

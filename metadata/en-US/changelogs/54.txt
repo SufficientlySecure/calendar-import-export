@@ -1,0 +1,3 @@
+* Fix importing calendars from emails (thanks to Fred Dupont)
+* Fix an exception when exporting on some systems
+* Use Android 6 runtime permissions

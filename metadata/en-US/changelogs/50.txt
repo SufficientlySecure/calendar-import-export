@@ -1,0 +1,1 @@
+* First released version of Calendar Import/Export, mostly rewritten by Jon Griffiths

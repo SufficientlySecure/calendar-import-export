@@ -1,0 +1,1 @@
+* Corrected library dependency problem (issue #94)
