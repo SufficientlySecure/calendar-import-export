@@ -19,6 +19,7 @@
 
 package org.sufficientlysecure.ical.ui;
 
+import static android.provider.Settings.ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION;
 import java.io.File;
 import java.io.InputStream;
 import java.io.IOException;
@@ -28,6 +29,7 @@ import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
 import net.fortuna.ical4j.data.CalendarBuilder;
@@ -38,6 +40,7 @@ import net.fortuna.ical4j.util.CompatibilityHints;
 import org.apache.commons.codec.binary.Base64;
 
 import org.sufficientlysecure.ical.AndroidCalendar;
+import org.sufficientlysecure.ical.BuildConfig;
 import org.sufficientlysecure.ical.ProcessVEvent;
 import org.sufficientlysecure.ical.SaveCalendar;
 import org.sufficientlysecure.ical.Settings;
@@ -49,7 +52,6 @@ import org.sufficientlysecure.ical.util.Log;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -61,9 +63,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.preference.PreferenceManager;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.fragment.app.FragmentActivity;
+import androidx.core.content.ContextCompat;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.view.Menu;
@@ -85,13 +87,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public static final String EXTRA_CALENDAR_ID = "calendarId";
 
     private static final int MY_PERMISSIONS_REQUEST = 1;
-    private static final String[] MY_PERMISSIONS = new String[] {
-        Manifest.permission.GET_ACCOUNTS,
-        Manifest.permission.READ_CALENDAR,
-        Manifest.permission.WRITE_CALENDAR,
-        Manifest.permission.READ_EXTERNAL_STORAGE,
-        Manifest.permission.WRITE_EXTERNAL_STORAGE
-    };
+    private static String[] MY_PERMISSIONS;
 
     private Settings mSettings;
 
@@ -135,6 +131,27 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        if (Build.VERSION.SDK_INT <= 29){
+            MY_PERMISSIONS = new String[] {
+                    Manifest.permission.GET_ACCOUNTS,
+                    Manifest.permission.READ_CALENDAR,
+                    Manifest.permission.WRITE_CALENDAR,
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+            };
+        } else {
+            MY_PERMISSIONS = new String[] {
+                    Manifest.permission.GET_ACCOUNTS,
+                    Manifest.permission.READ_CALENDAR,
+                    Manifest.permission.WRITE_CALENDAR
+            };
+            if (!Environment.isExternalStorageManager()) {
+                      Intent intent = new Intent(ACTION_MANAGE_APP_ALL_FILES_ACCESS_PERMISSION, Uri.parse("package:" + BuildConfig.APPLICATION_ID));
+                startActivity(intent);
+            }
+        }
+
+
         setContentView(R.layout.main);
         mIntentCalendarId = NO_CALENDAR;
         mInitialCreated = true;
@@ -144,7 +161,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mCalendarUpdateReciever = new BroadcastReceiver() {
             public void onReceive(final Context context, final Intent intent) {
                 Log.d(TAG, "Received broadcast: " + intent.getAction());
-                if (intent.getAction() == mCalendarUpdateFilter.getAction(0))
+                if (Objects.equals(intent.getAction(), mCalendarUpdateFilter.getAction(0)))
                     onExternalCalendarChanged();
             }
         };
@@ -182,6 +199,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     public void onRequestPermissionsResult(int requestCode,
                                            String permissions[],
                                            int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST: {
                 boolean allGranted = false;
@@ -424,7 +442,11 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         else
             onExternalCalendarChanged();
 
-        registerReceiver(mCalendarUpdateReciever, mCalendarUpdateFilter);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            registerReceiver(mCalendarUpdateReciever, mCalendarUpdateFilter, Context.RECEIVER_NOT_EXPORTED);
+        } else {
+            registerReceiver(mCalendarUpdateReciever, mCalendarUpdateFilter);
+        }
     }
 
     protected void onPause() {

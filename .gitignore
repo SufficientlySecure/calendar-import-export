@@ -1,5 +1,4 @@
 # Gradle
-gradle.properties
 .gradle
 /build
 /CalendarImportExport/build
