@@ -231,11 +231,14 @@ public class SaveCalendar extends RunnableWithProgress {
         String where = Events.CALENDAR_ID + "=? AND deleted=0";
         String[] args = new String[] { cal_src.mIdStr };
         String sortBy = Events.CALENDAR_ID + " ASC";
-        Cursor cur;
+        Cursor cur = null;
+
         try {
             cur = resolver.query(Events.CONTENT_URI, mAllCols ? null : EVENT_COLS,
-                                 where, args, sortBy);
-        } catch (Exception except) {
+                    where, args, sortBy);
+        } catch (Exception ignored) {}
+
+        if (cur == null) {
             Log.w(TAG, "Calendar provider is missing columns, continuing anyway");
             int n = 0;
             for (n = 0; n < EVENT_COLS.length; ++n)
@@ -249,18 +252,22 @@ public class SaveCalendar extends RunnableWithProgress {
         //TW:  _sync_id=1611333603291   pro Event?   oder: secTimeStamp=1611334074922
 
         // Collect up events and add them after any timezones
-        setMax(cur.getCount());
         List<VEvent> events = new ArrayList<>();
-        while (cur.moveToNext()) {
-            incrementProgress();
-            VEvent e = convertFromDb(cur, cal_dst, timestamp);
-            if (e != null) {
-                events.add(e);
-                if (Log.getIsUserEnabled())
-                    Log.d(TAG, "Adding event: " + e.toString());
+
+        if (cur != null) {
+            setMax(cur.getCount());
+            while (cur.moveToNext()) {
+                incrementProgress();
+                VEvent e = convertFromDb(cur, cal_dst, timestamp);
+                if (e != null) {
+                    events.add(e);
+                    if (Log.getIsUserEnabled())
+                        Log.d(TAG, "Adding event: " + e.toString());
+                }
             }
+            cur.close();
         }
-        cur.close();
+
         return events;
     }
 
