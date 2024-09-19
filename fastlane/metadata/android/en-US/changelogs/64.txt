@@ -1,0 +1,3 @@
+Update for Android 14, SDK 34
+Monochrome icon support
+F-Droid fastlane
